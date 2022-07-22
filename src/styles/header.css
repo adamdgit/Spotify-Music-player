@@ -1,0 +1,148 @@
+.header-bar {
+  height: 100px;
+  padding: 0 40px;
+  border-bottom: 5px solid var(--secondary-blue);
+  box-shadow: 0 5px 12px #111;
+  width: 100%;
+  background-color: var(--bg-blue);
+  display: grid;
+  grid-template-columns: 170px 340px auto 150px;
+  align-items: center;
+  z-index: 200;
+}
+
+.header-bar h1 {
+  color: var(--blue);
+}
+
+.nav-bar {
+  display: flex;
+  gap: 1rem;
+  margin-top: 44px;
+}
+
+.nav-bar .nav-item {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:10px;
+  width: 140px;
+  height: 50px;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 998;
+}
+
+.nav-bar .nav-item:hover {
+  color: var(--blue);
+}
+
+.nav-bar .nav-search {
+  list-style: none;
+}
+
+.searchWrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0 20px 0 0;
+}
+
+.search-bar {
+  width:100%;
+  min-width: 140px;
+  max-width: 600px;
+  border: 1px solid var(--secondary-blue);
+  box-shadow: inset 3px 3px 5px #111;
+  background-color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+.search-bar .search {
+  color: white;
+  height: 30px;
+  width: 100%;
+  margin: 0 5px;
+  padding: 0 10px;
+  background-color: var(--primary-blue);
+}
+
+.search-bar .search-btn {
+  background-color: var(--primary-blue);
+  color: white;
+  height: 30px;
+}
+
+.search-bar .search-btn:hover {
+  color: var(--blue);
+}
+
+.active-nav {
+  background-color: var(--secondary-blue);
+}
+
+.search-bar:hover {
+  border: 1px solid var(--blue);
+}
+
+.search-bar input:focus {
+  outline: 0;
+}
+
+.login, .logout {
+  background-color: var(--primary-blue);
+  border: 1px solid var(--secondary-blue);
+  border-radius: 4px;
+  width: 150px;
+  height: 40px;
+  color: white;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  font-size: .9rem;
+}
+
+.login:hover, .logout:hover {
+  border: 1px solid var(--blue);
+  color: var(--blue);
+}
+
+.account {
+  font-size: .8rem;
+  text-align: center;
+}
+
+/*-----Search results dropdown-----*/
+.search-results-wrap {
+  display: none;
+  position: absolute;
+  top:42px;
+  background-color: var(--bg-blue);
+  box-shadow: 0 5px 12px #111;
+  height: calc(100vh - 180px);
+  overflow: auto;
+  padding: 20px;
+  z-index: 777;
+}
+
+.show-search {
+  display: block;
+}
+
+.search-result {
+  font-size: .9rem;
+  display: flex;
+  gap: .5rem;
+  padding: 15px 0;
+  align-items: center;
+  border-bottom: 1px solid var(--secondary-blue);
+}
+
+.search-result:hover {
+
+}

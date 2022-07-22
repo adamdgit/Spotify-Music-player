@@ -1,0 +1,160 @@
+.playlist-wrap {
+  position: fixed;
+  top:96px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 100vh;
+  transform: translateY(100vh);
+  transition: transform 400ms ease-in-out;
+}
+
+.song-category {
+  display: grid;
+  grid-template-columns: 5% var(--img-width) auto 30% 8%;
+  width: 100%;
+  min-width: 450px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--secondary-blue);
+  border-right: 1px solid var(--secondary-blue);
+  background-color: var(--bg-blue);
+  box-shadow: inset 3px 3px 12px #111;
+  padding: 10px;
+  margin: 0 0 20px 0;
+  font-size: .6rem;
+}
+
+.playlist {
+  background-color: var(--primary-blue);
+  overflow-y: auto;
+  border-top: 3px solid var(--secondary-blue);
+  padding:20px;
+}
+
+.container {
+}
+
+.draggable h1 {
+  font-size: 1.2rem;
+}
+
+.draggable h2 {
+  font-size: .9rem;
+}
+
+.draggable h3 {
+  font-size: .8rem;
+}
+
+.playlist-title {
+  padding:20px 0;
+  text-align: center;
+  color: white;
+}
+
+.draggable {
+  position: relative;
+  color: white;
+  background-color: var(--secondary-blue);
+  margin:5px 0;
+  width: 100%;
+  min-width: 450px;
+  height: 100px;
+  display: grid;
+  grid-template-columns: 10px var(--img-width) auto 30% 8%;
+  align-items: center;
+  padding:10px;
+  cursor: move;
+  gap:15px;
+  text-overflow:ellipsis;
+}
+
+.draggable:hover {
+  background-color: var(--bg-blue);
+}
+
+.draggable:hover::after{
+  content: url(../img/play-solid.svg);
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  opacity: .7;
+  top:35px; 
+  left:65px;
+  cursor: pointer;
+}
+
+.draggable img {
+  width: var(--img-width);
+}
+
+.draggable img:hover {
+  cursor: pointer;
+}
+
+/* Lyrics section */
+
+.song-wrap {
+  overflow-y: scroll;
+  border-top: 3px solid var(--secondary-blue);
+  padding-bottom: 260px;
+  background-color: var(--bg-blue);
+}
+
+.lyrics-wrap {
+  width: calc(100% - 80px);
+  min-width: 500px;
+  max-width: 800px;
+  margin: -100px auto 0;
+  background-color: var(--secondary-blue);
+  padding: 40px;
+  z-index: 100;
+  box-shadow: 0 0 12px #111;
+  display: grid;
+  justify-content: center;
+}
+
+.song-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:3rem;
+  padding: 60px 40px 140px;
+  margin-bottom: 20px;
+  background-color: var(--primary-blue);
+  z-index: 90;
+}
+
+.album-large {
+  width: 100%;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.song-info ul li {
+  display: flex;
+  list-style: none;
+  margin: 10px 0;
+}
+
+.song-info ul li h3 {
+  width: 120px;
+}
+
+.verse {
+  display: block;
+  margin:20px 0;
+}
+
+/*-----Drag & Drop-----*/
+
+.move {
+  opacity: 0.2;
+}
+
+.clone {
+  position: absolute;
+  transform: translate(var(--x), var(--y));
+  z-index:999;
+  background-color: var(--bg-blue);
+}
