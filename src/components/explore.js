@@ -1,4 +1,4 @@
-import GetUserRecommendations from './search/getRecommendations'
+import GetUserRecommendations from './api/getRecommendations'
 
 export default function Explore() {
 

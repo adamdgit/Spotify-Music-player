@@ -5,8 +5,11 @@
   grid-template-columns: 1fr 1fr;
   width: 100%;
   height: 100vh;
-  transform: translateY(100vh);
   transition: transform 400ms ease-in-out;
+}
+
+.hide {
+  transform: translateY(100vh);
 }
 
 .song-category {

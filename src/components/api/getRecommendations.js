@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default function GetUserRecommendations() {
 
-  const token = window.localStorage.getItem('token')
+  let token = window.localStorage.getItem('token')
   const API_URL = `https://api.spotify.com/v1/browse/featured-playlists`
 
   const [results, setResults] = useState([])

@@ -1,26 +1,18 @@
-import { useRef } from "react"
+import { useState } from "react"
+import Playlist from "./playlist"
 
 function MusicPlayer({...props}) {
-
-  const showHideBtn = useRef()
-
-  function showHidePlayer() {
-    const playlist = document.querySelector('.playlist-wrap')
-    if (showHideBtn.current.classList.contains('rotate-btn')) {
-      showHideBtn.current.classList.remove('rotate-btn')
-      playlist.style = "transform: translateY(100vh);"
-    } else {
-      showHideBtn.current.classList.add('rotate-btn')
-      playlist.style = "transform: translateY(0);"
-    }
-  }
+  
+  let [playerIsHidden, setPLayerIsHidden] = useState(true)
 
   return (
+    <>
+    <Playlist playerIsHidden={playerIsHidden} />
     <div className="controls">
       <span className="player-controls">
         <span className="player-btns">
           <button className="shuffle-btn">
-            <svg viewBox="0 0 24 24" height="30px" width="30px" fill="currentcolor"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.808 4.655l2.069 1.978h-.527c-1.656 0-3.312.68-4.458 1.814L12.797 9.75l1.179 1.246 1.317-1.527c.764-.794 1.91-1.247 3.057-1.247h.55l-2.07 2.014 1.178 1.179 4.005-3.993-4.026-3.945-1.178 1.179zm1.974 10.998l-1.974-1.888 1.18-1.179 4.024 3.945-4.004 3.993-1.178-1.179 1.954-1.901h-.434c-1.656 0-3.312-.625-4.458-1.667L8.242 9.8C7.35 9.071 6.204 8.55 4.93 8.55H2l.006-1.794 2.965.003c1.784 0 3.312.521 4.459 1.563l5.904 6.185c.765.73 1.911 1.146 3.058 1.146h.39zm-9.02-2.092l-1.52 1.394c-.892.793-2.038 1.36-3.312 1.36H2v1.588h2.93c1.783 0 3.312-.567 4.459-1.701l1.537-1.396-1.164-1.245z"></path></svg>
+            <svg viewBox="0 0 24 24" height="30px" width="30px" fill="currentcolor"><path d="M16.808 4.655l2.069 1.978h-.527c-1.656 0-3.312.68-4.458 1.814L12.797 9.75l1.179 1.246 1.317-1.527c.764-.794 1.91-1.247 3.057-1.247h.55l-2.07 2.014 1.178 1.179 4.005-3.993-4.026-3.945-1.178 1.179zm1.974 10.998l-1.974-1.888 1.18-1.179 4.024 3.945-4.004 3.993-1.178-1.179 1.954-1.901h-.434c-1.656 0-3.312-.625-4.458-1.667L8.242 9.8C7.35 9.071 6.204 8.55 4.93 8.55H2l.006-1.794 2.965.003c1.784 0 3.312.521 4.459 1.563l5.904 6.185c.765.73 1.911 1.146 3.058 1.146h.39zm-9.02-2.092l-1.52 1.394c-.892.793-2.038 1.36-3.312 1.36H2v1.588h2.93c1.783 0 3.312-.567 4.459-1.701l1.537-1.396-1.164-1.245z"></path></svg>
           </button>
           <button className="previous-btn">
             <svg viewBox="0 0 16 16" height="26" width="26" fill="currentcolor"><path d="M3.3 1a.7.7 0 01.7.7v5.15l9.95-5.744a.7.7 0 011.05.606v12.575a.7.7 0 01-1.05.607L4 9.149V14.3a.7.7 0 01-.7.7H1.7a.7.7 0 01-.7-.7V1.7a.7.7 0 01.7-.7h1.6z"></path></svg>
@@ -34,7 +26,7 @@ function MusicPlayer({...props}) {
           <button className="loop-btn">
             <svg viewBox="0 0 24 24" height="30px" width="30px" fill="currentcolor"><path d="M3 6.929c0-.75.643-1.393 1.393-1.393h14.286L16.32 3.179 17.5 2l4.393 4.393-4.393 4.393-1.179-1.179L18.68 7.25H4.714V11H3V6.929zM2.107 17.607L6.5 13.214l1.179 1.179L5.32 16.75l13.965-.071v-3.965H21V17c0 .75-.643 1.393-1.393 1.393l-14.286.071 2.358 2.357L6.5 22l-4.393-4.393z"></path></svg>
           </button>
-          <button className="show-hide-playlist-btn" onClick={showHidePlayer} ref={showHideBtn}>
+          <button className={playerIsHidden === true ? 'show-hide-playlist-btn' : 'show-hide-playlist-btn rotate-btn'} onClick={() => setPLayerIsHidden(!playerIsHidden)} >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="20px" fill="currentcolor">/*! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc.*/<path d="M9.39 265.4l127.1-128C143.6 131.1 151.8 128 160 128s16.38 3.125 22.63 9.375l127.1 128c9.156 9.156 11.9 22.91 6.943 34.88S300.9 320 287.1 320H32.01c-12.94 0-24.62-7.781-29.58-19.75S.2333 274.5 9.39 265.4z"/></svg>
           </button>
         </span>
@@ -59,6 +51,7 @@ function MusicPlayer({...props}) {
         </span>
       </div>
     </div>
+    </>
   ) 
 }
 

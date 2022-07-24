@@ -1,9 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import axios from "axios";
+import { LoginStatusCtx } from "../login";
 
-export default function SearchSongs({...props}) {
+export default function SearchSongs() {
 
   const API_URL = 'https://api.spotify.com/v1/search'
+
+  const {token, setToken} = useContext(LoginStatusCtx)
 
   const [tracks, setTracks] = useState([])
   const [search, setSearch] = useState('')
@@ -35,7 +38,7 @@ export default function SearchSongs({...props}) {
         const {data} = await axios.get(API_URL, {
           headers: {
             Accept: 'application/json',
-            Authorization: `Bearer ${props.token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           params: {
@@ -60,30 +63,30 @@ export default function SearchSongs({...props}) {
   },[search])
 
   return (
-    <div className="searchWrap">
+    <>
       <div className="search-bar">
         <input type='search' ref={searchElement} onChange={(e) => setSearch(e.target.value)} className="search" placeholder="search" />
+        <div className={tracks.length == 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
+        {
+          tracks.length != 0 ?
+          tracks.map((result, i) => {
+            return (
+            <div key={i} ref={trackElement[i]} className={'search-result'}>
+              <img src={result.album.images[0].url} height={'90px'} />
+              <span>
+              <h3>{result.name}</h3>
+                {result.artists.map(artist => {
+                  return `${artist.name}, `
+                })}
+              </span>
+            </div>
+            )
+          })
+          : <></>
+        }
+        </div>
       </div>
-      <div className={tracks.length == 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
-      {
-        tracks.length != 0 ?
-        tracks.map((result, i) => {
-          return (
-          <div key={i} ref={trackElement[i]} className={'search-result'}>
-            <img src={result.album.images[0].url} height={'90px'} />
-            <span>
-            <h3>{result.name}</h3>
-              {result.artists.map(artist => {
-                return `${artist.name}, `
-              })}
-            </span>
-          </div>
-          )
-        })
-        : <></>
-      }
-      </div>
-    </div>
+    </>
   )
 
 }

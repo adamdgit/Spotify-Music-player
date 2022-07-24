@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import React from 'react';
 
-function Playlist() {
+function Playlist({ playerIsHidden }) {
 
   const [lyrics, setLyrics] = useState('')
 
@@ -47,12 +47,16 @@ function Playlist() {
   let currentSong = songData[1]
 
   useEffect(() => {
+    // saves draggable elements to an array to prevent cleanup errors
+    // otherwise cleanup will say there are no eventlisteners to remove
+    let elements = []
     draggables.current.forEach(element => {
+      elements.push(element)
       element.addEventListener('dragstart', drag)
     })
     // cleanup event listeners on component re-render
     return () => {
-      draggables.current.forEach(element => {
+      elements.forEach(element => {
         element.removeEventListener('dragstart', drag)
       })
     }
@@ -112,7 +116,7 @@ function Playlist() {
   }
 
   return (
-    <div className="playlist-wrap" ref={playlist}>
+    <div className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"} ref={playlist}>
       
       <div className="song-wrap">
           {
