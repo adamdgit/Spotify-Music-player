@@ -1,17 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './styles/index.css';
 import './styles/header.css';
 import './styles/controls.css'
 import './styles/playlist.css'
 import './styles/explore.css'
 import Login from './components/login';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-
-    <Login />
-
+    <BrowserRouter> 
+      <Routes>
+        <Route path="*" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );

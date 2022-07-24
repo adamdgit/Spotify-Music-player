@@ -1,8 +1,9 @@
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import SearchSongs from "./api/searchSongs";
 import axios from "axios";
 import { LoginStatusCtx } from "./login";
+import { NavLink } from "react-router-dom"
 
 function Header() {
 
@@ -38,8 +39,15 @@ function Header() {
   return (
     <header className="header-bar">
       <ul className="nav-bar">
-        <li className="nav-item active-nav">Explore</li>
-        <li className="nav-item">Playlists</li>
+        <NavLink to="/" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <li>Home</li>
+        </NavLink>
+        <NavLink to="/explore" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <li>Explore</li>
+        </NavLink>
+        <NavLink to="/playlists" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <li>Playlists</li>
+        </NavLink>
       </ul>
       <SearchSongs />
       <span className="user-info">

@@ -1,16 +1,17 @@
-// put login logic here, can pass login token to children components
-// move header.js login logic to this file
 
 import React, { useState, useEffect } from "react";
 import Header from "./header";
 import Controls from './controls';
-import Explore from './explore';
+import Explore from './pages/explore';
+import Playlists from "./pages/playlists";
+import Home from "./pages/home";
+import { Route, Routes } from "react-router-dom"
 
 export const LoginStatusCtx = React.createContext()
 
 function Login() {
 
-  const CLIENT_ID = "1054d21743b44ad1b1bcbf1046e70025"
+  const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
   const REDIRECT_URI = "http://localhost:3000"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
@@ -45,7 +46,11 @@ function Login() {
       :
       <>
         <Header />
-        <Explore />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/playlists" element={<Playlists />} />
+        </Routes>
         <Controls />
       </>
     }

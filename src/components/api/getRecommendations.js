@@ -46,7 +46,9 @@ export default function GetUserRecommendations() {
               <img src={result.images[0].url} width={'200px'} height={'200px'} />
               <h2>{result.name}</h2>
               <p>{result.description}</p>
-              <button className="play">Play</button>
+              <button className="play">
+                <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+              </button>
             </div>
           )
         })

@@ -65,7 +65,7 @@ export default function SearchSongs() {
   return (
     <>
       <div className="search-bar">
-        <input type='search' ref={searchElement} onChange={(e) => setSearch(e.target.value)} className="search" placeholder="search" />
+        <input type='search' ref={searchElement} onChange={(e) => setSearch(e.target.value)} className="search" placeholder="search songs..." />
         <div className={tracks.length == 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
         {
           tracks.length != 0 ?
@@ -79,6 +79,9 @@ export default function SearchSongs() {
                   return `${artist.name}, `
                 })}
               </span>
+              <button className="play">
+                <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+              </button>
             </div>
             )
           })

@@ -36,40 +36,18 @@
   border: 4px solid var(--secondary-blue);
 }
 
-.explore-result .play {
+.play {
   background-color: var(--bg-blue);
   border: 1px solid var(--secondary-blue);
   border-radius: 4px;
-  width: 80px;
-  height: 40px;
+  padding: 6px 10px 4px 10px;
   color: white;
-  display: grid;
-  align-items: center;
-  justify-items: center;
   font-size: .9rem;
-  justify-self: end;
+  justify-self: flex-end;
+  box-shadow: inset 2px 2px 5px black;
 }
 
-.explore-result .play:hover {
+.play:hover {
   border: 1px solid var(--blue);
   color: var(--blue);
-}
-
-.featured-category {
-  display: grid;
-  grid-template-columns: 160px 1fr 1fr 90px;
-  width: 100%;
-  min-width: 450px;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--secondary-blue);
-  border-right: 1px solid var(--secondary-blue);
-  background-color: var(--bg-blue);
-  box-shadow: inset 3px 3px 12px #111;
-  padding: 10px;
-  margin: 0 0 20px 0;
-  font-size: .6rem;
-}
-
-.featured-category :nth-child(1) {
-  margin-left: 2rem;
 }

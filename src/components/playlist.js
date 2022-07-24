@@ -43,7 +43,7 @@ function Playlist({ playerIsHidden }) {
       albumArtURL: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Eminem_-_The_Slim_Shady_LP_CD_cover.jpg/220px-Eminem_-_The_Slim_Shady_LP_CD_cover.jpg'
     }
   ]
-  // dynamically change this later
+
   let currentSong = songData[1]
 
   useEffect(() => {
