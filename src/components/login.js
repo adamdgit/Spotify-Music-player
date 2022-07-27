@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
@@ -15,9 +15,23 @@ function Login() {
   const REDIRECT_URI = "http://localhost:3000"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
-  const SCOPE = 'user-read-email user-modify-playback-state playlist-modify-private playlist-read-private'
+  const SCOPE = 'user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-read-private%20streaming'
 
+  // Global context items
   const [token, setToken] = useState('')
+  const [playerData, setPlayerData] = useState({
+    uris: [],
+    play: false,
+    offset: 0
+  })
+  const [playlistData, setPlaylistData] = useState({
+    playlist_id: '',
+    playlist_name: '',
+    playlist_uri: '',
+    playlist_image: '',
+    playlist_tracks_href: '',
+    playlist_desc: ''
+  })
 
   useEffect(() => {
 
@@ -36,7 +50,7 @@ function Login() {
   },[token])
   
   return (
-    <LoginStatusCtx.Provider value={{token, setToken}}>
+    <LoginStatusCtx.Provider value={{token, setToken, playerData, setPlayerData, playlistData, setPlaylistData}}>
     {
       !token ?
       <div className="login-wrap">
