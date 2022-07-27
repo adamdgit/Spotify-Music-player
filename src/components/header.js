@@ -1,5 +1,5 @@
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import SearchSongs from "./api/searchSongs";
 import axios from "axios";
 import { LoginStatusCtx } from "./login";
@@ -15,26 +15,33 @@ function Header() {
     window.localStorage.removeItem('token')
   }
 
-   // get logged in user's display name
-  async function getUserData() {
-    const API_URL = `https://api.spotify.com/v1/me`
-      try {
-        const {data} = await axios.get(API_URL, {
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+  useEffect(() => {
+    // get logged in user's display name
+    async function getUserData() {
+      const API_URL = `https://api.spotify.com/v1/me`
+        try {
+          const {data} = await axios.get(API_URL, {
+            headers: {
+              Accept: 'application/json',
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            }
+          })
+          return setUsername(data.display_name)
+        } catch (error) {
+          console.error(error)
+          // if token is expired log out user
+          if(error.response.data.error.message == 'The access token expired') {
+            logout()
           }
-        })
-        return setUsername(data.display_name)
-      } catch (error) {
-        console.error(error)
-      }
-  }
+        }
+    }
 
-  if(token) {
-    getUserData()
-  }
+    if(token) {
+      getUserData()
+    }
+    
+  },[])
 
   return (
     <header className="header-bar">
@@ -52,8 +59,8 @@ function Header() {
       <SearchSongs />
       <span className="user-info">
         <span>
-          <button onClick={logout} className="logout">Logout of spotify</button>
-          <p className="account">Logged in as: {username}</p>
+          <button onClick={logout} className="logout">Disconnect spotify</button>
+          <p className="account">Hello:{username}</p>
         </span>
       </span>
     </header>
