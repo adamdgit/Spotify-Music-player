@@ -74,13 +74,11 @@
 }
 
 .search-bar .search-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
   background-color: var(--primary-blue);
   color: white;
-  height: 30px;
-}
-
-.search-bar .search-btn:hover {
-  color: var(--blue);
 }
 
 .search-bar:hover {

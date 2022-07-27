@@ -1,14 +1,12 @@
 .controls {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
   position: fixed;
-  gap:10px;
+  display: flex;
   width: 100%;
-  padding: 15px 0;
+  padding: 30px 20px 20px;
   left: 0;
   bottom: 0;
   justify-content: center;
-  align-items: center;
+  align-items:flex-start;
   background-color: #111;
   border-top: 1px solid var(--secondary-blue);
   z-index: 999;
@@ -90,10 +88,7 @@
 }
 
 .show-hide-playlist-btn {
-  position: absolute;
-  right: 10px;
-  top: 15px;
-  margin: 0 10px;
+  margin-left: 20px;
   transition: transform 300ms ease-in-out;
 }
 
@@ -106,4 +101,14 @@
 
 .rotate-btn {
   transform: rotate(180deg);
+}
+
+/*Spotify player controls*/
+
+.controls ._SliderRSWP {
+  margin-bottom: 15px;
+}
+
+.controls button:hover {
+  color:var(--blue)
 }

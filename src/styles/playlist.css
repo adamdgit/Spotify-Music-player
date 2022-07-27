@@ -14,7 +14,7 @@
 
 .song-category {
   display: grid;
-  grid-template-columns: 5% var(--img-width) auto 30% 8%;
+  grid-template-columns: 40px 80px auto 60px;
   width: 100%;
   min-width: 450px;
   text-transform: uppercase;
@@ -31,21 +31,18 @@
   background-color: var(--primary-blue);
   overflow-y: auto;
   border-top: 3px solid var(--secondary-blue);
-  padding:20px;
+  padding: 20px;
+  height: calc(100vh - 210px);
 }
 
 .container {
 }
 
 .draggable h1 {
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .draggable h2 {
-  font-size: .9rem;
-}
-
-.draggable h3 {
   font-size: .8rem;
 }
 
@@ -64,12 +61,13 @@
   min-width: 450px;
   height: 100px;
   display: grid;
-  grid-template-columns: 10px var(--img-width) auto 30% 8%;
+  grid-template-columns: 18px 80px auto 8%;
   align-items: center;
   padding:10px;
   cursor: move;
-  gap:15px;
+  gap:10px;
   text-overflow:ellipsis;
+  font-size: .9rem;
 }
 
 .draggable:hover {
@@ -79,10 +77,10 @@
 .draggable:hover::after{
   content: url(../img/play-solid.svg);
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   opacity: .7;
-  top:35px; 
+  top:40px; 
   left:65px;
   cursor: pointer;
 }
@@ -95,6 +93,9 @@
   cursor: pointer;
 }
 
+.draggable .song-length {
+  font-size: .8rem;
+}
 /* Lyrics section */
 
 .song-wrap {
@@ -118,10 +119,9 @@
 }
 
 .song-info {
-  display: flex;
-  align-items: center;
+  display: grid;
   justify-content: center;
-  gap:3rem;
+  gap:1rem;
   padding: 60px 40px 140px;
   margin-bottom: 20px;
   background-color: var(--primary-blue);
@@ -130,8 +130,8 @@
 
 .album-large {
   width: 100%;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: 150px;
+  max-width: 350px;
 }
 
 .song-info ul li {
@@ -160,4 +160,8 @@
   transform: translate(var(--x), var(--y));
   z-index:999;
   background-color: var(--bg-blue);
+}
+
+.selected {
+  border: 1px solid var(--blue);
 }
