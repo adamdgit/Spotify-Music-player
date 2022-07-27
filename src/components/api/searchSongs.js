@@ -12,13 +12,17 @@ export default function SearchSongs() {
   const [search, setSearch] = useState('')
   const trackElement = useRef([])
   const searchElement = useRef('')
+  const inputElement = useRef('')
 
   useEffect(() => {
 
     function handleClick(e) {
-      if (searchElement.current && !searchElement.current.contains(e.target)) {
+      if (searchElement.current 
+        && !searchElement.current.contains(e.target) 
+        && !inputElement.current.contains(e.target)) 
+      {
         setTracks([])
-        searchElement.current.value = ''
+        inputElement.current.value = ''
       }
     }
     // listen for click outside of search input to hide results
@@ -30,10 +34,19 @@ export default function SearchSongs() {
         element.remove()
       })
     }
+
+    // cleanup event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+    }
+
+  },[])
+
+  useEffect(() => {
     // set delay for search requests
     const delaySearch = setTimeout(() => {
-      searchtest()
-      async function searchtest() {
+      searchSongs()
+      async function searchSongs() {
       try {
         const {data} = await axios.get(API_URL, {
           headers: {
@@ -55,18 +68,19 @@ export default function SearchSongs() {
       }
     }, 300)
 
-    // cleanup event listener and remove timer
+    // remove timeout function
     return () => {
       clearTimeout(delaySearch)
-      document.removeEventListener('mousedown', handleClick)
     }
+
   },[search])
 
   return (
     <>
       <div className="search-bar">
-        <input type='search' ref={searchElement} onChange={(e) => setSearch(e.target.value)} className="search" placeholder="search songs..." />
-        <div className={tracks.length == 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="search-btn" fill="currentcolor" width="20px"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
+        <input ref={inputElement} type='search' onChange={(e) => setSearch(e.target.value)} className="search" placeholder="search songs..." />
+        <div ref={searchElement} className={tracks.length == 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
         {
           tracks.length != 0 ?
           tracks.map((result, i) => {
