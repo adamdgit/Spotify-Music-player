@@ -1,119 +1,70 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import React from 'react';
+import { LoginStatusCtx } from "./login";
+import axios from "axios";
 
 function Playlist({ playerIsHidden }) {
 
+  // global context
+  const { token, setToken } = useContext(LoginStatusCtx)
+  const { playlistData, setPlaylistData } = useContext(LoginStatusCtx)
+
   const [lyrics, setLyrics] = useState('')
+  const [currentSong, setCurrentSong] = useState()
+  const [songs, setSongs] = useState([])
 
   const container = useRef()
   const playlist = useRef()
   let draggables = useRef([])
   let clone = null
+  let Playlist_ID = ''
 
-  const songData = [
-    {
-      song: 'White America',
-      artist: 'Eminem',
-      album: 'The Eminem Show',
-      songLength: '5:25',
-      genre: 'Rap/Hip Hop',
-      producer: 'Dr-Dre',
-      label: 'Aftermath, Shady, Interscope',
-      released: '26th May 2002',
-      albumArtURL: 'https://upload.wikimedia.org/wikipedia/en/3/35/The_Eminem_Show.jpg'
-    }, {
-      song: 'Mockingbird',
-      artist: 'Eminem',
-      album: 'Encore',
-      songLength: '4:11',
-      genre: 'Rap/Hip Hop',
-      producer: 'Dr-Dre',
-      label: 'Aftermath, Shady, Interscope',
-      released: '25th April 2005',
-      albumArtURL: 'https://upload.wikimedia.org/wikipedia/en/b/b4/Encore_%28Eminem_album%29_coverart.jpg'
-    }, {
-      song: 'My Name Is',
-      artist: 'Eminem',
-      album: 'The Slim Shady LP',
-      songLength: '4:28',
-      genre: 'Rap/Hip Hop',
-      producer: 'Dr-Dre',
-      label: 'Aftermath, Shady, Interscope',
-      released: '25th January 1995',
-      albumArtURL: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/35/Eminem_-_The_Slim_Shady_LP_CD_cover.jpg/220px-Eminem_-_The_Slim_Shady_LP_CD_cover.jpg'
-    }
-  ]
-
-  let currentSong = songData[1]
+  function convertTime(millis) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return (
+      seconds == 60 ?
+      (minutes+1) + ":00" :
+      minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+    );
+  }
 
   useEffect(() => {
-    // saves draggable elements to an array to prevent cleanup errors
-    // otherwise cleanup will say there are no eventlisteners to remove
-    let elements = []
-    draggables.current.forEach(element => {
-      elements.push(element)
-      element.addEventListener('dragstart', drag)
-    })
-    // cleanup event listeners on component re-render
-    return () => {
-      elements.forEach(element => {
-        element.removeEventListener('dragstart', drag)
-      })
+    
+    const getCurrentlyPlaying = async () => {
+      await axios.get(`https://api.spotify.com/v1/me/player/currently-playing`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      }).then((res) => {
+        console.log(res.data)
+        setCurrentSong(res.data.item)
+      }).catch(error => console.error(error))
     }
-  },[])
+    getCurrentlyPlaying()
+    
+  },[playlistData])
 
-  function drag(e) {
-    // create a clone which follows the mouse cursor
-    clone = e.target.cloneNode(true)
-    e.target.classList.add('move')
-    playlist.current.appendChild(clone)
-    clone.classList.add('clone')
-    // set clones width to same as elements width (width varies with screen size)
-    clone.style.width = `${e.target.offsetWidth}px`
-    clone.style.top = '-145px'
-    clone.style.left = `-${e.offsetX}px`
-    clone.style.setProperty('--x', e.clientX + 'px')
-    clone.style.setProperty('--y', e.clientY + 'px')
-    clone.classList.add('dragging')
+  useEffect(() => {
 
-    // stop dragstart event listener to allow mousemove listener to take over
-    e.preventDefault()
-    document.addEventListener('mousemove', mousePos)
-  }
+    Playlist_ID = playlistData.playlist_id
 
-  // on mousemove have clone follow the cursor
-  function mousePos(e) {
-    clone.style.setProperty('--x', e.clientX + 'px')
-    clone.style.setProperty('--y', e.clientY + 'px')
-    let nearestNode = getNearestNode(e.clientY)
-    const moveEl = document.querySelector('.move')
-    // swap original element with nearest node
-    container.current.insertBefore(moveEl, nearestNode)
-    document.addEventListener('mouseup', placeClone)
-  }
-
-  function getNearestNode(y) {
-    let nodes = [...document.querySelectorAll('.draggable:not(.clone)')]
-    return nodes.reduce((closest, child) => {
-      const box = child.getBoundingClientRect()
-      const offset = y - box.top - box.height / 2
-      if(offset < 0 && offset > closest.offset) {
-        return { offset:offset, element: child }
-      } else {
-        return closest
-      }
-    }, {offset: Number.NEGATIVE_INFINITY}).element
-  }
-  
-  // on mouseup delete the clone and place original element in its current position
-  function placeClone() {
-    if (document.querySelector('.move')) {
-      document.querySelector('.move').classList.remove('move')
-      document.removeEventListener('mousemove', mousePos)
-      document.removeEventListener('mouseup', placeClone)
-      clone.remove()
+    const getPlaylistItems = async () => {
+      await axios.get(`https://api.spotify.com/v1/playlists/${Playlist_ID}/tracks`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      }).then((res) => {
+        setSongs(res.data.items)
+      }).catch(error => console.error(error))
     }
-  }
+    getPlaylistItems()
+
+  },[currentSong])
 
   return (
     <div className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"} ref={playlist}>
@@ -122,18 +73,25 @@ function Playlist({ playerIsHidden }) {
           {
             currentSong?
               <span className="song-info">
-                <img className="album-large" src={currentSong.albumArtURL} alt={`${currentSong.album} Album art`} />
+                <h2>Currently playing:</h2>
+                <h3>{currentSong.name}</h3>
+                <img className="album-large" src={currentSong.album.images[0].url} alt={`${currentSong.album.name} Album art`} />
                 <ul>
-                  <li><h3>Title: </h3>{currentSong.song}</li>
-                  <li><h3>Artist: </h3>{currentSong.artist}</li>
-                  <li><h3>Album: </h3>{currentSong.album}</li>
-                  <li><h3>Genre: </h3>{currentSong.genre}</li>
-                  <li><h3>Released: </h3>{currentSong.released}</li>
+                  <li><h3>Artists:</h3>
+                    {currentSong.artists.length > 1 
+                    ? currentSong.artists.map(artist => {
+                    return `${artist.name}, `
+                    })
+                    : currentSong.artists[0].name
+                    }
+                  </li>
+                  <li><h3>Album: </h3>{currentSong.album.name}</li>
+                  <li><h3>Released: </h3>{currentSong.album.release_date}</li>
                 </ul>
               </span>
             : 
-              <span>
-                No song selected
+              <span className="song-info">
+                Play a song to show data
               </span>
           }
 
@@ -147,33 +105,37 @@ function Playlist({ playerIsHidden }) {
       </div>
 
       <div className="playlist">
-        <h1 className="playlist-title">Playlist: $playlistName</h1>
+        <h1 className="playlist-title">{playlistData.playlist_name}</h1>
         <div className="song-category">
           <h3>#</h3>
-          <h3>Art</h3>
-          <h3>Title</h3>
           <h3>Album</h3>
+          <h3>Title</h3>
           <h3>Length</h3>
         </div>
         
         <div className="container" ref={container}>
           {
-            songData.map((obj, index) => {
+            !songs.length == 0 ? songs.map((obj, index) => {
               return (
-                <span key={index} className="draggable" draggable="true" ref={el => draggables.current[index] = el}>
+                <span key={index} className={currentSong.name === obj.track.name ? "draggable selected" : "draggable"} draggable="true" ref={el => draggables.current[index] = el}>
                   <span>{index+1}</span>
-                  <img src={obj.albumArtURL} alt={`${obj.album} Album art`} draggable="false" />
+                  <img src={obj.track.album.images[1].url} alt={`${obj.track.name} Album art`} draggable="false" />
                   <span>
-                    <h1>{obj.song}</h1>
-                    <h2>{obj.artist}</h2>
+                    <h1>{obj.track.name}</h1>
+                    <h2>
+                      {obj.track.artists.length > 1 
+                      ? obj.track.artists.map(artist => {
+                      return `${artist.name}, `
+                      })
+                      : obj.track.artists[0].name}
+                    </h2>
                   </span>
-                  <h3>{obj.album}</h3>
                   <span>
-                    <p className="song-length">{obj.songLength}</p>
+                    <p className="song-length">{convertTime(obj.track.duration_ms)}</p>
                   </span>
                 </span>
               )
-            })
+            }) : <h1>No playlist data</h1>
           }
         </div>
       </div>
