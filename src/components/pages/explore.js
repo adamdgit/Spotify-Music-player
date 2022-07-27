@@ -1,4 +1,4 @@
-import GetUserRecommendations from '../api/getRecommendations'
+import GetFeatured from '../api/getFeatured'
 
 export default function Explore() {
 
@@ -6,7 +6,7 @@ export default function Explore() {
     <div className="page-wrap">
       <div className="main-content">
         <h1 className="featured">Spotify featured playlists:</h1>
-          <GetUserRecommendations />
+          <GetFeatured />
       </div>
     </div>
   )
