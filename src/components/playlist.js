@@ -146,9 +146,14 @@ function Playlist({ playerIsHidden }) {
     
   },[draggables])
 
+  // cleanup arrays when playlist changes
+  useEffect(() => {
+    setDraggables([])
+    setSongs([])
+  },[playlistData.playlist_id])
+
   // when player sends callback state update, run this effect
   useEffect(() => {
-
     // only run effect on track updates
     if(playerCBData.type === 'track_update') {
       console.log('track update run')
@@ -182,7 +187,6 @@ function Playlist({ playerIsHidden }) {
       }
       getPlaylistItems()
     }
-
   },[playerCBData])
 
   return (
