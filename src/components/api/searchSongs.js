@@ -4,15 +4,25 @@ import { LoginStatusCtx } from "../login";
 
 export default function SearchSongs() {
 
-  const API_URL = 'https://api.spotify.com/v1/search'
-
-  const {token, setToken} = useContext(LoginStatusCtx)
+  const { token, setToken } = useContext(LoginStatusCtx)
+  const { playlistData, setPlaylistData } = useContext(LoginStatusCtx)
 
   const [tracks, setTracks] = useState([])
   const [search, setSearch] = useState('')
   const trackElement = useRef([])
   const searchElement = useRef('')
   const inputElement = useRef('')
+
+  function playSong(song) {
+    console.log(song)
+    // save currently playing playlist data to global context
+    setPlaylistData({
+      uris: song.uri,
+      play: true,
+      autoplay: true,
+      offset: 0
+    })
+  }
 
   useEffect(() => {
 
@@ -48,7 +58,7 @@ export default function SearchSongs() {
       searchSongs()
       async function searchSongs() {
       try {
-        const {data} = await axios.get(API_URL, {
+        const {data} = await axios.get('https://api.spotify.com/v1/search', {
           headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`,
@@ -93,7 +103,7 @@ export default function SearchSongs() {
                   return `${artist.name}, `
                 })}
               </span>
-              <button className="play">
+              <button className="play" onClick={() => playSong(result)}>
                 <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
               </button>
             </div>
