@@ -15,16 +15,21 @@ function Login() {
   const REDIRECT_URI = "http://localhost:3000"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
-  const SCOPE = 'user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-read-private%20streaming'
+  const SCOPE = 'user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-modify-public%20playlist-read-private%20streaming'
 
   // Global context items
   const [token, setToken] = useState('')
-  const [playerData, setPlayerData] = useState({
-    uris: [],
-    play: false,
-    offset: 0
+  const [playerCBData, setPlayerCBData] = useState({
+    is_playing: true,
+    progress_ms: 0,
+    volume: 0,
+    deviceId: '',
+    track_id: ''
   })
   const [playlistData, setPlaylistData] = useState({
+    uris: [],
+    play: true,
+    autoplay: true,
     playlist_id: '',
     playlist_name: '',
     playlist_uri: '',
@@ -50,7 +55,7 @@ function Login() {
   },[token])
   
   return (
-    <LoginStatusCtx.Provider value={{token, setToken, playerData, setPlayerData, playlistData, setPlaylistData}}>
+    <LoginStatusCtx.Provider value={{token, setToken, playlistData, setPlaylistData, playerCBData, setPlayerCBData}}>
     {
       !token ?
       <div className="login-wrap">
