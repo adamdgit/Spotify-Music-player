@@ -1,0 +1,45 @@
+.home-result {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  border-bottom: 1px solid var(--secondary-blue);
+  padding:15px;
+  align-items: center;
+}
+
+.home-result:hover {
+  border-bottom: 1px solid var(--blue);
+  border-left: 1px solid var(--secondary-blue);
+  border-right: 1px solid var(--secondary-blue);
+  box-shadow: 0 5px 8px #111;
+}
+
+.home-result img {
+  width: 110px;
+  height: 110px;
+  border: 4px solid var(--secondary-blue);
+}
+
+.home-category {
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  align-items: center;
+}
+
+.category-playlists {
+  padding: .8rem;
+  font-size: .9rem;
+}
+
+.category-item {
+  display: grid;
+  padding: 1rem;
+  border-bottom: 1px solid var(--secondary-blue);
+}
+
+.home-category .play {
+  padding: 1rem;
+}
+
+.home-result {
+  
+}
