@@ -19,9 +19,7 @@
   min-width: 450px;
   text-transform: uppercase;
   border-bottom: 1px solid var(--secondary-blue);
-  border-right: 1px solid var(--secondary-blue);
-  background-color: var(--bg-blue);
-  box-shadow: inset 3px 3px 12px #111;
+  background: linear-gradient(180deg, rgba(18,22,27,1) 0%, rgba(255,255,255,0) 75%);
   padding: 10px;
   margin: 0 0 20px 0;
   font-size: .6rem;
@@ -35,19 +33,8 @@
   height: calc(100vh - 210px);
 }
 
-.container {
-}
-
-.draggable h1 {
-  font-size: 1rem;
-}
-
-.draggable h2 {
-  font-size: .8rem;
-}
-
 .playlist-title {
-  padding:20px 0;
+  padding: 20px 0;
   text-align: center;
   color: white;
 }
@@ -56,22 +43,37 @@
   position: relative;
   color: white;
   background-color: var(--secondary-blue);
-  margin:5px 0;
+  margin: 5px 0;
   width: 100%;
   min-width: 450px;
   height: 100px;
   display: grid;
-  grid-template-columns: 18px 80px auto 8%;
+  grid-template-columns: 18px 80px auto 40px 20px;
   align-items: center;
-  padding:10px;
+  justify-items: center;
+  padding: 10px;
   cursor: move;
-  gap:10px;
-  text-overflow:ellipsis;
+  gap: 10px;
+  text-overflow: ellipsis;
   font-size: .9rem;
 }
 
 .draggable:hover {
   background-color: var(--bg-blue);
+}
+
+.draggable h1 {
+  font-size: 1rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.draggable h2 {
+  font-size: .8rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .draggable img {
@@ -85,8 +87,24 @@
 .draggable .song-length {
   font-size: .8rem;
 }
-/* Lyrics section */
 
+.draggable .draggable-trackname {
+  width: 100%;
+  min-width: 200px;
+  max-width: 800px;
+}
+
+.draggable .remove-track-btn {
+  color: white;
+  background: none;
+  padding: 5px 8px;
+}
+
+.draggable .remove-track-btn:hover {
+  color: rgb(216, 0, 0);
+}
+
+/* Lyrics section */
 .song-wrap {
   overflow-y: scroll;
   border-top: 3px solid var(--secondary-blue);
@@ -105,11 +123,16 @@
   box-shadow: 0 0 12px #111;
   display: grid;
   justify-content: center;
+  text-align: center;
+}
+
+.lyrics-title {
+  margin-bottom: 20px;
 }
 
 .song-info {
   display: grid;
-  justify-content: center;
+  justify-items: center;
   gap:1rem;
   padding: 60px 40px 140px;
   margin-bottom: 20px;
@@ -131,11 +154,6 @@
 
 .song-info ul li h3 {
   width: 120px;
-}
-
-.verse {
-  display: block;
-  margin:20px 0;
 }
 
 /*-----Drag & Drop-----*/

@@ -1,4 +1,7 @@
 .page-wrap {
+  position: fixed;
+  margin-top: 100px;
+  width: 100%;
   height: calc(100vh - 200px);
   overflow-y: auto;
 }
@@ -25,9 +28,7 @@
 
 .explore-result:hover {
   border-bottom: 1px solid var(--blue);
-  border-left: 1px solid var(--secondary-blue);
-  border-right: 1px solid var(--secondary-blue);
-  box-shadow: 0 5px 8px #111;
+  box-shadow: 0 7px 15px #111;
 }
 
 .explore-result img {

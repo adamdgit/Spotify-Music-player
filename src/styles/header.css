@@ -1,15 +1,16 @@
 .header-bar {
-  padding: 0 20px;
-  border-bottom: 5px solid var(--secondary-blue);
-  box-shadow: 0 5px 12px #111;
-  width: 100%;
-  background-color: var(--bg-blue);
+  position: fixed;
   display: grid;
   grid-template-columns: 1fr 3fr 150px;
   align-items: center;
   justify-items: center;
-  z-index: 200;
   gap: 2rem;
+  background-color: var(--bg-blue);
+  padding: 0 20px;
+  border-bottom: 5px solid var(--secondary-blue);
+  box-shadow: 0 5px 12px #111;
+  width: 100%;
+  z-index: 200;
 }
 
 .header-bar h1 {
@@ -155,7 +156,7 @@
 .search-result {
   font-size: .9rem;
   display: grid;
-  grid-template-columns: 90px auto 80px;
+  grid-template-columns: 90px auto 80px 50px;
   gap: 1rem;
   padding: 15px 0;
   align-items: center;
@@ -164,4 +165,58 @@
 
 .search-result:hover {
   border-bottom: 1px solid var(--blue);
+}
+
+.add-to-playlist {
+  position: relative;
+  background-color: var(--bg-blue);
+  border: 1px solid var(--secondary-blue);
+  border-radius: 4px;
+  padding: 6px 10px 4px 10px;
+  color: white;
+  font-size: .9rem;
+  justify-self: flex-end;
+  box-shadow: inset 2px 2px 5px black;
+}
+
+.choose-playlist {
+  color:white;
+  background:var(--primary-blue);
+  display: none;
+  border-radius: 10px;
+  position: absolute;
+  z-index: 888;
+  left:-250px;
+  top:35px;
+  box-shadow: 1px 1px 10px black;
+  padding: 10px 20px;
+}
+
+.choose-playlist h3 {
+  padding: 10px;
+}
+
+.choose-playlist ul li {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid var(--secondary-blue);
+  border-radius: 5px;
+  padding: 15px 20px;
+  margin: 10px 0;
+}
+
+.choose-playlist ul li:hover {
+  color: var(--blue);
+  border-color: var(--blue);
+}
+
+.show-p {
+  display: block;
+}
+
+.add-to-playlist:hover {
+  color: var(--blue);
+  border:1px solid var(--blue)
 }
