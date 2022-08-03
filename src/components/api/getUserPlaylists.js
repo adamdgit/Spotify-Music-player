@@ -1,29 +1,23 @@
-import { useEffect, useContext, useState, useRef } from "react"
+import { useEffect, useContext, useState } from "react"
 import axios from "axios"
 import { LoginStatusCtx } from "../login";
 
 export default function GetUserPlaylists() {
 
-  const { token, setToken } = useContext(LoginStatusCtx)
-  const { playlistData, setPlaylistData } = useContext(LoginStatusCtx)
+  const { token } = useContext(LoginStatusCtx)
+  const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
+  const { playerOffset, setPlayerOffset } = useContext(LoginStatusCtx)
+  const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
 
   const [playlists, setPlaylists] = useState([])
   
   function playPlaylist(playlist){
-    console.log(playlist)
+    console.log(playlist.uri)
+    console.log(playlist.id)
     // save currently playing playlist data to global context
-    setPlaylistData({
-      uris: [playlist.uri],
-      play: true,
-      autoplay: true,
-      offset: 0,
-      playlist_id: playlist.id,
-      playlist_name: playlist.name,
-      playlist_uri: playlist.uri,
-      playlist_image: playlist.images[0].url,
-      playlist_tracks_href: playlist.tracks.href,
-      playlist_desc: playlist.description
-    })
+    setPlayerURIS(playlist.uri)
+    setPlaylistID(playlist.id)
+    setPlayerOffset(0)
   }
 
   useEffect(() => {
@@ -36,22 +30,21 @@ export default function GetUserPlaylists() {
             'Content-Type': 'application/json',
           }
         }).then((res) => {
-          console.log(res.data.items)
           setPlaylists(res.data.items)
         }).catch(error => console.error(error))
     }
     getPlaylists()
 
-  },[])
+  },[token])
 
   return (
       <>
         {
-        playlists.length != 0 ?
+        playlists.length !== 0 ?
         playlists.map((result, i) => {
           return (
             <div key={i} className={'explore-result'}>
-              <img src={result.images[0].url} width={'200px'} height={'200px'} />
+              <img src={result.images[0].url} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
               <h2>{result.name}</h2>
               <p>{result.description}</p>
               <button className="play" onClick={() => playPlaylist(result)}>
@@ -60,7 +53,7 @@ export default function GetUserPlaylists() {
             </div>
           )
         })
-        : <></>
+        : <h1>No playlists found</h1>
       }
     </>
   )
