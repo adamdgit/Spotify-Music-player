@@ -5,9 +5,7 @@ import axios from "axios"
 export default function Home() {
 
   // global context
-  const { token, setToken } = useContext(LoginStatusCtx)
-  const { playlistData, setPlaylistData } = useContext(LoginStatusCtx)
-  const { playerCBData, setPlayerCBData } = useContext(LoginStatusCtx)
+  const { token } = useContext(LoginStatusCtx)
 
   const [categories, setCategories] = useState([])
   const [categoryPlaylists, setCategoryPlaylists] = useState([])
@@ -21,7 +19,7 @@ export default function Home() {
       }
     }).then((res) => {
       setCategoryPlaylists(res.data.playlists.items)
-    }).catch(error => console.error(error))
+    }).catch(error => console.error(error))   
   }
 
   useEffect(() => {
@@ -39,7 +37,7 @@ export default function Home() {
     }
     getCurrentTrack()
 
-  },[])
+  },[token])
 
   return (
     <div className="page-wrap">
@@ -59,12 +57,12 @@ export default function Home() {
         }
         </div>
         {
-          categories.length != 0 ?
+          categories.length !== 0 ?
           categories.map((result, i) => {
             return (
-              <div key={i} className={'home-result'}>
+              <div key={i} className={'home-result'} data-id={result.id}>
                 <span className="home-category">
-                  <img src={result.icons[0].url} width={'200px'} height={'200px'} />
+                  <img src={result.icons[0].url} alt={result.name + 'icon'} width={'200px'} height={'200px'} />
                   <h2>{result.name}</h2>
                   <button className="play" onClick={() => getCategoryPlaylist(result.id)}>
                     Explore {result.name}
