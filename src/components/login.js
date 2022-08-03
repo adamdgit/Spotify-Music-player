@@ -24,19 +24,12 @@ function Login() {
     progress_ms: 0,
     volume: 0,
     deviceId: '',
-    track_id: ''
+    track_id: '',
+    type: ''
   })
-  const [playlistData, setPlaylistData] = useState({
-    uris: [],
-    play: true,
-    autoplay: true,
-    playlist_id: '',
-    playlist_name: '',
-    playlist_uri: '',
-    playlist_image: '',
-    playlist_tracks_href: '',
-    playlist_desc: ''
-  })
+  const [playerURIS, setPlayerURIS] = useState('')
+  const [playerOffset, setPlayerOffset] = useState(0)
+  const [playlistID, setPlaylistID] = useState('')
 
   useEffect(() => {
 
@@ -55,7 +48,7 @@ function Login() {
   },[token])
   
   return (
-    <LoginStatusCtx.Provider value={{token, setToken, playlistData, setPlaylistData, playerCBData, setPlayerCBData}}>
+    <LoginStatusCtx.Provider value={{token, playlistID, setPlaylistID, setToken, playerURIS, setPlayerURIS, playerOffset, setPlayerOffset, playerCBData, setPlayerCBData}}>
     {
       !token ?
       <div className="login-wrap">
