@@ -16,31 +16,23 @@ function Header() {
   }
 
   useEffect(() => {
-    // get logged in user's display name
-    async function getUserData() {
-      const API_URL = `https://api.spotify.com/v1/me`
-        try {
-          const {data} = await axios.get(API_URL, {
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            }
-          })
-          return setUsername(data.display_name)
-        } catch (error) {
-          console.error(error)
-          // if token is expired log out user
-          if(error.response.data.error.message == 'The access token expired') {
-            logout()
-          }
-        }
-    }
-
     if(token) {
-      getUserData()
+      // get logged in user's display name
+      axios.get(`https://api.spotify.com/v1/me`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      }).then((res) => {
+        return setUsername(res.data.display_name)
+      }).catch(error => {
+        console.error(error)
+        if(error.response.data.error.message == 'The access token expired') {
+          logout()
+        }
+      })
     }
-    
   },[])
 
   return (
