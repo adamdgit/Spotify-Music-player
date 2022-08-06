@@ -16,6 +16,10 @@ function Playlist({ playerIsHidden }) {
   const [currentSong, setCurrentSong] = useState()
   const [songs, setSongs] = useState([])
   const [draggables, setDraggables] = useState([])
+  const [playlistName, setPlaylistName] = useState('No playlist data')
+  const [Username, setUsername] = useState('')
+  const [playlists, setPlaylists] = useState([])
+
   let dragElIndex = 0
   let dragElNewIndex = 0
   let moveEl = null
@@ -43,10 +47,8 @@ function Playlist({ playerIsHidden }) {
     );
   }
 
-  function changePlaylistSong(offset){
-    //setPlayerOffset(offset)
-    //setPlayerURIS('')
-    return axios({ 
+  async function changePlaylistSong(offset){
+    await axios({ 
       method: 'put', 
       url: 'https://api.spotify.com/v1/me/player/play', 
       headers: { 'Authorization': 'Bearer ' + token }, 
@@ -57,9 +59,7 @@ function Playlist({ playerIsHidden }) {
     })
   }
 
-  // remove selected track from playlist and re-load playlist
   async function removeTrackFromPlaylist(trackURI) {
-    // delete track from playlist
     await axios({ 
       method: 'delete', 
       url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
@@ -70,6 +70,36 @@ function Playlist({ playerIsHidden }) {
         }]
       }
     }).catch(error => console.error(error))
+    await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=50`, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    }).then((res) => {
+      setSongs(res.data.items)
+    }).catch(error => console.error(error))
+  }
+
+  async function changePlaylistOrder(dragElIndex, dragElNewIndex) {
+    // add 1 to index as API requires 'insert before' not insert at
+    // dont change index if value is 0
+    if(dragElNewIndex !== 0) {
+      dragElNewIndex = dragElNewIndex+1
+    }
+    // send playlist track index changes to API
+    await axios({ 
+      method: 'put', 
+      url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
+      headers: { 'Authorization': 'Bearer ' + token }, 
+      data: {
+        "range_start": dragElIndex, // first item to change
+        "insert_before": dragElNewIndex, // location to insert item
+        "range_length": 1 // number of items to change
+      }
+    })
+    setSongs([])
+    setDraggables([])
     // get newly updated playlist items
     await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=50`, {
       headers: {
@@ -82,10 +112,57 @@ function Playlist({ playerIsHidden }) {
     }).catch(error => console.error(error))
   }
 
-  // whenever new playlist items (draggables) are created add event listeners
-  useEffect(() => {
+  async function addTrackToPlaylist(resultURI, playlistid) {
+    await axios({ 
+      method: 'post', 
+      url: `https://api.spotify.com/v1/playlists/${playlistid}/tracks`, 
+      headers: { 'Authorization': 'Bearer ' + token }, 
+      data: {
+        "uris": [`${resultURI}`]
+      }
+    })
+    document.querySelector('.show-p').classList.remove('show-p')
+  }
 
-    // todo: only allow re-ordering of user owned playlists
+  function showHideAddToPlaylist(e) {
+    if(!e.classList.contains('add-to-playlist')) return
+    // if add to playlist button is clicked but a different buttons hidden
+    // element is showing, hide it
+    if(e.classList.contains('add-to-playlist') && document.querySelector('.show-p') && !e.querySelector('.show-p')) {
+      document.querySelector('.show-p').classList.remove('show-p')
+    }
+    // if hidden element is shown, hide it
+    if(e.querySelector('.show-p')) {
+      e.querySelector('.show-p').classList.remove('show-p')
+    //if hidden element is hidden, show it
+    } else {
+      e.querySelector('.choose-playlist').classList.add('show-p')
+    }
+  }
+
+  useEffect(() => {
+    // get playlists for add to playlist functionality
+    const getPlaylists = async () => {
+      await axios.get('https://api.spotify.com/v1/me/playlists', {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      }).then((res) => {
+        setPlaylists(res.data.items)
+      }).catch(error => console.error(error))
+    }
+    getPlaylists()
+  },[token])
+
+  useEffect(() => {
+    // when playlist changes, draggables array is emptied
+    // we don't want to run through all this code on empty array
+    // only run code when new draggables array is populated
+    if(draggables.length === 0) return
+
+    // add event listeners for drag & drop functionality
     draggables.forEach(element => {
       element.addEventListener('dragstart', drag)
     })
@@ -104,7 +181,6 @@ function Playlist({ playerIsHidden }) {
       clone.style.setProperty('--x', e.clientX + 'px')
       clone.style.setProperty('--y', e.clientY + 'px')
       clone.classList.add('dragging')
-  
       // stop dragstart event listener to allow mousemove listener to take over
       e.preventDefault()
       document.addEventListener('mousemove', mousePos)
@@ -136,16 +212,13 @@ function Playlist({ playerIsHidden }) {
   
     // on mouseup delete the clone and place original element in its current position
     function placeClone() {
-
       if (document.querySelector('.move')) {
         // get drag & dropped element reference
         const tempEl = document.querySelector('.move')
-
         document.querySelector('.move').classList.remove('move')
         document.removeEventListener('mousemove', mousePos)
         document.removeEventListener('mouseup', placeClone)
         clone.remove()
-
         // get nodelist from html and convert to array
         // check converted array for drag & drop elements new index in playlist
         const draggableNodeList = document.querySelectorAll('.draggable')
@@ -155,28 +228,18 @@ function Playlist({ playerIsHidden }) {
         draggables.splice(dragElNewIndex, 0, draggables.splice(dragElIndex, 1)[0]);
         // if position is unchanged, dont send api request
         if(dragElIndex === dragElNewIndex) return
-        // send playlist index changes to API
-        return axios({ 
-          method: 'put', 
-          url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
-          headers: { 'Authorization': 'Bearer ' + token }, 
-          data: {
-            "range_start": dragElIndex, // first item to change
-            "insert_before": dragElNewIndex, // location to insert item
-            "range_length": 1 // number of items to change
-          }
-        })
-
+        // delay changes to prevent bugs
+        setTimeout(() => {
+          changePlaylistOrder(dragElIndex, dragElNewIndex)
+        }, 500)
       }
     }
-
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
         element.removeEventListener('dragstart', drag)
       })
     }
-    
   },[draggables])
 
   // cleanup arrays when playlist changes
@@ -192,10 +255,8 @@ function Playlist({ playerIsHidden }) {
 
       console.log('track update callback')
 
-      let currentTrackID = playerCBData.track_id
-
       const getCurrentTrack = async () => {
-        await axios.get(`https://api.spotify.com/v1/tracks/${currentTrackID}`, {
+        await axios.get(`https://api.spotify.com/v1/tracks/${playerCBData.track_id}`, {
           headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${token}`,
@@ -210,14 +271,17 @@ function Playlist({ playerIsHidden }) {
       // only run when playlist is playing, not single track
       if(playlistID) {
         const getPlaylistItems = async () => {
-          await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=50`, {
+          await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}?limit=50`, {
             headers: {
               Accept: 'application/json',
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             }
           }).then((res) => {
-            setSongs(res.data.items)
+            // can get owner
+            setUsername(res.data.owner.display_name)
+            setPlaylistName(res.data.name)
+            setSongs(res.data.tracks.items)
           }).catch(error => console.error(error))
         }
         getPlaylistItems()
@@ -226,12 +290,12 @@ function Playlist({ playerIsHidden }) {
   },[playerCBData, playlistID, token])
 
   return (
-    <div className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"} ref={playlist}>
+    <div style={!playlistID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"} ref={playlist}>
       
-      <GetCurrentlyPlaying currentSong={currentSong}/>
+      <GetCurrentlyPlaying currentSong={currentSong} />
 
-      <div className="playlist">
-        <h1 className="playlist-title">{}</h1>
+      <div className={!playlistID ? "hide" : "playlist"}>
+        <h1 className="playlist-title">{playlistName}</h1>
         <div className="song-category">
           <h3>#</h3>
           <h3>Album</h3>
@@ -243,19 +307,6 @@ function Playlist({ playerIsHidden }) {
           {
             playlistID? songs.map((song, index) => {
               return (
-                song.track === null ? 
-                <span key={index} className={"draggable"} draggable="true" ref={setDraggableElement}>
-                  <span>{index+1}</span>
-                  <img src='' alt='' />
-                  <span>
-                    <h1>Track unavailable</h1>
-                    <span></span>
-                  </span>
-                  <span>
-                    <p className="song-length"></p>
-                  </span>
-                </span>
-                :
                 <span key={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
                   <img src={song.track.album.images.length !== 0 ? song.track.album.images[0].url : ''} 
@@ -263,6 +314,7 @@ function Playlist({ playerIsHidden }) {
                   draggable="false"
                   onClick={() => changePlaylistSong(index)}
                   />
+                  <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
                     <h2>
@@ -274,14 +326,35 @@ function Playlist({ playerIsHidden }) {
                     </h2>
                   </span>
                   <p className="song-length">{convertTime(song.track.duration_ms)}</p>
-                  <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrackFromPlaylist(song.track.uri)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
-                  </button>
+                  {
+                    Username === 'Adam' ?
+                    <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrackFromPlaylist(song.track.uri)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+                    </button>
+                    :
+                    <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylist(e.target)}>
+                      <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
+                      <span className={"choose-playlist"}>
+                        <h3>Add to playlist:</h3>
+                        <ul>
+                          {
+                            playlists? playlists.map((playlist, index) => {
+                              return <li key={index} style={{listStyle:"none"}} onClick={() => addTrackToPlaylist(song.track.uri, playlist.id)}>{playlist.name}</li>
+                            })
+                            : <li>No playlists found</li>
+                          }
+                        </ul>
+                      </span>
+                    </button>
+                  }
                 </span>
               )
             }) : <h1>No playlist available</h1>
           }
         </div>
+      </div>
+      <div className="playlist-update-message">
+        <h2>Track added to playlist</h2>
       </div>
     </div>
   ) 
