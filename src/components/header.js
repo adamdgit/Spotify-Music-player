@@ -39,9 +39,6 @@ function Header() {
     <header className="header-bar">
       <ul className="nav-bar">
         <NavLink to="/" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
-          <li>Home</li>
-        </NavLink>
-        <NavLink to="/explore" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
           <li>Explore</li>
         </NavLink>
         <NavLink to="/playlists" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
