@@ -28,6 +28,7 @@ export default function GetFeatured() {
           'Content-Type': 'application/json',
         }
       }).then((res) => {
+        console.log(res.data)
         setResults(res.data.playlists.items)
       }).catch(error => console.error(error))
     }
