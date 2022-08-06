@@ -33,8 +33,7 @@ export default function SearchSongs() {
   },[token])
 
   function addTrackToPlaylist(resultURI, playlistid) {
-    alert('playlist updated')
-    return axios({ 
+    axios({ 
       method: 'post', 
       url: `https://api.spotify.com/v1/playlists/${playlistid}/tracks`, 
       headers: { 'Authorization': 'Bearer ' + token }, 
@@ -42,19 +41,25 @@ export default function SearchSongs() {
         "uris": [`${resultURI}`]
       }
     })
+    document.querySelector('.show-p').classList.remove('show-p')
+    setTracks([])
+    inputElement.current.value = ''
   }
 
   function showHideAddToPlaylist(e) {
-    // prevent clicking on child elements
     if(!e.classList.contains('add-to-playlist')) return
-    // if button is clicked show hidden drop down
-    const hiddenDropDown = e.querySelector('.choose-playlist')
-    if(hiddenDropDown.classList.contains('show-p')) {
-      hiddenDropDown.classList.remove('show-p')
-    } else {
-      hiddenDropDown.classList.add('show-p')
+    // if add to playlist button is clicked but a different buttons hidden
+    // element is showing, hide it
+    if(e.classList.contains('add-to-playlist') && document.querySelector('.show-p') && !e.querySelector('.show-p')) {
+      document.querySelector('.show-p').classList.remove('show-p')
     }
-
+    // if hidden element is shown, hide it
+    if(e.querySelector('.show-p')) {
+      e.querySelector('.show-p').classList.remove('show-p')
+    //if hidden element is hidden, show it
+    } else {
+      e.querySelector('.choose-playlist').classList.add('show-p')
+    }
   }
 
   function playSong(song) {
