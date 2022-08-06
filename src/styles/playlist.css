@@ -34,7 +34,7 @@
 }
 
 .playlist-title {
-  padding: 20px 0;
+  padding: 30px 0 40px;
   text-align: center;
   color: white;
 }
@@ -48,7 +48,7 @@
   min-width: 450px;
   height: 100px;
   display: grid;
-  grid-template-columns: 18px 80px auto 40px 20px;
+  grid-template-columns: 18px 80px auto 40px max-content;
   align-items: center;
   justify-items: center;
   padding: 10px;
@@ -110,6 +110,7 @@
   border-top: 3px solid var(--secondary-blue);
   padding-bottom: 260px;
   background-color: var(--bg-blue);
+  height: inherit;
 }
 
 .lyrics-wrap {
@@ -146,6 +147,10 @@
   max-width: 350px;
 }
 
+.song-info h2 {
+  text-align: center;
+}
+
 .song-info ul li {
   display: flex;
   list-style: none;
@@ -171,4 +176,34 @@
 
 .selected {
   border: 1px solid var(--blue);
+}
+
+.draggable img:hover ~ .play-song-tooltip {
+  display: block;
+  position: absolute;
+  padding: 0 10px;
+  background-color: var(--primary-blue);
+  color: var(--blue);
+  border: 1px solid var(--secondary-blue);
+  border-radius: 4px;
+  left: -7px;
+  top: 35px;
+}
+
+.play-song-tooltip {
+  display: none;
+}
+
+.playlist-update-message {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  background-color: var(--bg-blue);
+  color: white;
+  padding: 10px 20px;
+  border: 1px solid var(--blue);
+  border-radius: 5px;
+  bottom: 220px;
+  left: 50%;
+  transform: translateX(-50%);
 }

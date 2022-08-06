@@ -180,9 +180,10 @@
 }
 
 .choose-playlist {
+  display: none;
   color:white;
   background:var(--primary-blue);
-  display: none;
+  max-height: 350px;
   border-radius: 10px;
   position: absolute;
   z-index: 888;
@@ -190,6 +191,7 @@
   top:35px;
   box-shadow: 1px 1px 10px black;
   padding: 10px 20px;
+  overflow-y: auto;
 }
 
 .choose-playlist h3 {
