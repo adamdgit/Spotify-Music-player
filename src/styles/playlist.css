@@ -8,6 +8,10 @@
   transition: transform 400ms ease-in-out;
 }
 
+.hidden {
+  display: none;
+}
+
 .hide {
   transform: translateY(100vh);
 }

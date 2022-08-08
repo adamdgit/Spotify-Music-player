@@ -113,3 +113,7 @@
 .controls button:hover {
   color:var(--blue)
 }
+
+._ActionsRSWP ._VolumeRSWP {
+  display: inline-block;
+}

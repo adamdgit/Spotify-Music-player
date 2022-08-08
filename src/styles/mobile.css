@@ -1,0 +1,87 @@
+@media only screen and (max-width: 899px){ 
+
+  .login-wrap {
+    padding: 0 30px;
+  }
+
+  .login {
+    width: auto;
+    min-width: 200px;
+  }
+
+  .page-wrap {
+    margin-top: 180px;
+    height: calc(100vh - 350px);
+  }
+
+  .main-content {
+    padding: 50px 20px;
+  }
+
+  .explore-result {
+    grid-template-columns:unset;
+    grid-template-rows:1fr 60px auto 60px;
+    justify-items: center;
+  }
+
+  .explore-result button {
+    justify-self: center;
+  }
+
+  .playlist-wrap {
+    top: 180px;
+    grid-template-columns: unset;
+    overflow-y: auto;
+  }
+
+  .playlist {
+    background-color: var(--primary-blue);
+    overflow-y: unset;
+    height: 100%;
+    margin-bottom: 350px;
+  }
+
+  .lyrics-wrap {
+    display: none;
+  }
+
+  .song-wrap {
+    overflow-y: unset;
+    height: unset;
+    padding-bottom: unset;
+  }
+
+  .song-info {
+    padding-bottom: 60px;
+  }
+
+  .header-bar {
+    grid-template-columns: unset;
+    grid-template-rows: 1fr 1fr auto;
+    gap: .5rem;
+  }
+
+  .nav-bar {
+    margin-top: unset;
+    min-width: 100px;
+    grid-row: 3;
+  }
+
+  .search-results-wrap {
+    z-index: 999;
+  }
+
+  .search-bar {
+    margin: 5px 0 10px 0;
+  }
+
+  .user-info {
+    grid-row: 1;
+  }
+
+  .user-info span {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}
