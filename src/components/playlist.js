@@ -294,7 +294,7 @@ function Playlist({ playerIsHidden }) {
       
       <GetCurrentlyPlaying currentSong={currentSong} />
 
-      <div className={!playlistID ? "hide" : "playlist"}>
+      <div className={!playlistID ? "hidden" : "playlist"}>
         <h1 className="playlist-title">{playlistName}</h1>
         <div className="song-category">
           <h3>#</h3>
