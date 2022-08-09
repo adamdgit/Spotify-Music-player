@@ -68,6 +68,8 @@ export default function SearchSongs() {
     setPlayerURIS(song.uri)
     // remove playlist ID as track is playing not playlist
     setPlaylistID('')
+    setTracks([])
+    inputElement.current.value = ''
   }
 
   useEffect(() => {
