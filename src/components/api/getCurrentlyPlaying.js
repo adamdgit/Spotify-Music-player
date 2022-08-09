@@ -52,6 +52,7 @@ export default function GetCurrentlyPlaying({...props}) {
     <div className="lyrics-wrap">
       <h2 className="lyrics-title">Lyrics</h2>
       <span className='lyrics'>
+        connect lyrics api here...
       </span>
     </div>
     
