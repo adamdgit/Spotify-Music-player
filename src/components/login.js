@@ -49,12 +49,12 @@ function Login() {
   return (
     <LoginStatusCtx.Provider value={{token, playlistID, setPlaylistID, setToken, playerURIS, setPlayerURIS, playerOffset, setPlayerOffset, playerCBData, setPlayerCBData}}>
     {
-      !token ?
+    !token ?
       <div className="login-wrap">
         <h1>Login to your spotify account to use this app.</h1>
         <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`} className="login">Connect Spotify</a>
       </div>
-      :
+    :
       <>
         <Header />
         <Routes>
