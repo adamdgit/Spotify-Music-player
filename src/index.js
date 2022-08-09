@@ -6,6 +6,7 @@ import './styles/controls.css'
 import './styles/playlist.css'
 import './styles/explore.css'
 import './styles/home.css'
+import './styles/mobile.css'
 import Login from './components/login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
