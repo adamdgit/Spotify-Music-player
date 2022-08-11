@@ -1,6 +1,6 @@
 import axios from "axios"
 
-let errorMsg = null
+let errorMsg
 
 export async function addTrackToPlaylist(resultURI, playlistid, token) {
   await axios({ 
@@ -13,5 +13,5 @@ export async function addTrackToPlaylist(resultURI, playlistid, token) {
   }).catch(error => errorMsg = error)
   document.querySelector('.show-p').classList.remove('show-p')
 
-  if(errorMsg !== null) return errorMsg
+  if(errorMsg) return errorMsg
 }
