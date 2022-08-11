@@ -1,5 +1,7 @@
 import axios from "axios"
 
+let errorMsg
+
 export async function changePlaylistSong(offset, token, playerURIS){
   await axios({ 
     method: 'put', 
@@ -9,5 +11,7 @@ export async function changePlaylistSong(offset, token, playerURIS){
       "context_uri": `${playerURIS}`,
       "offset": { "position": offset }
     }
-  })
+  }).catch(error => errorMsg = error)
+  
+  if(errorMsg) return errorMsg
 }
