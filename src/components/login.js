@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Header from "./header";
 import Controls from './controls';
@@ -47,7 +46,11 @@ function Login() {
   },[token])
   
   return (
-    <LoginStatusCtx.Provider value={{token, playlistID, setPlaylistID, setToken, playerURIS, setPlayerURIS, playerOffset, setPlayerOffset, playerCBData, setPlayerCBData}}>
+    <LoginStatusCtx.Provider value={{token, setToken, 
+      playlistID, setPlaylistID, 
+      playerURIS, setPlayerURIS, 
+      playerOffset, setPlayerOffset, 
+      playerCBData, setPlayerCBData}}>
     {
     !token ?
       <div className="login-wrap">
