@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import React from 'react';
-import { LoginStatusCtx } from "./login";
 import axios from "axios";
 import CurrentSong from "./currentSong";
+import { useState, useEffect, useRef, useContext, useCallback } from "react";
+import { LoginStatusCtx } from "./login";
 import { changePlaylistSong } from "./api/changePlaylistSong";
 import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
 import { changePlaylistOrder } from "./api/changePlaylistOrder"
+import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
 
 function Playlist({ playerIsHidden }) {
 
@@ -22,12 +23,12 @@ function Playlist({ playerIsHidden }) {
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [Username, setUsername] = useState('')
   const [playlists, setPlaylists] = useState([])
+  const [showMessage, setShowMessage] = useState(false)
 
+  // variables for drag and drop function
   let dragElIndex = 0
   let dragElNewIndex = 0
   let moveEl = null
-
-  // variables for drag and drop function
   const container = useRef()
   const playlist = useRef()
   // Update draggables array after elements are created using useCallback
@@ -72,16 +73,14 @@ function Playlist({ playerIsHidden }) {
       }) 
   }
 
-  async function addTrackToPlaylist(resultURI, playlistid) {
-    await axios({ 
-      method: 'post', 
-      url: `https://api.spotify.com/v1/playlists/${playlistid}/tracks`, 
-      headers: { 'Authorization': 'Bearer ' + token }, 
-      data: {
-        "uris": [`${resultURI}`]
-      }
-    })
-    document.querySelector('.show-p').classList.remove('show-p')
+  const addToPlaylist = async (resultURI, playlistid) => {
+    addTrackToPlaylist(resultURI, playlistid, token)
+      .then(result => console.error(result))
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
   }
 
   function showHideAddToPlaylist(e) {
@@ -299,7 +298,7 @@ function Playlist({ playerIsHidden }) {
                         <ul>
                           {
                             playlists? playlists.map((playlist, index) => {
-                              return <li key={index} style={{listStyle:"none"}} onClick={() => addTrackToPlaylist(song.track.uri, playlist.id)}>{playlist.name}</li>
+                              return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(song.track.uri, playlist.id)}>{playlist.name}</li>
                             })
                             : <li>No playlists found</li>
                           }
@@ -313,8 +312,9 @@ function Playlist({ playerIsHidden }) {
           }
         </div>
       </div>
-      <div className="playlist-update-message">
+      <div className={showMessage === true ? "playlist-update-message show" : "playlist-update-message"}>
         <h2>Track added to playlist</h2>
+        <span className="triangle"></span>
       </div>
     </div>
   ) 
