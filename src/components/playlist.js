@@ -7,6 +7,7 @@ import { changePlaylistSong } from "./api/changePlaylistSong";
 import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
 import { changePlaylistOrder } from "./api/changePlaylistOrder"
 import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
+import { showHideAddToPlaylistBtn } from "./func/showHideAddToPlaylistBtn"
 
 function Playlist({ playerIsHidden }) {
 
@@ -23,7 +24,9 @@ function Playlist({ playerIsHidden }) {
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [Username, setUsername] = useState('')
   const [playlists, setPlaylists] = useState([])
+  // playlist update message
   const [showMessage, setShowMessage] = useState(false)
+  const [message, setMessage] = useState('')
 
   // variables for drag and drop function
   let dragElIndex = 0
@@ -61,6 +64,12 @@ function Playlist({ playerIsHidden }) {
         if(result.length > 0) return setSongs(result)
         console.error(result)
       }) 
+    setMessage('Song removed from playlist')
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
   }
 
   const changeOrder = async (dragElIndex, dragElNewIndex) => {
@@ -76,6 +85,7 @@ function Playlist({ playerIsHidden }) {
   const addToPlaylist = async (resultURI, playlistid) => {
     addTrackToPlaylist(resultURI, playlistid, token)
       .then(result => console.error(result))
+    setMessage('Song added to playlist')
     setShowMessage(true)
     // hide message after 2 seconds
     setTimeout(() => {
@@ -83,20 +93,8 @@ function Playlist({ playerIsHidden }) {
     }, 2000)
   }
 
-  function showHideAddToPlaylist(e) {
-    if(!e.classList.contains('add-to-playlist')) return
-    // if add to playlist button is clicked but a different buttons hidden
-    // element is showing, hide it
-    if(e.classList.contains('add-to-playlist') && document.querySelector('.show-p') && !e.querySelector('.show-p')) {
-      document.querySelector('.show-p').classList.remove('show-p')
-    }
-    // if hidden element is shown, hide it
-    if(e.querySelector('.show-p')) {
-      e.querySelector('.show-p').classList.remove('show-p')
-    //if hidden element is hidden, show it
-    } else {
-      e.querySelector('.choose-playlist').classList.add('show-p')
-    }
+  const showBtn = (e) => {
+    showHideAddToPlaylistBtn(e)
   }
 
   useEffect(() => {
@@ -291,7 +289,7 @@ function Playlist({ playerIsHidden }) {
                       <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
                     </button>
                     :
-                    <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylist(e.target)}>
+                    <button className="add-to-playlist" onClick={(e) => showBtn(e.target)}>
                       <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
                       <span className={"choose-playlist"}>
                         <h3>Add to playlist:</h3>
@@ -313,7 +311,7 @@ function Playlist({ playerIsHidden }) {
         </div>
       </div>
       <div className={showMessage === true ? "playlist-update-message show" : "playlist-update-message"}>
-        <h2>Track added to playlist</h2>
+        <h2>{message}</h2>
         <span className="triangle"></span>
       </div>
     </div>
