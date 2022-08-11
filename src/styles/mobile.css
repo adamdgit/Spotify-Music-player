@@ -32,6 +32,7 @@
     top: 180px;
     grid-template-columns: unset;
     overflow-y: auto;
+    width: 100vw;
   }
 
   .playlist {
@@ -39,6 +40,7 @@
     overflow-y: unset;
     height: 100%;
     margin-bottom: 350px;
+    width: 100vw;
   }
 
   .lyrics-wrap {
@@ -48,11 +50,31 @@
   .song-wrap {
     overflow-y: unset;
     height: unset;
+    width: 100vw;
     padding-bottom: unset;
   }
 
   .song-info {
     padding-bottom: 60px;
+  }
+
+  .song-category {
+    min-width: 250px;
+  }
+
+  .draggable {
+    grid-template-columns: 16px 60px auto 35px 16px;
+    min-width: 300px;
+    padding: .2rem;
+    gap: .2rem;
+  }
+
+  .draggable-trackname {
+    min-width: 160px;
+  }
+
+  .draggable img {
+    width: 60px;
   }
 
   .header-bar {
