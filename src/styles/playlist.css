@@ -43,6 +43,10 @@
   color: white;
 }
 
+.container {
+  position: relative;
+}
+
 .draggable {
   position: relative;
   color: white;
