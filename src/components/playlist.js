@@ -79,7 +79,7 @@ function Playlist({ playerIsHidden }) {
       .then(result => {
         if(result.length > 0) return setSongs(result)
         console.error(result)
-      }) 
+      })
   }
 
   const addToPlaylist = async (resultURI, playlistid) => {
@@ -133,7 +133,12 @@ function Playlist({ playerIsHidden }) {
       clone.classList.add('clone')
       // set clones width to same as elements width (width varies with screen size)
       clone.style.width = `${e.target.offsetWidth}px`
-      clone.style.top = '-145px'
+      // adjust clone position if small device or large device
+      if(window.innerWidth < 900) {
+        clone.style.top = '50px'
+      } else {
+        clone.style.top = '-145px'
+      }
       clone.style.left = `-${e.offsetX}px`
       clone.style.setProperty('--x', e.clientX + 'px')
       clone.style.setProperty('--y', e.clientY + 'px')
