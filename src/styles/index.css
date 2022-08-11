@@ -2,6 +2,7 @@
 
 :root {
   --img-width:70px;
+  --img-width-mobile:60px;
   --blue:rgb(58, 209, 255);
   --primary-blue:rgb(33, 37, 44);
   --secondary-blue:rgb(58, 67, 82);
