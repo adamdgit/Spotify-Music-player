@@ -15,13 +15,19 @@
   }
 
   .main-content {
-    padding: 50px 20px;
+    padding: 50px 10px;
+  }
+
+  .featured {
+    text-align: center;
   }
 
   .explore-result {
     grid-template-columns:unset;
     grid-template-rows:1fr 60px auto 60px;
     justify-items: center;
+    text-align: center;
+    font-size: .9rem;
   }
 
   .explore-result button {
@@ -41,6 +47,7 @@
     height: 100%;
     margin-bottom: 350px;
     width: 100vw;
+    padding: 10px;
   }
 
   .lyrics-wrap {
@@ -63,18 +70,28 @@
   }
 
   .draggable {
-    grid-template-columns: 16px 60px auto 35px 16px;
+    grid-template-columns: 16px 60px auto 30px min-content;
     min-width: 300px;
     padding: .2rem;
-    gap: .2rem;
+    gap: .3rem;
   }
 
   .draggable-trackname {
     min-width: 160px;
-  }
+  }         
 
   .draggable img {
-    width: 60px;
+    width: var(--img-width-mobile);
+    height: var(--img-width-mobile);
+  }
+
+  .play-song-btn {
+    height: var(--img-width-mobile);
+  }
+
+  .play-song-btn:hover ~ .play-song-tooltip {
+    left: 30px;
+    top: -15px;
   }
 
   .header-bar {
@@ -91,6 +108,35 @@
 
   .search-results-wrap {
     z-index: 999;
+    padding: 10px;
+  }
+
+  .search-result {
+    grid-template-columns: 90px 1fr;
+    grid-template-rows: 80px 1fr;
+    font-size: .9rem;
+  }
+
+  .search-result span {
+    grid-column: span 2;
+    grid-row: 2;
+  }
+
+  .search-result h3 {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .search-result .add-to-playlist {
+    grid-column: 2;
+    grid-row: 1;
+    margin-right: 60px;
+  }
+
+  .search-result .play {
+    grid-column: 2;
+    grid-row: 1;
   }
 
   .search-bar {
