@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useContext } from "react";
 import axios from "axios";
 import { LoginStatusCtx } from "../login";
 import { showHideAddToPlaylistBtn } from "../func/showHideAddToPlaylistBtn"
+import { addTrackToPlaylist } from "./addTrackToPlaylist";
 
 export default function SearchSongs() {
   
@@ -33,16 +34,8 @@ export default function SearchSongs() {
     getPlaylists()
   },[token])
 
-  function addTrackToPlaylist(resultURI, playlistid) {
-    axios({ 
-      method: 'post', 
-      url: `https://api.spotify.com/v1/playlists/${playlistid}/tracks`, 
-      headers: { 'Authorization': 'Bearer ' + token }, 
-      data: {
-        "uris": [`${resultURI}`]
-      }
-    })
-    document.querySelector('.show-p').classList.remove('show-p')
+  const addToPlaylist = (resultURI, playlistid) => {
+    addTrackToPlaylist(resultURI, playlistid, token)
     setTracks([])
     inputElement.current.value = ''
   }
@@ -141,7 +134,7 @@ export default function SearchSongs() {
                   <ul>
                     {
                       playlists? playlists.map((playlist, index) => {
-                        return <li key={index} style={{listStyle:"none"}} onClick={() => addTrackToPlaylist(result.uri, playlist.id)}>{playlist.name}</li>
+                        return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(result.uri, playlist.id)}>{playlist.name}</li>
                       })
                       : <li>No playlists found</li>
                     }
