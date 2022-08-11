@@ -112,6 +112,10 @@
   color: rgb(216, 0, 0);
 }
 
+.play-song-btn {
+  height: var(--img-width);
+}
+
 /* Lyrics section */
 .song-wrap {
   overflow-y: scroll;
@@ -186,7 +190,7 @@
   border: 1px solid var(--blue);
 }
 
-.draggable img:hover ~ .play-song-tooltip {
+.play-song-btn:hover ~ .play-song-tooltip {
   display: block;
   position: absolute;
   padding: 0 10px;
