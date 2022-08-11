@@ -1,23 +1,21 @@
 import { useEffect, useContext, useState } from "react"
 import axios from "axios"
 import { LoginStatusCtx } from "../login";
+import { changePlaylistSong } from "./changePlaylistSong";
 
 export default function GetUserPlaylists() {
 
   const { token } = useContext(LoginStatusCtx)
   const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
-  const { playerOffset, setPlayerOffset } = useContext(LoginStatusCtx)
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
 
   const [playlists, setPlaylists] = useState([])
   
   function playPlaylist(playlist){
-    console.log(playlist.uri)
-    console.log(playlist.id)
     // save currently playing playlist data to global context
     setPlayerURIS(playlist.uri)
     setPlaylistID(playlist.id)
-    setPlayerOffset(0)
+    changePlaylistSong(0, token, playlist.uri)
   }
 
   useEffect(() => {
