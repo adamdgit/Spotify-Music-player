@@ -2,7 +2,10 @@ import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import React from 'react';
 import { LoginStatusCtx } from "./login";
 import axios from "axios";
-import GetCurrentlyPlaying from "./api/getCurrentlyPlaying";
+import CurrentSong from "./currentSong";
+import { changePlaylistSong } from "./api/changePlaylistSong";
+import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
+import { changePlaylistOrder } from "./api/changePlaylistOrder"
 
 function Playlist({ playerIsHidden }) {
 
@@ -47,69 +50,26 @@ function Playlist({ playerIsHidden }) {
     );
   }
 
-  async function changePlaylistSong(offset){
-    await axios({ 
-      method: 'put', 
-      url: 'https://api.spotify.com/v1/me/player/play', 
-      headers: { 'Authorization': 'Bearer ' + token }, 
-      data: {
-        "context_uri": `${playerURIS}`,
-        "offset": { "position": offset }
-      }
-    })
+  const changeSong = (index) => {
+    changePlaylistSong(index, token, playerURIS)
+  } 
+
+  const removeTrack = async (trackURI) => {
+    removeTrackFromPlaylist(trackURI, token, playlistID)
+      .then(result => {
+        if(result.length > 0) return setSongs(result)
+        console.error(result)
+      }) 
   }
 
-  async function removeTrackFromPlaylist(trackURI) {
-    await axios({ 
-      method: 'delete', 
-      url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
-      headers: { 'Authorization': 'Bearer ' + token }, 
-      data: {
-        "tracks": [{
-          "uri": `${trackURI}`
-        }]
-      }
-    }).catch(error => console.error(error))
-    await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=50`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      }
-    }).then((res) => {
-      setSongs(res.data.items)
-    }).catch(error => console.error(error))
-  }
-
-  async function changePlaylistOrder(dragElIndex, dragElNewIndex) {
-    // add 1 to index as API requires 'insert before' not insert at
-    // dont change index if value is 0
-    if(dragElNewIndex !== 0) {
-      dragElNewIndex = dragElNewIndex+1
-    }
-    // send playlist track index changes to API
-    await axios({ 
-      method: 'put', 
-      url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
-      headers: { 'Authorization': 'Bearer ' + token }, 
-      data: {
-        "range_start": dragElIndex, // first item to change
-        "insert_before": dragElNewIndex, // location to insert item
-        "range_length": 1 // number of items to change
-      }
-    })
+  const changeOrder = async (dragElIndex, dragElNewIndex) => {
     setSongs([])
     setDraggables([])
-    // get newly updated playlist items
-    await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=50`, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      }
-    }).then((res) => {
-      setSongs(res.data.items)
-    }).catch(error => console.error(error))
+    changePlaylistOrder(dragElIndex, dragElNewIndex, token, playlistID)
+      .then(result => {
+        if(result.length > 0) return setSongs(result)
+        console.error(result)
+      }) 
   }
 
   async function addTrackToPlaylist(resultURI, playlistid) {
@@ -230,7 +190,7 @@ function Playlist({ playerIsHidden }) {
         if(dragElIndex === dragElNewIndex) return
         // delay changes to prevent bugs
         setTimeout(() => {
-          changePlaylistOrder(dragElIndex, dragElNewIndex)
+          changeOrder(dragElIndex, dragElNewIndex)
         }, 500)
       }
     }
@@ -292,7 +252,7 @@ function Playlist({ playerIsHidden }) {
   return (
     <div style={!playlistID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"} ref={playlist}>
       
-      <GetCurrentlyPlaying currentSong={currentSong} />
+      <CurrentSong currentSong={currentSong} />
 
       <div className={!playlistID ? "hidden" : "playlist"}>
         <h1 className="playlist-title">{playlistName}</h1>
@@ -312,7 +272,7 @@ function Playlist({ playerIsHidden }) {
                   <img src={song.track.album.images.length !== 0 ? song.track.album.images[0].url : ''} 
                   alt={song.track.album.images.length !== 0 ? `${song.track.name} Album art` : 'Image missing'}
                   draggable="false"
-                  onClick={() => changePlaylistSong(index)}
+                  onClick={() => changeSong(index)}
                   />
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
@@ -328,7 +288,7 @@ function Playlist({ playerIsHidden }) {
                   <p className="song-length">{convertTime(song.track.duration_ms)}</p>
                   {
                     Username === 'Adam' ?
-                    <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrackFromPlaylist(song.track.uri)}>
+                    <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
                     </button>
                     :
