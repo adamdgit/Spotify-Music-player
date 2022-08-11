@@ -271,11 +271,12 @@ function Playlist({ playerIsHidden }) {
               return (
                 <span key={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
-                  <img src={song.track.album.images.length !== 0 ? song.track.album.images[0].url : ''} 
-                  alt={song.track.album.images.length !== 0 ? `${song.track.name} Album art` : 'Image missing'}
-                  draggable="false"
-                  onClick={() => changeSong(index)}
-                  />
+                  <button onClick={() => changeSong(index)} className="play-song-btn">
+                    <img src={song.track.album.images.length !== 0 ? song.track.album.images[0].url : ''}
+                    alt={song.track.album.images.length !== 0 ? `${song.track.name} Album art` : 'Image missing'}
+                    draggable="false"
+                    />
+                  </button>
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
