@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
-import Playlists from "./pages/playlists";
+import Playlists from "./pages/userPlaylists";
 import { Route, Routes } from "react-router-dom"
+import Playlist from "./pages/createPlaylist";
 
 export const LoginStatusCtx = React.createContext()
 
@@ -63,6 +64,7 @@ function Login() {
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/playlists" element={<Playlists />} />
+          <Route path="/create-playlist" element={<Playlist />} />
         </Routes>
         <Controls />
       </>
