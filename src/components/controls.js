@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react"
-import Playlist from "./playlist"
+import Playlist from "./playlistInfo"
 import { LoginStatusCtx } from "./login";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 
