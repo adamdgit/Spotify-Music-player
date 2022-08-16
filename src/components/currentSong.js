@@ -32,15 +32,17 @@ export default function CurrentSong({...props}) {
           <img className="album-large" src={currentSong.album.images[0].url} alt={`${currentSong.album.name} Album art`} />
           <ul>
             <li><h3>Artists:</h3>
+            <p>
               {currentSong.artists.length > 1 
               ? currentSong.artists.map(artist => {
               return `${artist.name}, `
               })
               : currentSong.artists[0].name
               }
+            </p>
             </li>
-            <li><h3>Album: </h3>{currentSong.album.name}</li>
-            <li><h3>Released: </h3>{currentSong.album.release_date}</li>
+            <li><h3>Album: </h3><p>{currentSong.album.name}</p></li>
+            <li><h3>Released: </h3><p>{currentSong.album.release_date}</p></li>
           </ul>
         </span>
       : 
