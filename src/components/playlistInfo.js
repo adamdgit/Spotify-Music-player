@@ -8,6 +8,7 @@ import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
 import { changePlaylistOrder } from "./api/changePlaylistOrder"
 import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
 import { showHideAddToPlaylistBtn } from "./func/showHideAddToPlaylistBtn"
+import { convertTime } from "./func/convertTime"
 
 function Playlist({ playerIsHidden }) {
 
@@ -22,8 +23,10 @@ function Playlist({ playerIsHidden }) {
   const [songs, setSongs] = useState([])
   const [draggables, setDraggables] = useState([])
   const [playlistName, setPlaylistName] = useState('No playlist data')
+  const [playlistDesc, setPlaylistDesc] = useState('')
   const [Username, setUsername] = useState('')
   const [playlists, setPlaylists] = useState([])
+  const [playlistArt, setPlaylistArt] = useState('')
   // playlist update message
   const [showMessage, setShowMessage] = useState(false)
   const [message, setMessage] = useState('')
@@ -42,17 +45,6 @@ function Playlist({ playerIsHidden }) {
     }
   },[])
   let clone = null
-
-  // song duration given in MS, convert to mins + secs
-  function convertTime(millis) {
-    var minutes = Math.floor(millis / 60000);
-    var seconds = ((millis % 60000) / 1000).toFixed(0);
-    return (
-      seconds === 60 ?
-      (minutes+1) + ":00" :
-      minutes + ":" + (seconds < 10 ? "0" : "") + seconds
-    );
-  }
 
   const changeSong = (index) => {
     changePlaylistSong(index, token, playerURIS)
@@ -240,7 +232,8 @@ function Playlist({ playerIsHidden }) {
               'Content-Type': 'application/json',
             }
           }).then((res) => {
-            // can get owner
+            setPlaylistArt(res.data.images[0].url)
+            setPlaylistDesc(res.data.description)
             setUsername(res.data.owner.display_name)
             setPlaylistName(res.data.name)
             setSongs(res.data.tracks.items)
@@ -257,7 +250,14 @@ function Playlist({ playerIsHidden }) {
       <CurrentSong currentSong={currentSong} />
 
       <div className={!playlistID ? "hidden" : "playlist"}>
-        <h1 className="playlist-title">{playlistName}</h1>
+        <div className="playlist-info-wrap">
+          <img className="playlist-art" src={playlistArt? playlistArt : 'no image found'} alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} />
+          <span>
+            <h1 className="playlist-title" style={{fontSize: '3rem'}}>{playlistName}</h1>
+            <h2 className="playlist-desc">{playlistDesc}</h2>
+          </span>
+        </div>
+
         <div className="song-category">
           <h3>#</h3>
           <h3>Album</h3>
@@ -297,7 +297,7 @@ function Playlist({ playerIsHidden }) {
                     :
                     <button className="add-to-playlist" onClick={(e) => showBtn(e.target)}>
                       <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
-                      <span className={"choose-playlist"}>
+                      <span className="choose-playlist">
                         <h3>Add to playlist:</h3>
                         <ul>
                           {
