@@ -24,7 +24,7 @@
   text-transform: uppercase;
   border-bottom: 1px solid var(--secondary-blue);
   background: linear-gradient(180deg, rgba(18,22,27,1) 0%, rgba(255,255,255,0) 75%);
-  padding: 10px;
+  padding: 1.2rem 10px;
   margin: 0 0 20px 0;
   font-size: .6rem;
 }
@@ -37,17 +37,32 @@
   height: calc(100vh - 210px);
 }
 
-.playlist-title {
-  padding: 30px 0 40px;
-  text-align: center;
-  color: white;
+.playlist-info-wrap {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 3rem 0;
+}
+
+.playlist-title, .playlist-desc {
+  margin: 2rem 0;
+  line-height: normal;
+}
+
+.playlist-art {
+  width: 100%;
+  height: 100%;
+  min-width: 150px;
+  max-width: 220px;
+  aspect-ratio: 1;
+  box-shadow: 4px 4px 10px #111;
 }
 
 .container {
   position: relative;
 }
 
-.draggable {
+.draggable, .edit-playlist-item {
   position: relative;
   color: white;
   background-color: var(--secondary-blue);
@@ -70,21 +85,21 @@
   background-color: var(--bg-blue);
 }
 
-.draggable h1 {
+.draggable h1, .edit-playlist-item h1 {
   font-size: 1rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.draggable h2 {
+.draggable h2, .edit-playlist-item h2 {
   font-size: .8rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.draggable img {
+.draggable img, .edit-playlist-item img {
   width: var(--img-width);
 }
 
@@ -92,23 +107,23 @@
   cursor: pointer;
 }
 
-.draggable .song-length {
+.song-length {
   font-size: .8rem;
 }
 
-.draggable .draggable-trackname {
+.draggable .draggable-trackname, .trackname {
   width: 100%;
   min-width: 200px;
   max-width: 800px;
 }
 
-.draggable .remove-track-btn {
+.remove-track-btn {
   color: white;
   background: none;
   padding: 5px 8px;
 }
 
-.draggable .remove-track-btn:hover {
+.remove-track-btn:hover {
   color: rgb(216, 0, 0);
 }
 
@@ -235,4 +250,21 @@
 
 .show {
   opacity: 1;
+}
+
+.edit-playlist-wrap {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.edit-playlist-cover-img {
+  width: 300px;
+  box-shadow: 3px 3px 15px #111;
+}
+
+.edit-playlist-details {
+  display: grid;
+  gap: 2rem;
 }

@@ -69,7 +69,6 @@
   color: white;
   height: 30px;
   width: 100%;
-  margin: 0 5px;
   padding: 0 10px;
   background-color: var(--primary-blue);
 }
@@ -121,6 +120,7 @@
   align-items: center;
   justify-items: center;
   font-size: .9rem;
+  margin-bottom: 10px;
 }
 
 .login:hover, .logout:hover {

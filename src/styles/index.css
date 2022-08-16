@@ -29,5 +29,5 @@ body {
   background-color: var(--primary-blue);
   font-size: 16px;
   font-family: Arial, 'Helvetica', sans-serif;
-  line-height: 30px;
+  line-height: normal;
 }
