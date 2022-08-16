@@ -5,6 +5,7 @@ import { changePlaylistSong } from "./changePlaylistSong";
 
 export default function GetUserPlaylists() {
 
+  // global context
   const { token } = useContext(LoginStatusCtx)
   const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
@@ -42,7 +43,7 @@ export default function GetUserPlaylists() {
         playlists.map((result, i) => {
           return (
             <div key={i} className={'explore-result'}>
-              <img src={result.images[0].url} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
+              <img src={result.images.length !== 0 ? result.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
               <h2>{result.name}</h2>
               <p>{result.description}</p>
               <button className="play" onClick={() => playPlaylist(result)}>
