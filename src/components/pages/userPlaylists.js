@@ -1,16 +1,14 @@
 import GetUserPlaylists from "../api/getUserPlaylists"
-import { NavLink } from "react-router-dom"
+import { createPlaylist } from "../api/createPlaylist"
 
-export default function Playlists() {
+export default function UserPlaylists({...props}) {
 
   return (
     <div className="page-wrap">
       <div className="main-content">
         <div className="create-playlists-wrap">
           <h1>My Playlists</h1>
-          <NavLink to={'/create-playlist'}>
-            <button className="play">Create Playlist</button>
-          </NavLink>
+          <button className="play" onClick={() => createPlaylist(props.token, props.userID)}>Create Playlist</button>
         </div>
         <GetUserPlaylists />
       </div>
