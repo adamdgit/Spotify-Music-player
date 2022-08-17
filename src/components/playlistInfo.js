@@ -9,6 +9,7 @@ import { changePlaylistOrder } from "./api/changePlaylistOrder"
 import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
 import { showHideAddToPlaylistBtn } from "./func/showHideAddToPlaylistBtn"
 import { convertTime } from "./func/convertTime"
+import { sanitizeArtistNames } from "./func/sanitizeArtistNames"
 
 function Playlist({ playerIsHidden }) {
 
@@ -21,10 +22,14 @@ function Playlist({ playerIsHidden }) {
   const [lyrics, setLyrics] = useState('')
   const [currentSong, setCurrentSong] = useState()
   const [songs, setSongs] = useState([])
-  const [draggables, setDraggables] = useState([])
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
   const [Username, setUsername] = useState('')
+  // TODO: make playlists gloabl? 
+  // can create or remove playlists from edit section
+  // playlistinfo and create playlist need to talk to each other
+  // TODO: remove draggables on playlists not owned by user
+  // TODO: add remove playlist button
   const [playlists, setPlaylists] = useState([])
   const [playlistArt, setPlaylistArt] = useState('')
   // playlist update message
@@ -32,6 +37,7 @@ function Playlist({ playerIsHidden }) {
   const [message, setMessage] = useState('')
 
   // variables for drag and drop function
+  const [draggables, setDraggables] = useState([])
   let dragElIndex = 0
   let dragElNewIndex = 0
   let moveEl = null
@@ -152,7 +158,7 @@ function Playlist({ playerIsHidden }) {
     }
   
     function getNearestNode(y) {
-      let nodes = [...document.querySelectorAll('.draggable:not(.clone)')]
+      let nodes = [...container.current.querySelectorAll('.draggable:not(.clone)')]
       return nodes.reduce((closest, child) => {
         const box = child.getBoundingClientRect()
         const offset = y - box.top - box.height / 2
@@ -175,7 +181,7 @@ function Playlist({ playerIsHidden }) {
         clone.remove()
         // get nodelist from html and convert to array
         // check converted array for drag & drop elements new index in playlist
-        const draggableNodeList = document.querySelectorAll('.draggable')
+        const draggableNodeList = container.current.querySelectorAll('.draggable')
         const convertedNodelist = Array.from(draggableNodeList)
         dragElNewIndex = convertedNodelist.indexOf(tempEl)
         // update draggables array with elements new index
@@ -251,7 +257,10 @@ function Playlist({ playerIsHidden }) {
 
       <div className={!playlistID ? "hidden" : "playlist"}>
         <div className="playlist-info-wrap">
-          <img className="playlist-art" src={playlistArt? playlistArt : 'no image found'} alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} />
+          <img className="playlist-art" 
+            src={playlistArt? playlistArt : 'no image found'} 
+            alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} 
+            />
           <span>
             <h1 className="playlist-title" style={{fontSize: '3rem'}}>{playlistName}</h1>
             <h2 className="playlist-desc">{playlistDesc}</h2>
@@ -272,21 +281,22 @@ function Playlist({ playerIsHidden }) {
                 <span key={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
                   <button onClick={() => changeSong(index)} className="play-song-btn">
-                    <img src={song.track.album.images.length !== 0 ? song.track.album.images[0].url : ''}
-                    alt={song.track.album.images.length !== 0 ? `${song.track.name} Album art` : 'Image missing'}
-                    draggable="false"
-                    />
+                  <img src={
+                    song.track.album.images.length === 0 ?
+                    'no image found' :
+                    song.track.album.images.length === 3 ?
+                    song.track.album.images[2].url :
+                    song.track.album.images[0].url
+                    } alt={
+                      song.track.album.images.length === 0 ?
+                    'no image found' :
+                    `${song.track.name} album art`
+                    } draggable="true" />
                   </button>
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
-                    <h2>
-                      {song.track.artists.length > 1 
-                      ? song.track.artists.map(artist => {
-                      return `${artist.name}, `
-                      })
-                      : song.track.artists[0].name}
-                    </h2>
+                    <p>{sanitizeArtistNames(song.track.artists)}</p>
                   </span>
                   <p className="song-length">{convertTime(song.track.duration_ms)}</p>
                   {
