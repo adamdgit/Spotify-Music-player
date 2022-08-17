@@ -29,7 +29,16 @@ export default function CurrentSong({...props}) {
       currentSong ?
         <span className="song-info">
           <h2>Playing: {currentSong.name}</h2>
-          <img className="album-large" src={currentSong.album.images[0].url} alt={`${currentSong.album.name} Album art`} />
+          <img className="album-large"
+            src={
+            currentSong.album.images.length === 0 ?
+            'no image found' :
+            currentSong.album.images[0].url
+            } alt={
+            currentSong.album.images.length === 0 ?
+            'no image found' :
+            `${currentSong.name} album art`
+            }/>
           <ul>
             <li><h3>Artists:</h3>
             <p>
