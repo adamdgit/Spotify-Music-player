@@ -62,7 +62,7 @@
   position: relative;
 }
 
-.draggable, .edit-playlist-item {
+.draggable {
   position: relative;
   color: white;
   background-color: var(--secondary-blue);
@@ -85,21 +85,21 @@
   background-color: var(--bg-blue);
 }
 
-.draggable h1, .edit-playlist-item h1 {
+.draggable h1 {
   font-size: 1rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.draggable h2, .edit-playlist-item h2 {
+.draggable p {
   font-size: .8rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.draggable img, .edit-playlist-item img {
+.draggable img {
   width: var(--img-width);
 }
 
@@ -111,7 +111,9 @@
   font-size: .8rem;
 }
 
-.draggable .draggable-trackname, .trackname {
+.draggable .draggable-trackname {
+  display: grid;
+  gap: 1rem;
   width: 100%;
   min-width: 200px;
   max-width: 800px;
@@ -208,7 +210,7 @@
 .play-song-btn:hover ~ .play-song-tooltip {
   display: block;
   position: absolute;
-  padding: 0 10px;
+  padding: 5px 10px;
   background-color: var(--primary-blue);
   color: var(--blue);
   border: 1px solid var(--secondary-blue);
