@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
-import Playlists from "./pages/userPlaylists";
+import UserPlaylists from "./pages/userPlaylists";
 import { Route, Routes } from "react-router-dom"
-import Playlist from "./pages/createPlaylist";
+import EditPlaylist from "./pages/editPlaylist";
+import axios from "axios";
 
 export const LoginStatusCtx = React.createContext()
 
@@ -29,6 +30,8 @@ function Login() {
   const [playerURIS, setPlayerURIS] = useState('')
   const [playerOffset, setPlayerOffset] = useState(0)
   const [playlistID, setPlaylistID] = useState('')
+  const [username, setUsername] = useState('')
+  const [userID, setUserID] = useState('')
 
   useEffect(() => {
 
@@ -43,6 +46,22 @@ function Login() {
     }
 
     setToken(token)
+
+    if(token) {
+      // get logged in user's display name
+      axios.get(`https://api.spotify.com/v1/me`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      }).then((res) => {
+        setUserID(res.data.id)
+        setUsername(res.data.display_name)
+      }).catch(error => {
+        console.error(error)
+      })
+    }
 
   },[token])
   
@@ -60,11 +79,11 @@ function Login() {
       </div>
     :
       <>
-        <Header />
+        <Header username={username}/>
         <Routes>
           <Route path="/" element={<Explore />} />
-          <Route path="/playlists" element={<Playlists />} />
-          <Route path="/create-playlist" element={<Playlist />} />
+          <Route path="/playlists" element={<UserPlaylists token={token} userID={userID}/>} />
+          <Route path="/editPlaylist/:id" element={<EditPlaylist />} />
         </Routes>
         <Controls />
       </>
