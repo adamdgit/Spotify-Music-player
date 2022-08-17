@@ -11,7 +11,6 @@ export async function addTrackToPlaylist(resultURI, playlistid, token) {
       "uris": [`${resultURI}`]
     }
   }).catch(error => errorMsg = error)
-  document.querySelector('.show-p').classList.remove('show-p')
 
   if(errorMsg) return errorMsg
 }
