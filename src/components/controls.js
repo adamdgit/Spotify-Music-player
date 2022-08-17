@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react"
-import Playlist from "./playlistInfo"
+import PlaylistInfo from "./playlistInfo"
 import { LoginStatusCtx } from "./login";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 
@@ -15,7 +15,7 @@ function MusicPlayer() {
 
   return (
     <>
-    <Playlist playerIsHidden={playerIsHidden} />
+    <PlaylistInfo playerIsHidden={playerIsHidden} />
     <div className="controls">
       {playerURIS ?
       <>
