@@ -16,11 +16,11 @@
   margin: 3rem 0;
 }
 
-.create-playlist span {
+.user-input-wrap {
   display: grid;
-  grid-template-rows:repeat(5, auto) ;
+  grid-template-rows:repeat(3, auto) ;
   width: 100%;
-  column-gap: 1rem;
+  height: 200px;
   align-items: center;
 }
 
@@ -41,11 +41,11 @@
   outline: unset;
 }
 
-.create-playlist svg {
+/*-----Edit playlist page---------*/
+
+.create-playlist img {
   width: 300px;
   height: 300px;
-  padding: 6rem;
-  background-color: var(--secondary-blue);
   box-shadow: 3px 3px 12px #111;
 }
 
@@ -55,3 +55,45 @@
   padding: 3rem;
 }
 
+.results-wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.add-song-result {
+  display: grid;
+  grid-template-columns: 100px auto 70px ;
+  background-color: var(--secondary-blue);
+  box-shadow: 0 5px 12px #111;
+  padding: 1rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.add-song-result img {
+  width: 80px;
+  height: 80px;
+}
+
+.playlist-info {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.change-details {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.edit-songlist {
+  
+}
+
+.edit-heading {
+  margin: 1rem 0 3rem;
+  padding: 1rem;
+  box-shadow: 3px 3px 10px #111;
+  background-color: var(--secondary-blue);
+}
