@@ -32,6 +32,7 @@ function Login() {
   const [playlistID, setPlaylistID] = useState('')
   const [username, setUsername] = useState('')
   const [userID, setUserID] = useState('')
+  const [songs, setSongs] = useState([])
 
   useEffect(() => {
 
@@ -66,7 +67,9 @@ function Login() {
   },[token])
   
   return (
-    <LoginStatusCtx.Provider value={{token, setToken, 
+    <LoginStatusCtx.Provider value={{
+      token, setToken, 
+      songs, setSongs,
       playlistID, setPlaylistID, 
       playerURIS, setPlayerURIS, 
       playerOffset, setPlayerOffset, 
