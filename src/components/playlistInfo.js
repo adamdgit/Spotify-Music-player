@@ -18,16 +18,13 @@ function Playlist({ playerIsHidden }) {
   const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
   const { playerCBData, setPlayerCBData } = useContext(LoginStatusCtx)
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
+  const { songs, setSongs } = useContext(LoginStatusCtx)
 
   const [lyrics, setLyrics] = useState('')
   const [currentSong, setCurrentSong] = useState()
-  const [songs, setSongs] = useState([])
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
   const [Username, setUsername] = useState('')
-  // TODO: make playlists gloabl? 
-  // can create or remove playlists from edit section
-  // playlistinfo and create playlist need to talk to each other
   // TODO: remove draggables on playlists not owned by user
   // TODO: add remove playlist button
   const [playlists, setPlaylists] = useState([])
@@ -41,6 +38,7 @@ function Playlist({ playerIsHidden }) {
   let dragElIndex = 0
   let dragElNewIndex = 0
   let moveEl = null
+  let clone = null
   const container = useRef()
   const playlist = useRef()
   // Update draggables array after elements are created using useCallback
@@ -50,7 +48,6 @@ function Playlist({ playerIsHidden }) {
       setDraggables(current => [...current, node])
     }
   },[])
-  let clone = null
 
   const changeSong = (index) => {
     changePlaylistSong(index, token, playerURIS)
@@ -288,7 +285,7 @@ function Playlist({ playerIsHidden }) {
                     song.track.album.images[2].url :
                     song.track.album.images[0].url
                     } alt={
-                      song.track.album.images.length === 0 ?
+                    song.track.album.images.length === 0 ?
                     'no image found' :
                     `${song.track.name} album art`
                     } draggable="true" />
