@@ -20,7 +20,6 @@ function Playlist({ playerIsHidden }) {
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
   const { songs, setSongs } = useContext(LoginStatusCtx)
 
-  const [lyrics, setLyrics] = useState('')
   const [currentSong, setCurrentSong] = useState()
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
