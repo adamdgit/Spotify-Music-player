@@ -9,6 +9,7 @@ export default function SearchSongs() {
   
   // global context
   const { token } = useContext(LoginStatusCtx)
+  const { songs, setSongs } = useContext(LoginStatusCtx)
   const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
 
@@ -37,6 +38,10 @@ export default function SearchSongs() {
 
   const addToPlaylist = (resultURI, playlistid) => {
     addTrackToPlaylist(resultURI, playlistid, token)
+    .then(result => {
+      if(result.length > 0) return setSongs(result)
+      console.error(result)
+    })
     setTracks([])
     document.querySelector('.show-p').classList.remove('show-p')
     inputElement.current.value = ''
