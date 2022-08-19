@@ -11,7 +11,9 @@ import axios from "axios";
 
 export default function EditPlaylist() {
 
+  // global context
   const { token } = useContext(LoginStatusCtx)
+  const { songs, setSongs } = useContext(LoginStatusCtx)
   const { id } = useParams()
 
   const [playlistName, setPlaylistName] = useState()
@@ -23,7 +25,9 @@ export default function EditPlaylist() {
   const [originalName, setOriginalName] = useState('')
   const [originalDesc, setOriginalDesc] = useState('')
   const [playlistData, setPlaylistData] = useState()
-  const [songs, setSongs] = useState([])
+  // edit playlist tracks can be different from currently playing global songs
+  const [tracks, setTracks] = useState([])
+  const [playlistsMatch, setPlaylistsMatch] = useState(false)
 
   // variables for drag and drop function
   const [draggables, setDraggables] = useState([])
@@ -42,11 +46,19 @@ export default function EditPlaylist() {
   let clone = null
 
   const changeOrder = async (dragElIndex, dragElNewIndex) => {
-    setSongs([])
+    setTracks([])
     setDraggables([])
     changePlaylistOrder(dragElIndex, dragElNewIndex, token, id)
       .then(result => {
-        if(result.length > 0) return setSongs(result)
+        if(result.length > 0) {
+          // user can edit playlist that is not currently playing
+          // we check if currently playing matches currently editing
+          // and sync changes that are made
+          if (JSON.stringify(songs) === JSON.stringify(tracks)) {
+            setSongs(result)
+          }
+          return setTracks(result)
+        }
         console.error(result)
       })
   }
@@ -65,7 +77,7 @@ export default function EditPlaylist() {
       }).then((res) => {
         console.log(res.data)
         setPlaylistData(res.data)
-        setSongs(res.data.tracks.items)
+        setTracks(res.data.tracks.items)
         setOriginalName(res.data.name)
         setOriginalDesc(res.data.description)
       }).catch(error => console.error(error))
@@ -233,11 +245,11 @@ export default function EditPlaylist() {
           </span>
         </div>
 
-        {songs ? 
+        {tracks ? 
         <div className="edit-songlist" ref={container}>
-          {songs.length === 0 ? 
+          {tracks.length === 0 ? 
             <p>No songs added yet, use the searchbar below to add some</p> :
-            songs.map((song, index) => {
+            tracks.map((song, index) => {
               return (
                 <span key={index} className="draggable" draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
