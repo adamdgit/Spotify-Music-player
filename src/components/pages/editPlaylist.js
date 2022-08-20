@@ -7,6 +7,7 @@ import { changePlaylistDetails } from "../api/changePlaylistDetails"
 import { convertTime } from "../func/convertTime";
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { changePlaylistOrder } from "../api/changePlaylistOrder"
+import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
 import axios from "axios";
 
 export default function EditPlaylist() {
@@ -14,6 +15,7 @@ export default function EditPlaylist() {
   // global context
   const { token } = useContext(LoginStatusCtx)
   const { songs, setSongs } = useContext(LoginStatusCtx)
+  const { playlistID } = useContext(LoginStatusCtx)
   const { id } = useParams()
 
   const [playlistName, setPlaylistName] = useState()
@@ -27,7 +29,6 @@ export default function EditPlaylist() {
   const [playlistData, setPlaylistData] = useState()
   // edit playlist tracks can be different from currently playing global songs
   const [tracks, setTracks] = useState([])
-  const [playlistsMatch, setPlaylistsMatch] = useState(false)
 
   // variables for drag and drop function
   const [draggables, setDraggables] = useState([])
@@ -47,6 +48,7 @@ export default function EditPlaylist() {
 
   const changeOrder = async (dragElIndex, dragElNewIndex) => {
     setTracks([])
+    setSongs([])
     setDraggables([])
     changePlaylistOrder(dragElIndex, dragElNewIndex, token, id)
       .then(result => {
@@ -54,8 +56,24 @@ export default function EditPlaylist() {
           // user can edit playlist that is not currently playing
           // we check if currently playing matches currently editing
           // and sync changes that are made
-          if (JSON.stringify(songs) === JSON.stringify(tracks)) {
-            setSongs(result)
+          if (playlistID === playlistData.id) {
+            return setSongs(result)
+          }
+          return setTracks(result)
+        }
+        console.error(result)
+      })
+  }
+
+  const removeTrack = async (trackURI) => {
+    removeTrackFromPlaylist(trackURI, token, playlistData.id)
+      .then(result => {
+        if(result.length > 0) {
+          // user can edit playlist that is not currently playing
+          // we check if currently playing matches currently editing
+          // and sync changes that are made
+          if (playlistID === playlistData.id) {
+            return setSongs(result)
           }
           return setTracks(result)
         }
@@ -245,10 +263,38 @@ export default function EditPlaylist() {
           </span>
         </div>
 
-        {tracks ? 
+        {playlistData? 
         <div className="edit-songlist" ref={container}>
-          {tracks.length === 0 ? 
-            <p>No songs added yet, use the searchbar below to add some</p> :
+          { // show global songs if playlists are the same, otherwise show selected playlist tracks
+          playlistID === playlistData.id?
+            songs.map((song, index) => {
+              return (
+                <span key={index} className="draggable" draggable="true" ref={setDraggableElement}>
+                  <span>{index+1}</span>
+                  <img src={
+                    song.track.album.images.length === 0 ?
+                    'no image found' :
+                    song.track.album.images.length === 3 ?
+                    song.track.album.images[2].url :
+                    song.track.album.images[0].url
+                    } alt={
+                      song.track.album.images.length === 0 ?
+                    'no image found' :
+                    `${song.track.name} album art`
+                    } draggable="true" />
+                  <span className="play-song-tooltip">Play</span>
+                  <span className="draggable-trackname">
+                    <h1>{song.track.name}</h1>
+                    <p>{sanitizeArtistNames(song.track.artists)}</p>
+                  </span>
+                  <p className="song-length">{convertTime(song.track.duration_ms)}</p>
+                  <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+                  </button>
+                </span>
+              )
+            }) 
+            : 
             tracks.map((song, index) => {
               return (
                 <span key={index} className="draggable" draggable="true" ref={setDraggableElement}>
@@ -270,7 +316,7 @@ export default function EditPlaylist() {
                     <p>{sanitizeArtistNames(song.track.artists)}</p>
                   </span>
                   <p className="song-length">{convertTime(song.track.duration_ms)}</p>
-                  <button className="remove-track-btn" title="remove track from playlist">
+                  <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
                   </button>
                 </span>
@@ -278,7 +324,7 @@ export default function EditPlaylist() {
             })
           }
         </div>
-        : <h1>no playlist data</h1>
+        : <h1>No songs in playlist</h1>
         }
       </div>
 
