@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useContext } from "react";
-import axios from "axios";
 import { LoginStatusCtx } from "../login";
 import { showHideAddToPlaylistBtn } from "../func/showHideAddToPlaylistBtn"
 import { addTrackToPlaylist } from "./addTrackToPlaylist";
 import { sanitizeArtistNames } from "../func/sanitizeArtistNames";
+import { getUserPlaylists } from "./getUserPlaylists"
+import { searchSongs } from "../api/search";
 
 export default function SearchSongs() {
   
@@ -14,32 +15,32 @@ export default function SearchSongs() {
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
 
   const [tracks, setTracks] = useState([])
-  const [search, setSearch] = useState('')
+  const [query, setQuery] = useState('')
   const [playlists, setPlaylists] = useState([])
   const trackElement = useRef([])
   const searchElement = useRef('')
   const inputElement = useRef('')
 
   useEffect(() => {
-    // get playlists for add to playlist functionality
-    const getPlaylists = async () => {
-      await axios.get('https://api.spotify.com/v1/me/playlists', {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      }).then((res) => {
-        setPlaylists(res.data.items)
-      }).catch(error => console.error(error))
-    }
-    getPlaylists()
+    getUserPlaylists(token)
+    .then(result => {
+      if(result.length > 0) return setPlaylists(result)
+      console.error(result)
+    })
   },[token])
 
   const addToPlaylist = (resultURI, playlistid) => {
     addTrackToPlaylist(resultURI, playlistid, token)
     .then(result => {
-      if(result.length > 0) return setSongs(result)
+      if(result.length > 0) {
+        // Only update currently playing song data if
+        // playlist IDs match, as we need to sync the newly
+        // added song to the current playlist
+        if (playlistID === playlistid) {
+          return setSongs(result)
+        }
+        return
+      }
       console.error(result)
     })
     setTracks([])
@@ -90,37 +91,33 @@ export default function SearchSongs() {
   },[])
 
   useEffect(() => {
-    if(search === '') return
+    if(query === '') return
     // set delay for search requests
     const delaySearch = setTimeout(() => {
-      const searchSongs = async () => {
-        await axios.get('https://api.spotify.com/v1/search', {
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          params: {
-            q: search,
-            type: 'track'
-          }
-        }).then((res) => {
-          setTracks(res.data.tracks.items)
-        }).catch(error => console.error(error))
+      const search = async () => {
+        searchSongs(token, query)
+          .then(result => {
+            if(result.length !== 0) return setTracks(result.tracks.items)
+            return console.error(result)
+          })
       }
-      searchSongs()
+      search()
     }, 300)
     // remove timeout function
     return () => {
       clearTimeout(delaySearch)
     }
-  },[search, token])
+  },[query, token])
 
   return (
     <>
       <div className="search-bar">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="search-btn" fill="currentcolor" width="20px"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
-        <input ref={inputElement} type='search' onChange={(e) => setSearch(e.target.value)} className="search" placeholder="search songs..." />
+        <input ref={inputElement} type='search' 
+          onChange={(e) => setQuery(e.target.value)}
+          className="search" 
+          placeholder="search songs..." 
+        />
         <div ref={searchElement} className={tracks.length === 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
         {
           tracks.length !== 0 ?
