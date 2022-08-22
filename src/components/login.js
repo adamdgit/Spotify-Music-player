@@ -33,6 +33,8 @@ function Login() {
   const [username, setUsername] = useState('')
   const [userID, setUserID] = useState('')
   const [songs, setSongs] = useState([])
+  const [message, setMessage] = useState('')
+  const [showMessage, setShowMessage] = useState(false)
 
   useEffect(() => {
 
@@ -69,7 +71,11 @@ function Login() {
   return (
     <LoginStatusCtx.Provider value={{
       token, setToken, 
-      songs, setSongs,
+      username, setUsername, 
+      userID, setUserID, 
+      songs, setSongs, 
+      message, setMessage, 
+      showMessage, setShowMessage, 
       playlistID, setPlaylistID, 
       playerURIS, setPlayerURIS, 
       playerOffset, setPlayerOffset, 
@@ -82,7 +88,7 @@ function Login() {
       </div>
     :
       <>
-        <Header username={username}/>
+        <Header />
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/playlists" element={<UserPlaylists token={token} userID={userID}/>} />
