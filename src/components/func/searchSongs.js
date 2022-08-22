@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { LoginStatusCtx } from "../login";
-import { showHideAddToPlaylistBtn } from "../func/showHideAddToPlaylistBtn"
-import { addTrackToPlaylist } from "./addTrackToPlaylist";
-import { sanitizeArtistNames } from "../func/sanitizeArtistNames";
-import { getUserPlaylists } from "./getUserPlaylists"
+import { showHideAddToPlaylistBtn } from "./showHideAddToPlaylistBtn"
+import { addTrackToPlaylist } from "../api/addTrackToPlaylist";
+import { sanitizeArtistNames } from "./sanitizeArtistNames";
+import { getUserPlaylists } from "../api/getUserPlaylists"
 import { searchSongs } from "../api/search";
 
 export default function SearchSongs() {
