@@ -19,18 +19,17 @@ function Playlist({ playerIsHidden }) {
   const { playerCBData, setPlayerCBData } = useContext(LoginStatusCtx)
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
   const { songs, setSongs } = useContext(LoginStatusCtx)
+  const { userID, setUserID } = useContext(LoginStatusCtx)
+  // playlist update message
+  const { message, setMessage } = useContext(LoginStatusCtx)
+  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
 
   const [currentSong, setCurrentSong] = useState()
+  const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
-  const [Username, setUsername] = useState('')
-  // TODO: remove draggables on playlists not owned by user
-  // TODO: add remove playlist button
   const [playlists, setPlaylists] = useState([])
   const [playlistArt, setPlaylistArt] = useState('')
-  // playlist update message
-  const [showMessage, setShowMessage] = useState(false)
-  const [message, setMessage] = useState('')
 
   // variables for drag and drop function
   const [draggables, setDraggables] = useState([])
@@ -202,7 +201,7 @@ function Playlist({ playerIsHidden }) {
   useEffect(() => {
     setDraggables([])
     setSongs([])
-  },[playlistID])
+  },[playlistID, setSongs])
 
   // when player sends callback state update, run this effect
   useEffect(() => {
@@ -236,15 +235,15 @@ function Playlist({ playerIsHidden }) {
           }).then((res) => {
             setPlaylistArt(res.data.images[0].url)
             setPlaylistDesc(res.data.description)
-            setUsername(res.data.owner.display_name)
             setPlaylistName(res.data.name)
             setSongs(res.data.tracks.items)
+            setPlaylistOwner(res.data.owner.id)
           }).catch(error => console.error(error))
         }
         getPlaylistItems()
       }
     }
-  },[playerCBData, playlistID, token])
+  },[playerCBData, setSongs, playlistID, token])
 
   return (
     <div style={!playlistID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"} ref={playlist}>
@@ -296,7 +295,7 @@ function Playlist({ playerIsHidden }) {
                   </span>
                   <p className="song-length">{convertTime(song.track.duration_ms)}</p>
                   {
-                    Username === 'Adam' ?
+                    playlistOwner === userID ?
                     <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
                     </button>
@@ -321,10 +320,6 @@ function Playlist({ playerIsHidden }) {
             }) : <h1>No playlist available</h1>
           }
         </div>
-      </div>
-      <div className={showMessage === true ? "playlist-update-message show" : "playlist-update-message"}>
-        <h2>{message}</h2>
-        <span className="triangle"></span>
       </div>
     </div>
   ) 
