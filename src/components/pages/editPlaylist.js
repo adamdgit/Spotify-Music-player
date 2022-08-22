@@ -17,6 +17,8 @@ export default function EditPlaylist() {
   const { songs, setSongs } = useContext(LoginStatusCtx)
   const { playlistID } = useContext(LoginStatusCtx)
   const { id } = useParams()
+  const { message, setMessage } = useContext(LoginStatusCtx)
+  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
 
   const [playlistName, setPlaylistName] = useState()
   const [playlistDesc, setPlaylistDesc] = useState()
@@ -48,7 +50,9 @@ export default function EditPlaylist() {
 
   const changeOrder = async (dragElIndex, dragElNewIndex) => {
     setTracks([])
-    setSongs([])
+    if (playlistID === playlistData.id) {
+      setSongs([])
+    }
     setDraggables([])
     changePlaylistOrder(dragElIndex, dragElNewIndex, token, id)
       .then(result => {
@@ -81,6 +85,16 @@ export default function EditPlaylist() {
       })
   }
 
+  const changeDetails = async () => {
+    changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
+    setMessage('Playlist details updated')
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
+  }
+
   useEffect(() => {
 
     if(!id) return
@@ -93,7 +107,6 @@ export default function EditPlaylist() {
           'Content-Type': 'application/json',
         }
       }).then((res) => {
-        console.log(res.data)
         setPlaylistData(res.data)
         setTracks(res.data.tracks.items)
         setOriginalName(res.data.name)
@@ -224,7 +237,7 @@ export default function EditPlaylist() {
             <h1>{!playlistName ? originalName : playlistName}</h1>
             <h3>{!playlistDesc ? originalDesc : playlistDesc}</h3>
           </span>
-          <button className="play" onClick={() => changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)}>Save changes</button>
+          <button className="play" onClick={() => changeDetails()}>Save changes</button>
         </div>
 
         <div className="create-playlist">
