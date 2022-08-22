@@ -1,13 +1,12 @@
-
-import { useState, useContext, useEffect } from "react";
-import SearchSongs from "./api/searchSongs";
-import axios from "axios";
+import { useContext } from "react";
 import { LoginStatusCtx } from "./login";
 import { NavLink } from "react-router-dom"
+import SearchSongs from "./func/searchSongs";
 
-function Header(props) {
+function Header() {
 
   const {token, setToken} = useContext(LoginStatusCtx)
+  const { username } = useContext(LoginStatusCtx)
 
   const logout = () => {
     setToken('')
@@ -28,7 +27,7 @@ function Header(props) {
       <span className="user-info">
         <span>
           <button onClick={logout} className="logout">Disconnect spotify</button>
-          <p className="account">Hello:{props.username}</p>
+          <p className="account">Hello: {username}</p>
         </span>
       </span>
     </header>
