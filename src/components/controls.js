@@ -10,6 +10,8 @@ function MusicPlayer() {
   const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
   const { playerOffset, setPlayerOffset } = useContext(LoginStatusCtx)
   const { playerCBData, setPlayerCBData } = useContext(LoginStatusCtx)
+  const { message, setMessage } = useContext(LoginStatusCtx)
+  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
 
   const [playerIsHidden, setPLayerIsHidden] = useState(true)
 
@@ -48,6 +50,10 @@ function MusicPlayer() {
       </>
       :<></>
       }
+      <div className={showMessage === true ? "playlist-update-message show" : "playlist-update-message"}>
+        <h2>{message}</h2>
+        <span className="triangle"></span>
+      </div>
     </div>
     </>
   ) 
