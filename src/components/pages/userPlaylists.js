@@ -9,8 +9,9 @@ export default function UserPlaylists({...props}) {
 
   // global context
   const { token } = useContext(LoginStatusCtx)
-  const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
-  const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
+  const { setPlayerURIS } = useContext(LoginStatusCtx)
+  const { setPlaylistID } = useContext(LoginStatusCtx)
+  const { userID } = useContext(LoginStatusCtx)
 
   const [playlists, setPlaylists] = useState([])
   
@@ -45,9 +46,13 @@ export default function UserPlaylists({...props}) {
                 <img src={result.images.length !== 0 ? result.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
                 <h2>{result.name}</h2>
                 <p>{result.description}</p>
-                <NavLink to={`/editPlaylist/${result.id}`}>
-                  <button className="play edit">Edit</button>
-                </NavLink>
+                {
+                  result.owner.id !== userID 
+                  ? <button></button>
+                  : <NavLink to={`/editPlaylist/${result.id}`} className="edit-link">
+                      <button className="play edit">Edit</button>
+                    </NavLink>
+                }
                 <button className="play" onClick={() => playPlaylist(result)}>
                   <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
                 </button>
