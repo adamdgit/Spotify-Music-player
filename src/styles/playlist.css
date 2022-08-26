@@ -192,10 +192,6 @@
 
 /*-----Drag & Drop-----*/
 
-.move {
-  opacity: 0.2;
-}
-
 .clone {
   position: absolute;
   transform: translate(var(--x), var(--y));
