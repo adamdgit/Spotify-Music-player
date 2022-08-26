@@ -1,5 +1,9 @@
 @media only screen and (max-width: 899px){ 
 
+  /*----- 
+  TODO: fix music player for small devices, takes up too much space 
+  -----*/
+
   .login-wrap {
     padding: 0 30px;
   }
@@ -11,7 +15,7 @@
 
   .page-wrap {
     margin-top: 180px;
-    height: calc(100vh - 350px);
+    height: calc(100vh - 280px);
   }
 
   .main-content {
@@ -20,6 +24,28 @@
 
   .featured {
     text-align: center;
+  }
+
+  .my-playlists-result {
+    grid-template-columns: 130px 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-row-gap: 1rem;
+  }
+
+  .my-playlists-result img {
+    grid-column: 1;
+    grid-row: 1;
+    grid-row: span 2;
+  }
+
+  .edit-link {
+    grid-row: 2;
+    grid-column: 2;
+  }
+
+  .my-playlists-result .play {
+    grid-row: 2;
+    grid-column: 2;
   }
 
   .explore-result {
