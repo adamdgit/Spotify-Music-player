@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Route, Routes } from "react-router-dom"
+import axios from "axios";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
 import UserPlaylists from "./pages/userPlaylists";
-import { Route, Routes } from "react-router-dom"
 import EditPlaylist from "./pages/editPlaylist";
-import axios from "axios";
 
 export const LoginStatusCtx = React.createContext()
 
@@ -25,7 +25,9 @@ function Login() {
     volume: 0,
     deviceId: '',
     track_id: '',
-    type: ''
+    type: '',
+    error: '',
+    error_type: ''
   })
   const [playerURIS, setPlayerURIS] = useState('')
   const [playerOffset, setPlayerOffset] = useState(0)
