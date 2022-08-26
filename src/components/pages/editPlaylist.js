@@ -2,8 +2,8 @@ import { useContext, useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import { LoginStatusCtx } from "../login";
 import { searchSongs } from "../api/search";
-import { sanitizeArtistNames } from "../func/sanitizeArtistNames"
 import { changePlaylistDetails } from "../api/changePlaylistDetails"
+import { sanitizeArtistNames } from "../func/sanitizeArtistNames"
 import { convertTime } from "../func/convertTime";
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { changePlaylistOrder } from "../api/changePlaylistOrder"
@@ -12,16 +12,16 @@ import axios from "axios";
 
 export default function EditPlaylist() {
 
+  const { id } = useParams()
   // global context
   const { token } = useContext(LoginStatusCtx)
   const { songs, setSongs } = useContext(LoginStatusCtx)
   const { playlistID } = useContext(LoginStatusCtx)
-  const { id } = useParams()
   const { message, setMessage } = useContext(LoginStatusCtx)
   const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
 
-  const [playlistName, setPlaylistName] = useState()
-  const [playlistDesc, setPlaylistDesc] = useState()
+  const [playlistName, setPlaylistName] = useState('')
+  const [playlistDesc, setPlaylistDesc] = useState('')
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [isPublic, setIsPublic] = useState(false)
@@ -38,7 +38,6 @@ export default function EditPlaylist() {
   let dragElNewIndex = 0
   let moveEl = null
   const container = useRef()
-  const content = useRef()
   // Update draggables array after elements are created using useCallback
   const setDraggableElement = useCallback(node => {
     if(node != null) {
@@ -83,11 +82,40 @@ export default function EditPlaylist() {
         }
         console.error(result)
       })
+    setMessage('Song removed from playlist')
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
   }
 
   const changeDetails = async () => {
+    if (playlistName === '' && playlistDesc === '') {
+      alert('Please enter a name or description')
+      return
+    }
     changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
     setMessage('Playlist details updated')
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
+  }
+
+  const addTrack = async (uri) => {
+    addTrackToPlaylist(uri, id, token)
+    .then(result => {
+      if(result.length > 0) {
+        if (playlistID === playlistData.id) {
+          return setSongs(result)
+        }
+        return setTracks(result)
+      }
+      console.error(result)
+    })
+    setMessage('Track added to playlist')
     setShowMessage(true)
     // hide message after 2 seconds
     setTimeout(() => {
@@ -107,6 +135,7 @@ export default function EditPlaylist() {
           'Content-Type': 'application/json',
         }
       }).then((res) => {
+        console.log(res.data)
         setPlaylistData(res.data)
         setTracks(res.data.tracks.items)
         setOriginalName(res.data.name)
@@ -152,7 +181,7 @@ export default function EditPlaylist() {
       // create a clone which follows the mouse cursor
       clone = e.target.cloneNode(true)
       e.target.classList.add('move')
-      content.current.appendChild(clone)
+      document.body.appendChild(clone)
       clone.classList.add('clone')
       // set clones width to same as elements width (width varies with screen size)
       clone.style.width = `${e.target.offsetWidth}px`
@@ -160,7 +189,7 @@ export default function EditPlaylist() {
       if(window.innerWidth < 900) {
         clone.style.top = '50px'
       } else {
-        clone.style.top = '-145px'
+        clone.style.top = '-55px'
       }
       clone.style.left = `-${e.offsetX}px`
       clone.style.setProperty('--x', e.clientX + 'px')
@@ -228,7 +257,7 @@ export default function EditPlaylist() {
   },[draggables])
 
   return (
-    <div className="page-wrap" style={{backgroundColor: 'var(--bg-blue)'}} ref={content}>
+    <div className="page-wrap" style={{backgroundColor: 'var(--bg-blue)'}}>
       <div className="main-content" style={{backgroundColor: 'var(--primary-blue)'}}>
 
         <h1 className="edit-heading">Playlist editor:</h1>
@@ -256,14 +285,18 @@ export default function EditPlaylist() {
           <span className="user-input-wrap">
             <span className="change-details">
               <h3>Name:</h3>
-              <input type="text" className="edit-input" 
+              <input 
+                type="text" 
+                className="edit-input" 
                 onChange={(e) => setPlaylistName(e.target.value)}
                 placeholder="Change playlist name"
               />
             </span>
             <span className="change-details">
               <h3>Description:</h3>
-              <input type="text" className="edit-input" 
+              <input 
+                type="text" 
+                className="edit-input" 
                 onChange={(e) => setPlaylistDesc(e.target.value)}
                 placeholder="Change playlist description"
               />
@@ -369,7 +402,7 @@ export default function EditPlaylist() {
                 <h3>{track.name}</h3>
                 <p>{sanitizeArtistNames(track.artists)}</p>
               </span>
-              <button className="play" onClick={() => addTrackToPlaylist(track.uri, id, token)} >Add</button>
+              <button className="play" onClick={() => addTrack(track.uri)} >Add</button>
             </div>)
           })
           : <></>
