@@ -1,9 +1,9 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext } from "react"
 import PlaylistInfo from "./playlistInfo"
 import { LoginStatusCtx } from "./login";
 import SpotifyWebPlayer from "react-spotify-web-playback/lib";
 
-function MusicPlayer() {
+function Controls() {
  
   // global context
   const { token } = useContext(LoginStatusCtx)
@@ -29,7 +29,9 @@ function MusicPlayer() {
             volume: state.volume,
             deviceId: state.currentDeviceId,
             track_id: state.track.id,
-            type: state.type
+            type: state.type,
+            error: state.error,
+            errror_type: state.errorType
           })}
           uris={playerURIS}
           offset={playerOffset}
@@ -59,4 +61,4 @@ function MusicPlayer() {
   ) 
 }
 
-export default MusicPlayer
+export default Controls
