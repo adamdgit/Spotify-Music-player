@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import { LoginStatusCtx } from "../login";
+import axios from "axios";
 import { searchSongs } from "../api/search";
 import { changePlaylistDetails } from "../api/changePlaylistDetails"
 import { sanitizeArtistNames } from "../func/sanitizeArtistNames"
@@ -8,7 +9,7 @@ import { convertTime } from "../func/convertTime";
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { changePlaylistOrder } from "../api/changePlaylistOrder"
 import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
-import axios from "axios";
+import { getNearestNode } from "../func/getNearestNode";
 
 export default function EditPlaylist() {
 
@@ -31,12 +32,7 @@ export default function EditPlaylist() {
   const [playlistData, setPlaylistData] = useState()
   // edit playlist tracks can be different from currently playing global songs
   const [tracks, setTracks] = useState([])
-
-  // variables for drag and drop function
   const [draggables, setDraggables] = useState([])
-  let dragElIndex = 0
-  let dragElNewIndex = 0
-  let moveEl = null
   const container = useRef()
   // Update draggables array after elements are created using useCallback
   const setDraggableElement = useCallback(node => {
@@ -166,92 +162,59 @@ export default function EditPlaylist() {
   },[query, token])
 
   useEffect(() => {
-    // when playlist changes, draggables array is emptied
-    // we don't want to run through all this code on empty array
-    // only run code when new draggables array is populated
+
     if(draggables.length === 0) return
 
-    // add event listeners for drag & drop functionality
     draggables.forEach(element => {
-      element.addEventListener('dragstart', drag)
+      element.addEventListener('dragstart', dragStart)
     })
 
-    function drag(e) {
-      dragElIndex = draggables.indexOf(e.target)
-      // create a clone which follows the mouse cursor
-      clone = e.target.cloneNode(true)
-      e.target.classList.add('move')
+    function dragStart(e) {
+      console.log('dragstart')
+      let element = e.target
+      let startIndex = draggables.indexOf(element)
+      // create a copy of the dragging element for effect
+      let clone = element.cloneNode(true)
       document.body.appendChild(clone)
       clone.classList.add('clone')
-      // set clones width to same as elements width (width varies with screen size)
-      clone.style.width = `${e.target.offsetWidth}px`
-      // adjust clone position if small device or large device
-      if(window.innerWidth < 900) {
-        clone.style.top = '50px'
-      } else {
-        clone.style.top = '-55px'
-      }
+      clone.style.height = `${element.offsetHeight}px`
+      clone.style.width = `${element.offsetWidth}px`
+      clone.style.position = 'absolute'
+      clone.style.top = '-55px'
       clone.style.left = `-${e.offsetX}px`
-      clone.style.setProperty('--x', e.clientX + 'px')
-      clone.style.setProperty('--y', e.clientY + 'px')
-      clone.classList.add('dragging')
-      // stop dragstart event listener to allow mousemove listener to take over
+      element.style.opacity = '0.3'
+      // cancel drag listener, start listening for mousemove instead
       e.preventDefault()
-      document.addEventListener('mousemove', mousePos)
-    }
-  
-    // on mousemove have clone follow the cursor
-    function mousePos(e) {
-      clone.style.setProperty('--x', e.clientX + 'px')
-      clone.style.setProperty('--y', e.clientY + 'px')
-      let nearestNode = getNearestNode(e.clientY)
-      moveEl = document.querySelector('.move')
-      // swap original element with nearest node
-      container.current.insertBefore(moveEl, nearestNode)
-      document.addEventListener('mouseup', placeClone)
-    }
-  
-    function getNearestNode(y) {
-      let nodes = [...container.current.querySelectorAll('.draggable:not(.clone)')]
-      return nodes.reduce((closest, child) => {
-        const box = child.getBoundingClientRect()
-        const offset = y - box.top - box.height / 2
-        if(offset < 0 && offset > closest.offset) {
-          return { offset:offset, element: child }
-        } else {
-          return closest
-        }
-      }, {offset: Number.NEGATIVE_INFINITY}).element
-    }
-  
-    // on mouseup delete the clone and place original element in its current position
-    function placeClone() {
-      if (document.querySelector('.move')) {
-        // get drag & dropped element reference
-        const tempEl = document.querySelector('.move')
-        document.querySelector('.move').classList.remove('move')
-        document.removeEventListener('mousemove', mousePos)
-        document.removeEventListener('mouseup', placeClone)
-        clone.remove()
-        // get nodelist from html and convert to array
-        // check converted array for drag & drop elements new index in playlist
-        const draggableNodeList = container.current.querySelectorAll('.draggable')
-        const convertedNodelist = Array.from(draggableNodeList)
-        dragElNewIndex = convertedNodelist.indexOf(tempEl)
-        // update draggables array with elements new index
-        draggables.splice(dragElNewIndex, 0, draggables.splice(dragElIndex, 1)[0]);
-        // if position is unchanged, dont send api request
-        if(dragElIndex === dragElNewIndex) return
-        // delay changes to prevent bugs
+
+      document.addEventListener('mousemove', mouseMove)
+      function mouseMove(e) {
+        clone.style.setProperty('--x', e.clientX + 'px')
+        clone.style.setProperty('--y', e.clientY + 'px')
+        let nearestNode = getNearestNode(e.clientY)
+        container.current.insertBefore(element, nearestNode)
+      }
+
+      document.addEventListener('mouseup', placeEl)
+      function placeEl() {
+        element.style.opacity = '1'
+        document.querySelector('.clone')?.remove()
+        document.removeEventListener('mousemove', mouseMove)
+        document.removeEventListener('mouseup', placeEl)
+        let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
+        // get new index of moved element
+        let htmlElToArray = Array.from(container.current.childNodes)
+        let newIndex = htmlElToArray.indexOf(newElLocation)
+        // Only send API request if element has moved positions
+        if(startIndex === newIndex) return
         setTimeout(() => {
-          changeOrder(dragElIndex, dragElNewIndex)
-        }, 500)
+          changeOrder(startIndex, newIndex)
+        }, 200)
       }
     }
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
-        element.removeEventListener('dragstart', drag)
+        element.removeEventListener('dragstart', dragStart)
       })
     }
   },[draggables])
@@ -315,7 +278,7 @@ export default function EditPlaylist() {
           playlistID === playlistData.id?
             songs.map((song, index) => {
               return (
-                <span key={index} className="draggable" draggable="true" ref={setDraggableElement}>
+                <span key={index} data-index={index} className="draggable" draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
                   <img src={
                     song.track.album.images.length === 0 ?
