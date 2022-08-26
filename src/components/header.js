@@ -5,7 +5,7 @@ import SearchSongs from "./func/searchSongs";
 
 function Header() {
 
-  const {token, setToken} = useContext(LoginStatusCtx)
+  const { token, setToken } = useContext(LoginStatusCtx)
   const { username } = useContext(LoginStatusCtx)
 
   const logout = () => {
