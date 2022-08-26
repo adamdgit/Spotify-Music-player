@@ -5,7 +5,7 @@
   align-items: center;
   justify-items: center;
   gap: 2rem;
-  background-color: var(--bg-blue);
+  background-color: #111;
   padding: 0 20px;
   border-bottom: 5px solid var(--secondary-blue);
   box-shadow: 0 5px 12px #111;
