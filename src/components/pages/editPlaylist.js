@@ -205,6 +205,7 @@ export default function EditPlaylist() {
         let htmlElToArray = Array.from(container.current.childNodes)
         let newIndex = htmlElToArray.indexOf(newElLocation)
         // Only send API request if element has moved positions
+        console.log(startIndex, newIndex)
         if(startIndex === newIndex) return
         setTimeout(() => {
           changeOrder(startIndex, newIndex)
@@ -306,7 +307,7 @@ export default function EditPlaylist() {
             : 
             tracks.map((song, index) => {
               return (
-                <span key={index} className="draggable" draggable="true" ref={setDraggableElement}>
+                <span key={index} data-index={index} className="draggable" draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
                   <img src={
                     song.track.album.images.length === 0 ?
