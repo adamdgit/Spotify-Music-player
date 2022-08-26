@@ -13,13 +13,14 @@ export default function SearchSongs() {
   const { songs, setSongs } = useContext(LoginStatusCtx)
   const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
+  const { message, setMessage } = useContext(LoginStatusCtx)
+  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
 
   const [tracks, setTracks] = useState([])
   const [query, setQuery] = useState('')
   const [playlists, setPlaylists] = useState([])
-  const trackElement = useRef([])
-  const searchElement = useRef('')
-  const inputElement = useRef('')
+  const searchElement = useRef()
+  const inputElement = useRef()
 
   useEffect(() => {
     getUserPlaylists(token)
@@ -29,7 +30,7 @@ export default function SearchSongs() {
     })
   },[token])
 
-  const addToPlaylist = (resultURI, playlistid) => {
+  const addToPlaylist = (resultURI, playlistid, playlistName) => {
     addTrackToPlaylist(resultURI, playlistid, token)
     .then(result => {
       if(result.length > 0) {
@@ -43,17 +44,18 @@ export default function SearchSongs() {
       }
       console.error(result)
     })
+    setMessage(`Song added to playlist: ${playlistName}`)
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
     setTracks([])
     document.querySelector('.show-p').classList.remove('show-p')
     inputElement.current.value = ''
   }
 
-  const showBtn = (e) => {
-    showHideAddToPlaylistBtn(e)
-  }
-
   function playSong(song) {
-    console.log(song)
     // save new URIS data to global context (playlist or track)
     setPlayerURIS(song.uri)
     // remove playlist ID as track is playing not playlist
@@ -75,13 +77,6 @@ export default function SearchSongs() {
     }
     // listen for click outside of search input to hide results
     document.addEventListener('mousedown', handleClick)
-
-    // clear html search results 
-    if(trackElement.current.length !== 0) {
-      trackElement.current.forEach(element => {
-        element.remove()
-      })
-    }
 
     // cleanup event listener
     return () => {
@@ -123,7 +118,7 @@ export default function SearchSongs() {
           tracks.length !== 0 ?
           tracks.map((result, i) => {
             return (
-            <div key={i} ref={trackElement[i]} className={'search-result'}>
+            <div key={i} className={'search-result'}>
               <img src={
                 result.album.images.length === 0 ?
                 'no image found' :
@@ -139,14 +134,14 @@ export default function SearchSongs() {
               <h3>{result.name}</h3>
               <p>{sanitizeArtistNames(result.artists)}</p>
               </span>
-              <button className="add-to-playlist" onClick={(e) => showBtn(e.target)}>
+              <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylistBtn(e.target)}>
                 <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
                 <span className={"choose-playlist"}>
                   <h3>Add to playlist:</h3>
                   <ul>
                     {
                       playlists? playlists.map((playlist, index) => {
-                        return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(result.uri, playlist.id)}>{playlist.name}</li>
+                        return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(result.uri, playlist.id, playlist.name)}>{playlist.name}</li>
                       })
                       : <li>No playlists found</li>
                     }
