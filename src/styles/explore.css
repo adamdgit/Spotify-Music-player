@@ -9,6 +9,8 @@
 
 .main-content {
   padding: 50px 60px;
+  margin: 0 auto;
+  max-width: var(--max-page-width);
 }
 
 .spotify-data {
@@ -59,6 +61,7 @@
 
 .edit {
   padding: .5rem 1rem;
+  width: fit-content;
 }
 
 .play:hover {

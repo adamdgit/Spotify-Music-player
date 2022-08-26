@@ -15,21 +15,23 @@ function Header() {
 
   return (
     <header className="header-bar">
-      <ul className="nav-bar">
-        <NavLink to="/" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
-          <li>Explore</li>
-        </NavLink>
-        <NavLink to="/playlists" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
-          <li>Playlists</li>
-        </NavLink>
-      </ul>
-      <SearchSongs />
-      <span className="user-info">
-        <span>
-          <button onClick={logout} className="logout">Disconnect spotify</button>
-          <p className="account">Hello: {username}</p>
+      <div className="header-wrap">
+        <ul className="nav-bar">
+          <NavLink to="/" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+            <li>Explore</li>
+          </NavLink>
+          <NavLink to="/playlists" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+            <li>Playlists</li>
+          </NavLink>
+        </ul>
+        <SearchSongs />
+        <span className="user-info">
+          <span>
+            <button onClick={logout} className="logout">Disconnect spotify</button>
+            <p className="account">Hello: {username}</p>
+          </span>
         </span>
-      </span>
+      </div>
     </header>
   ) 
 }

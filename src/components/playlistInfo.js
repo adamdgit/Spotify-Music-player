@@ -110,7 +110,7 @@ function PlaylistInfo({ playerIsHidden }) {
       clone.style.position = 'absolute'
       clone.style.top = '-55px'
       clone.style.left = `-${e.offsetX}px`
-      element.style.opacity = '0.5'
+      element.style.opacity = '0.3'
       // cancel drag listener, start listening for mousemove instead
       e.preventDefault()
 

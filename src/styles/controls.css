@@ -106,6 +106,10 @@
 
 /*Spotify player controls*/
 
+.controls .PlayerRSWP {
+  max-width: var(--max-page-width);
+}
+
 .controls ._SliderRSWP {
   margin-bottom: 15px;
 }

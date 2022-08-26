@@ -33,7 +33,7 @@
   background-color: var(--primary-blue);
   overflow-y: auto;
   border-top: 3px solid var(--secondary-blue);
-  padding: 20px;
+  padding: 2rem;
   height: calc(100vh - 210px);
 }
 
@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   gap: 2rem;
-  padding: 3rem 0;
+  padding: 2rem 0;
 }
 
 .playlist-title, .playlist-desc {
