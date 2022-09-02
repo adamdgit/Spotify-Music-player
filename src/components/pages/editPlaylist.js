@@ -41,14 +41,15 @@ export default function EditPlaylist() {
       setDraggables(current => [...current, node])
     }
   },[])
-  let clone = null
 
   const changeOrder = async (dragElIndex, dragElNewIndex) => {
     setTracks([])
+    setDraggables([])
+    // if currently playing playlist matches currently editing
+    // empty songs to prepare for loading new songs from API
     if (playlistID === playlistData.id) {
       setSongs([])
     }
-    setDraggables([])
     changePlaylistOrder(dragElIndex, dragElNewIndex, token, id)
       .then(result => {
         if(result.length > 0) {
@@ -196,6 +197,7 @@ export default function EditPlaylist() {
 
       document.addEventListener('mouseup', placeEl)
       function placeEl() {
+        // remove listeners and place element
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
         document.removeEventListener('mousemove', mouseMove)
@@ -291,7 +293,7 @@ export default function EditPlaylist() {
                       song.track.album.images.length === 0 ?
                     'no image found' :
                     `${song.track.name} album art`
-                    } draggable="true" />
+                    } draggable="false" />
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
@@ -319,7 +321,7 @@ export default function EditPlaylist() {
                       song.track.album.images.length === 0 ?
                     'no image found' :
                     `${song.track.name} album art`
-                    } draggable="true" />
+                    } draggable="false" />
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
