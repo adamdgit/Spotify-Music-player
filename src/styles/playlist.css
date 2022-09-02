@@ -85,6 +85,14 @@
   background-color: var(--bg-blue);
 }
 
+/*--Prevent wierd bugs with drag and drop--*/
+.draggable .remove-track-btn,
+.draggable img,
+.draggable span,
+.draggable p {
+  pointer-events: none;
+}
+
 .draggable h1 {
   font-size: 1rem;
   white-space: nowrap;
