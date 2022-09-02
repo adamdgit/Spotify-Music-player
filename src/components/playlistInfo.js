@@ -57,6 +57,7 @@ function PlaylistInfo({ playerIsHidden }) {
   }
 
   const changeOrder = async (startIndex, newIndex) => {
+    // changes order of playlist item
     setSongs([])
     setDraggables([])
     changePlaylistOrder(startIndex, newIndex, token, playlistID)
@@ -95,39 +96,55 @@ function PlaylistInfo({ playerIsHidden }) {
 
     draggables.forEach(element => {
       element.addEventListener('dragstart', dragStart)
+      element.addEventListener('touchstart', dragStart)
     })
 
     function dragStart(e) {
-      console.log('dragstart')
       let element = e.target
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
       document.body.appendChild(clone)
       clone.classList.add('clone')
+      if (e.type === 'touchstart') {
+        clone.style.left = `-${e.changedTouches[0].clientX}px`
+      } else {
+        clone.style.left = `-${e.offsetX}px`
+      }
       clone.style.height = `${element.offsetHeight}px`
       clone.style.width = `${element.offsetWidth}px`
       clone.style.position = 'absolute'
       clone.style.top = '-55px'
-      clone.style.left = `-${e.offsetX}px`
       element.style.opacity = '0.3'
       // cancel drag listener, start listening for mousemove instead
       e.preventDefault()
 
       document.addEventListener('mousemove', mouseMove)
+      document.addEventListener('touchmove', mouseMove)
       function mouseMove(e) {
-        clone.style.setProperty('--x', e.clientX + 'px')
-        clone.style.setProperty('--y', e.clientY + 'px')
-        let nearestNode = getNearestNode(e.clientY)
-        container.current.insertBefore(element, nearestNode)
+        if (e.type === 'touchmove') {
+          clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
+          clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
+          let nearestNode = getNearestNode(e.changedTouches[0].clientY)
+          container.current.insertBefore(element, nearestNode)
+        } else {
+          clone.style.setProperty('--x', e.clientX + 'px')
+          clone.style.setProperty('--y', e.clientY + 'px')
+          let nearestNode = getNearestNode(e.clientY)
+          container.current.insertBefore(element, nearestNode)
+        }
       }
 
       document.addEventListener('mouseup', placeEl)
+      document.addEventListener('touchend', placeEl)
       function placeEl() {
+        // remove listeners, place element, remove clone
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
         document.removeEventListener('mousemove', mouseMove)
         document.removeEventListener('mouseup', placeEl)
+        document.removeEventListener('touchmove', mouseMove)
+        document.removeEventListener('touchend', placeEl)
         let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
         let htmlElToArray = Array.from(container.current.childNodes)
@@ -193,6 +210,7 @@ function PlaylistInfo({ playerIsHidden }) {
         getPlaylistItems()
       }
     }
+
   },[playerCBData, setSongs, playlistID, token])
 
   return (
@@ -225,7 +243,7 @@ function PlaylistInfo({ playerIsHidden }) {
               return (
                 <span key={index} data-index={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
-                  <button onClick={() => changePlaylistSong(index, token, playerURIS)} className="play-song-btn">
+                  <button onClick={() => changePlaylistSong(index, token, playerURIS)} className="play-song-btn" draggable="false" >
                   <img src={
                     song.track.album.images.length === 0 ?
                     'no image found' :
