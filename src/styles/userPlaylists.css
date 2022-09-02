@@ -1,11 +1,11 @@
-.create-playlists-wrap {
+.user-playlists-header {
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
   gap: 2rem;
 }
 
-.create-playlists-wrap button {
+.user-playlists-header button {
   padding: 12px 20px;
 }
 
