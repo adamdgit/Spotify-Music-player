@@ -45,7 +45,6 @@
 .explore-result img, .my-playlists-result img {
   width: 110px;
   height: 110px;
-  border: 4px solid var(--secondary-blue);
 }
 
 .play {

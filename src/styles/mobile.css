@@ -160,6 +160,10 @@
     padding: 10px;
   }
 
+  .controls {
+    padding: 1rem;
+  }
+
   @media only screen and (max-width: 500px){ 
     .search-result {
       grid-template-columns: unset;
