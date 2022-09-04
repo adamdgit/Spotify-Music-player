@@ -12,6 +12,15 @@
   gap: 1rem;
 }
 
+.test {
+  position: absolute;
+  top: -70px;
+  padding: 1.5rem;
+  background-color: #333;
+  color: white;
+  border: 1px solid var(--blue);
+}
+
 .player-controls {
   display: flex;
   justify-content: center;
