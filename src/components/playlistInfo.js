@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from "axios";
 import CurrentSong from "./currentSong";
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
@@ -17,11 +16,11 @@ function PlaylistInfo({ playerIsHidden }) {
 
   // global context
   const { token } = useContext(LoginStatusCtx)
-  const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
-  const { playerCBData, setPlayerCBData } = useContext(LoginStatusCtx)
-  const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
+  const { playlistURI } = useContext(LoginStatusCtx)
+  const { playerCBData } = useContext(LoginStatusCtx)
+  const { playlistID } = useContext(LoginStatusCtx)
   const { songs, setSongs } = useContext(LoginStatusCtx)
-  const { userID, setUserID } = useContext(LoginStatusCtx)
+  const { userID } = useContext(LoginStatusCtx)
   // playlist update message
   const { message, setMessage } = useContext(LoginStatusCtx)
   const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
@@ -81,6 +80,10 @@ function PlaylistInfo({ playerIsHidden }) {
       setShowMessage(false)
     }, 2000)
   }
+
+  useEffect(() => {
+    console.log(playerCBData)
+  },[playerCBData])
 
   useEffect(() => {
     getUserPlaylists(token)
@@ -172,10 +175,9 @@ function PlaylistInfo({ playerIsHidden }) {
 
   // when player sends callback state update, run this effect
   useEffect(() => {
+    console.log(playerCBData.type)
     // only run effect on track updates
-    if(playerCBData.type === 'track_update') {
-
-      console.log('track update callback')
+    if(playerCBData.type === 'track_update' || playerCBData.type === 'player_ready') {
 
       const getCurrentTrack = async () => {
         await axios.get(`https://api.spotify.com/v1/tracks/${playerCBData.track_id}`, {
@@ -243,18 +245,18 @@ function PlaylistInfo({ playerIsHidden }) {
               return (
                 <span key={index} data-index={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
-                  <button onClick={() => changePlaylistSong(index, token, playerURIS)} className="play-song-btn" draggable="false" >
-                  <img src={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    song.track.album.images.length === 3 ?
-                    song.track.album.images[2].url :
-                    song.track.album.images[0].url
-                    } alt={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    `${song.track.name} album art`
-                    } draggable="false" />
+                  <button onClick={() => changePlaylistSong(index, token, playlistURI)} className="play-song-btn" draggable="false" >
+                    <img src={
+                      song.track.album.images.length === 0 ?
+                      'no image found' :
+                      song.track.album.images.length === 3 ?
+                      song.track.album.images[2].url :
+                      song.track.album.images[0].url
+                      } alt={
+                      song.track.album.images.length === 0 ?
+                      'no image found' :
+                      `${song.track.name} album art`
+                      } draggable="false" />
                   </button>
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
