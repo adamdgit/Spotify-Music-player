@@ -3,7 +3,7 @@
   display: flex;
   width: 100%;
   min-height: 100px;
-  padding: 2rem;
+  padding: 1rem 1.4rem;
   left: 0;
   bottom: 0;
   background-color: #111;
@@ -12,23 +12,33 @@
   gap: 1rem;
 }
 
-.test {
-  position: absolute;
-  top: -70px;
-  padding: 1.5rem;
-  background-color: #333;
-  color: white;
-  border: 1px solid var(--blue);
+.playback-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
 }
 
-.player-controls {
+.current-info {
   display: flex;
-  justify-content: center;
+  justify-self: flex-start;
+  gap: 1rem;
+}
+
+.current-track {
+  font-weight: bold;
+  font-size: 1rem;
+  align-self: flex-end;
+}
+
+.current-artist {
+  font-size: .8rem;
+  align-self: flex-start;
 }
 
 .player-btns {
   display: flex;
   gap: 1rem;
+  justify-self: center;
 }
 
 .shuffle-btn, .loop-btn, 
@@ -61,42 +71,35 @@
 }
 
 .volume-control {
-  position: absolute;
-  right: 20px;
   display: flex;
+  gap: 1rem;
   align-items: center;
-  justify-content: flex-end;
-  padding-left: 20px;
-  height: 30px;
+  justify-self: end;
 }
 
 .volume-slider {
-  display: block;
-  position: absolute;
-  top:10px;
-  left:65px;
-  width: 10px;
-  height: 10px;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: var(--blue);
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
-  background-color: var(--blue);
 }
 
-.volume-trail {
-  display: block;
-  height: 100%;
-  width: 50px;
-  background-color: #ccc;
-}
-
-.volume-scrubber {
-  display: block;
-  height:5px;
-  width: 100px;
-  margin-right: 10px;
-  background-color: #444;
+.volume-slider::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
 }
 
 .show-hide-playlist-btn {
+  width: fit-content;
+  height: fit-content;
   transition: transform 300ms ease-in-out;
 }
 
@@ -109,24 +112,6 @@
 
 .rotate-btn {
   transform: rotate(180deg);
-}
-
-/*Spotify player controls*/
-
-.controls .PlayerRSWP {
-  max-width: var(--max-page-width);
-}
-
-.controls ._SliderRSWP {
-  margin-bottom: 15px;
-}
-
-.controls button:hover {
-  color:var(--blue)
-}
-
-._ActionsRSWP ._VolumeRSWP {
-  display: inline-block;
 }
 
 /*--------Playlist Message---------*/
