@@ -1,9 +1,10 @@
 .playlist-wrap {
   position: fixed;
-  top:96px;
+  top: 96px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 100vh;
+  width: 100%;
   transition: transform 400ms ease-in-out;
 }
 
@@ -19,7 +20,7 @@
   display: grid;
   grid-template-columns: 40px 80px auto 60px;
   width: 100%;
-  min-width: 450px;
+  min-width: 400px;
   text-transform: uppercase;
   border-bottom: 1px solid var(--secondary-blue);
   background: linear-gradient(180deg, rgba(18,22,27,1) 0%, rgba(255,255,255,0) 75%);
@@ -33,7 +34,7 @@
   overflow-y: auto;
   border-top: 3px solid var(--secondary-blue);
   padding: 2rem;
-  height: calc(100vh - 210px);
+  height: calc(100vh - 220px);
 }
 
 .playlist-info-wrap {
@@ -67,7 +68,8 @@
   background-color: var(--secondary-blue);
   margin: 5px 0;
   width: 100%;
-  min-width: 450px;
+  min-width: 400px;
+  max-width: 1200px;
   height: 100px;
   display: grid;
   grid-template-columns: 18px 80px auto 40px max-content;
@@ -82,14 +84,6 @@
 
 .draggable:hover {
   background-color: var(--bg-blue);
-}
-
-/*--Prevent wierd bugs with drag and drop--*/
-.draggable .remove-track-btn,
-.draggable img,
-.draggable span,
-.draggable p {
-  pointer-events: none;
 }
 
 .draggable h1 {
@@ -122,8 +116,6 @@
   display: grid;
   gap: 1rem;
   width: 100%;
-  min-width: 200px;
-  max-width: 800px;
 }
 
 .remove-track-btn {
@@ -144,18 +136,17 @@
 .song-wrap {
   overflow-y: scroll;
   border-top: 3px solid var(--secondary-blue);
-  padding-bottom: 260px;
   background-color: var(--bg-blue);
-  height: inherit;
+  height: calc(100vh - 220px);
 }
 
 .lyrics-wrap {
   width: calc(100% - 80px);
-  min-width: 500px;
+  min-width: 350px;
   max-width: 800px;
-  margin: -100px auto 0;
+  margin: -100px auto 2rem;
   background-color: var(--secondary-blue);
-  padding: 40px;
+  padding: 2rem;
   z-index: 100;
   box-shadow: 0 0 12px #111;
   display: grid;
@@ -170,8 +161,8 @@
 .song-info {
   display: grid;
   justify-items: center;
-  gap:1rem;
-  padding: 60px 40px 140px;
+  gap: 2rem;
+  padding: 3rem 3rem 9rem;
   margin-bottom: 20px;
   background-color: var(--primary-blue);
   z-index: 90;
