@@ -6,7 +6,6 @@ import Controls from './controls';
 import Explore from './pages/explore';
 import UserPlaylists from "./pages/userPlaylists";
 import EditPlaylist from "./pages/editPlaylist";
-import WebPlayback from "./func/webPlayBackSDK"
 
 export const LoginStatusCtx = React.createContext()
 
@@ -21,16 +20,13 @@ function Login() {
   // Global context items
   const [token, setToken] = useState('')
   const [playerCBData, setPlayerCBData] = useState({
-    is_playing: true,
+    is_paused: true,
     progress_ms: 0,
     volume: 0,
-    deviceId: '',
-    track_id: '',
     type: '',
-    error: '',
-    error_type: ''
+    track_id: ''
   })
-  const [playerURIS, setPlayerURIS] = useState('')
+  const [playlistURI, setPlaylistURI] = useState('')
   const [playerOffset, setPlayerOffset] = useState(0)
   const [playlistID, setPlaylistID] = useState('')
   const [username, setUsername] = useState('')
@@ -80,7 +76,7 @@ function Login() {
       message, setMessage, 
       showMessage, setShowMessage, 
       playlistID, setPlaylistID, 
-      playerURIS, setPlayerURIS, 
+      playlistURI, setPlaylistURI, 
       playerOffset, setPlayerOffset, 
       playerCBData, setPlayerCBData}}>
     {
@@ -96,7 +92,6 @@ function Login() {
           <Route path="/" element={<Explore />} />
           <Route path="/playlists" element={<UserPlaylists token={token} userID={userID}/>} />
           <Route path="/editPlaylist/:id" element={<EditPlaylist />} />
-          <Route path='/test' element={<WebPlayback token={token} />} />
         </Routes>
         <Controls />
       </>
