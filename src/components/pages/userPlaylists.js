@@ -9,7 +9,7 @@ export default function UserPlaylists({...props}) {
 
   // global context
   const { token } = useContext(LoginStatusCtx)
-  const { setPlayerURIS } = useContext(LoginStatusCtx)
+  const { setPlaylistURI } = useContext(LoginStatusCtx)
   const { setPlaylistID } = useContext(LoginStatusCtx)
   const { userID } = useContext(LoginStatusCtx)
 
@@ -17,7 +17,7 @@ export default function UserPlaylists({...props}) {
   
   function playPlaylist(playlist){
     // save currently playing playlist data to global context
-    setPlayerURIS(playlist.uri)
+    setPlaylistURI(playlist.uri)
     setPlaylistID(playlist.id)
     changePlaylistSong(0, token, playlist.uri)
   }
