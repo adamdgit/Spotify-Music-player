@@ -1,70 +1,29 @@
-# Getting Started with Create React App
+This project was created using Create React App by Adam Demol. 2022
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Using The App
 
-## Available Scripts
+Using this app requires a Spotify premium account. You will have to log-in and give access to certain scopes for the app to access and control your playlists.
 
-In the project directory, you can run:
+The app uses the official Spotify web API which can be read about below:
+https://developer.spotify.com/documentation/web-api/
 
-### `npm start`
+Any changes within the app will be reflected on your Spotify account.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## What data is used?
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+No data is stored or tracked, you will be giving the app access to authorisation scopes for the functionality to work.
 
-### `npm test`
+See the official documentation below: 
+https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## What can the app do?
 
-### `npm run build`
+Listen to your Spotify playlists or search songs to listen to.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Modify playlist info such as: name, description, add songs, remove songs and change song order.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Create new playlists
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Explore Spotify featured playlists
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Search for new songs
