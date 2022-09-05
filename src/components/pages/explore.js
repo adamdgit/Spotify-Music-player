@@ -38,7 +38,7 @@ export default function Explore() {
     <div className="page-wrap">
       <div className="main-content">
         <h1 className="featured">Spotify featured playlists:</h1>
-        <div className="searchResults">
+        <div className="explore-wrap">
           {
             results.length !== 0 ?
             results.map((result, i) => {
