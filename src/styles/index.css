@@ -7,7 +7,7 @@
   --primary-blue:rgb(33, 37, 44);
   --secondary-blue:rgb(58, 67, 82);
   --bg-blue:rgb(23, 25, 29);
-  --max-page-width: 1500px;
+  --max-page-width: 1300px;
 }
 
 ::-webkit-scrollbar {
