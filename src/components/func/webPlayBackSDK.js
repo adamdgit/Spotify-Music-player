@@ -1,18 +1,21 @@
 import { useEffect, useState, useContext } from "react";
 import { transferPlayback } from "../api/transferPlayback";
 import { LoginStatusCtx } from "../login";
+import { shufflePlaylist } from "../api/shufflePlaylist"
+import { repeatTrack } from "../api/repeatTrack";
 
 export default function WebPlayback(props) {
 
   // global context
   const { setPlayerCBData } = useContext(LoginStatusCtx)
   const { setPlaylistID } = useContext(LoginStatusCtx)
-  const { setPlaylistURI } = useContext(LoginStatusCtx)
+  const { setContextURI } = useContext(LoginStatusCtx)
 
   const [player, setPlayer] = useState(undefined)
   const [isMuted, setIsMuted] = useState(false)
   const [is_paused, setPaused] = useState(true)
   const [is_active, setActive] = useState(false)
+  const [shuffle, setShuffle] = useState(false)
   const [current_track, setTrack] = useState()
   const [volume, setVolume] = useState(20)
 
@@ -33,7 +36,6 @@ export default function WebPlayback(props) {
       player.addListener('ready', ({ device_id }) => {
         // transfer playback to webplayer SDK
         transferPlayback(props.token, device_id)
-        setPlayerCBData(current => ({...current, type: 'player_ready'}))
         console.log('Ready with Device ID', device_id);
       })
       player.addListener('not_ready', ({ device_id }) => {
@@ -41,11 +43,11 @@ export default function WebPlayback(props) {
       })
       player.addListener('player_state_changed', ( state => {
         if (!state) return
-        console.log(state)
-        setPlaylistURI(state.context.uri)
+        setPaused(state.paused)
+        setContextURI(state.context.uri)
         setPlaylistID(state.context.uri.split(":")[2])
         setTrack(state.track_window.current_track)
-        setPlayerCBData(current => ({...current, track_id: state.track_window.current_track.id, is_paused: state.paused}))
+        setPlayerCBData(current => ({...current, track_id: state.track_window.current_track.id, type: 'player_ready'}))
         player.getCurrentState().then( state => { 
             (!state)? setActive(false) : setActive(true) 
         });
@@ -54,6 +56,17 @@ export default function WebPlayback(props) {
     }
 
   }, [])
+
+  const shuffleSongs = () => {
+    // toggle shuffle between true/false
+    setShuffle(!shuffle)
+    shufflePlaylist(props.token, !shuffle)
+  }
+
+  const repeatSongs = () => {
+    // 2nd argument must be track, context or off
+    repeatTrack(props.token, 'context')
+  }
 
   const changeVolume = (value) => {
     setVolume(value)
@@ -85,7 +98,10 @@ export default function WebPlayback(props) {
       </div>
 
       <div className="player-btns">
-        <button className="shuffle-btn">
+        <button className="shuffle-btn" 
+          onClick={() => shuffleSongs()}
+          style={shuffle === true? {color: 'var(--blue)'} : {}}
+        >
           <svg viewBox="0 0 24 24" height="24px" width="24px" fill="currentcolor"><path d="M16.808 4.655l2.069 1.978h-.527c-1.656 0-3.312.68-4.458 1.814L12.797 9.75l1.179 1.246 1.317-1.527c.764-.794 1.91-1.247 3.057-1.247h.55l-2.07 2.014 1.178 1.179 4.005-3.993-4.026-3.945-1.178 1.179zm1.974 10.998l-1.974-1.888 1.18-1.179 4.024 3.945-4.004 3.993-1.178-1.179 1.954-1.901h-.434c-1.656 0-3.312-.625-4.458-1.667L8.242 9.8C7.35 9.071 6.204 8.55 4.93 8.55H2l.006-1.794 2.965.003c1.784 0 3.312.521 4.459 1.563l5.904 6.185c.765.73 1.911 1.146 3.058 1.146h.39zm-9.02-2.092l-1.52 1.394c-.892.793-2.038 1.36-3.312 1.36H2v1.588h2.93c1.783 0 3.312-.567 4.459-1.701l1.537-1.396-1.164-1.245z"></path></svg>
         </button>
         <button className="previous-btn" onClick={() => { 
@@ -99,7 +115,6 @@ export default function WebPlayback(props) {
         </button>
         <button className="play-btn" onClick={() => { 
           player.togglePlay()
-          setPaused(!is_paused)
           setPlayerCBData(current => ({...current, type: 'track_play_pause'}))
         }} >
           { 
@@ -126,7 +141,8 @@ export default function WebPlayback(props) {
             <path d="M12.7 1a.7.7 0 00-.7.7v5.15L2.05 1.107A.7.7 0 001 1.712v12.575a.7.7 0 001.05.607L12 9.149V14.3a.7.7 0 00.7.7h1.6a.7.7 0 00.7-.7V1.7a.7.7 0 00-.7-.7h-1.6z"></path>
           </svg>
         </button>
-        <button className="loop-btn">
+        <button className="loop-btn" 
+          onClick={() => {repeatSongs()}}>
           <svg viewBox="0 0 24 24" height="24px" width="24px" fill="currentcolor"><path d="M3 6.929c0-.75.643-1.393 1.393-1.393h14.286L16.32 3.179 17.5 2l4.393 4.393-4.393 4.393-1.179-1.179L18.68 7.25H4.714V11H3V6.929zM2.107 17.607L6.5 13.214l1.179 1.179L5.32 16.75l13.965-.071v-3.965H21V17c0 .75-.643 1.393-1.393 1.393l-14.286.071 2.358 2.357L6.5 22l-4.393-4.393z"></path></svg>
         </button>
       </div>
