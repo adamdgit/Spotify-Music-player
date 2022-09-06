@@ -16,7 +16,7 @@ function PlaylistInfo({ playerIsHidden }) {
 
   // global context
   const { token } = useContext(LoginStatusCtx)
-  const { playlistURI } = useContext(LoginStatusCtx)
+  const { contextURI } = useContext(LoginStatusCtx)
   const { playerCBData } = useContext(LoginStatusCtx)
   const { playlistID } = useContext(LoginStatusCtx)
   const { songs, setSongs } = useContext(LoginStatusCtx)
@@ -82,10 +82,6 @@ function PlaylistInfo({ playerIsHidden }) {
   }
 
   useEffect(() => {
-    console.log(playerCBData)
-  },[playerCBData])
-
-  useEffect(() => {
     getUserPlaylists(token)
     .then(result => {
       if(result.length > 0) return setPlaylists(result)
@@ -103,7 +99,20 @@ function PlaylistInfo({ playerIsHidden }) {
     })
 
     function dragStart(e) {
-      let element = e.target
+      let element = null
+      // using touchstart listener, e.target could return a child
+      // of the draggable element, unlike dragstart which only returns
+      // the target containing the draggable html tag
+      // can't use dragstart listener for mobile touch events
+      if (e.type === 'touchstart') {
+        e.path.forEach(path => {
+          if (path.classList?.contains('draggable')) {
+            element = path
+          }
+        })
+      } else {
+        element = e.target
+      }
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
@@ -122,32 +131,21 @@ function PlaylistInfo({ playerIsHidden }) {
       // cancel drag listener, start listening for mousemove instead
       e.preventDefault()
 
-      document.addEventListener('mousemove', mouseMove)
-      document.addEventListener('touchmove', mouseMove)
+      document.addEventListener('pointermove', mouseMove)
       function mouseMove(e) {
-        if (e.type === 'touchmove') {
-          clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
-          clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
-          let nearestNode = getNearestNode(e.changedTouches[0].clientY)
-          container.current.insertBefore(element, nearestNode)
-        } else {
-          clone.style.setProperty('--x', e.clientX + 'px')
-          clone.style.setProperty('--y', e.clientY + 'px')
-          let nearestNode = getNearestNode(e.clientY)
-          container.current.insertBefore(element, nearestNode)
-        }
+        clone.style.setProperty('--x', e.clientX + 'px')
+        clone.style.setProperty('--y', e.clientY + 'px')
+        let nearestNode = getNearestNode(e.clientY)
+        container.current.insertBefore(element, nearestNode)
       }
 
-      document.addEventListener('mouseup', placeEl)
-      document.addEventListener('touchend', placeEl)
+      document.addEventListener('pointerup', placeEl)
       function placeEl() {
         // remove listeners, place element, remove clone
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
-        document.removeEventListener('mousemove', mouseMove)
-        document.removeEventListener('mouseup', placeEl)
-        document.removeEventListener('touchmove', mouseMove)
-        document.removeEventListener('touchend', placeEl)
+        document.removeEventListener('pointermove', mouseMove)
+        document.removeEventListener('pointerup', placeEl)
         let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
         let htmlElToArray = Array.from(container.current.childNodes)
@@ -162,6 +160,7 @@ function PlaylistInfo({ playerIsHidden }) {
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
+        element.removeEventListener('touchstart', dragStart)
         element.removeEventListener('dragstart', dragStart)
       })
     }
@@ -213,7 +212,7 @@ function PlaylistInfo({ playerIsHidden }) {
       }
     }
 
-  },[playerCBData, setSongs, playlistID, token])
+  },[playerCBData, token])
 
   return (
     <div style={!playlistID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
@@ -245,7 +244,7 @@ function PlaylistInfo({ playerIsHidden }) {
               return (
                 <span key={index} data-index={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
-                  <button onClick={() => changePlaylistSong(index, token, playlistURI)} className="play-song-btn" draggable="false" >
+                  <button onClick={() => changePlaylistSong(index, token, contextURI)} className="play-song-btn" draggable="false" >
                     <img src={
                       song.track.album.images.length === 0 ?
                       'no image found' :
