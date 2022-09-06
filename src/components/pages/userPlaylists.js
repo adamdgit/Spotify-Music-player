@@ -9,17 +9,19 @@ export default function UserPlaylists({...props}) {
 
   // global context
   const { token } = useContext(LoginStatusCtx)
-  const { setPlaylistURI } = useContext(LoginStatusCtx)
+  const { setContextURI } = useContext(LoginStatusCtx)
   const { setPlaylistID } = useContext(LoginStatusCtx)
   const { userID } = useContext(LoginStatusCtx)
+  const { setPlayerCBData } = useContext(LoginStatusCtx)
 
   const [playlists, setPlaylists] = useState([])
   
   function playPlaylist(playlist){
     // save currently playing playlist data to global context
-    setPlaylistURI(playlist.uri)
+    setContextURI(playlist.uri)
     setPlaylistID(playlist.id)
     changePlaylistSong(0, token, playlist.uri)
+    setPlayerCBData(current => ({...current, type: 'track_update'}))
   }
 
   useEffect(() => {
@@ -35,7 +37,9 @@ export default function UserPlaylists({...props}) {
       <div className="main-content">
         <div className="user-playlists-header">
           <h1>My Playlists</h1>
-          <button className="play" onClick={() => createPlaylist(props.token, props.userID)}>Create Playlist</button>
+          <button className="play" onClick={() => createPlaylist(props.token, props.userID)}>
+            Create Playlist
+          </button>
         </div>
         <div className="user-playlists-wrap">
           <>
