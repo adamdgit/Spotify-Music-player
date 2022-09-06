@@ -26,7 +26,7 @@ function Login() {
     type: '',
     track_id: ''
   })
-  const [playlistURI, setPlaylistURI] = useState('')
+  const [contextURI, setContextURI] = useState('')
   const [playerOffset, setPlayerOffset] = useState(0)
   const [playlistID, setPlaylistID] = useState('')
   const [username, setUsername] = useState('')
@@ -76,7 +76,7 @@ function Login() {
       message, setMessage, 
       showMessage, setShowMessage, 
       playlistID, setPlaylistID, 
-      playlistURI, setPlaylistURI, 
+      contextURI, setContextURI, 
       playerOffset, setPlayerOffset, 
       playerCBData, setPlayerCBData}}>
     {
