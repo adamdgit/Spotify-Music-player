@@ -1,8 +1,7 @@
 .controls {
   position: fixed;
   display: flex;
-  width: 100%;
-  min-height: 100px;
+  width: 100vw;
   padding: 1rem 1.4rem;
   left: 0;
   bottom: 0;

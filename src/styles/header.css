@@ -4,7 +4,7 @@
   padding: 0 20px;
   border-bottom: 5px solid var(--secondary-blue);
   box-shadow: 0 5px 12px #111;
-  width: 100%;
+  width: 100vw;
   z-index: 200;
 }
 

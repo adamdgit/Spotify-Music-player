@@ -34,7 +34,7 @@
   overflow-y: auto;
   border-top: 3px solid var(--secondary-blue);
   padding: 2rem;
-  height: calc(100vh - 220px);
+  height: calc(100vh - 215px);
 }
 
 .playlist-info-wrap {
@@ -137,7 +137,7 @@
   overflow-y: scroll;
   border-top: 3px solid var(--secondary-blue);
   background-color: var(--bg-blue);
-  height: calc(100vh - 220px);
+  height: calc(100vh - 215px);
 }
 
 .lyrics-wrap {
