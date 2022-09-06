@@ -1,22 +1,24 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { LoginStatusCtx } from "../login";
+import { changePlaylistSong } from "../api/changePlaylistSong";
 import axios from "axios";
 
 export default function Explore() {
 
   const { token } = useContext(LoginStatusCtx)
-  const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
-  const { playerOffset, setPlayerOffset } = useContext(LoginStatusCtx)
-  const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
+  const { setContextURI } = useContext(LoginStatusCtx)
+  const { setPlaylistID } = useContext(LoginStatusCtx)
+  const { setPlayerCBData } = useContext(LoginStatusCtx)
 
   const [results, setResults] = useState([])
   const trackElement = useRef([])
 
   function playPlaylist(playlist){
     // save currently playing playlist data to global context
-    setPlayerURIS(playlist.uri)
+    setContextURI(playlist.uri)
     setPlaylistID(playlist.id)
-    setPlayerOffset(0)
+    changePlaylistSong(0, token, playlist.uri)
+    setPlayerCBData(current => ({...current, type: 'track_update'}))
   }
  
   useEffect(() => {
