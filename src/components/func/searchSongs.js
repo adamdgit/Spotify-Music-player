@@ -1,4 +1,4 @@
-import React from "react";
+import axios from "axios";
 import { useState, useRef, useEffect, useContext } from "react";
 import { LoginStatusCtx } from "../login";
 import { showHideAddToPlaylistBtn } from "./showHideAddToPlaylistBtn"
@@ -11,11 +11,12 @@ export default function SearchSongs() {
   
   // global context
   const { token } = useContext(LoginStatusCtx)
-  const { songs, setSongs } = useContext(LoginStatusCtx)
-  const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
+  const { setSongs } = useContext(LoginStatusCtx)
+  const { setContextURI } = useContext(LoginStatusCtx)
   const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
-  const { message, setMessage } = useContext(LoginStatusCtx)
-  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
+  const { setMessage } = useContext(LoginStatusCtx)
+  const { setShowMessage } = useContext(LoginStatusCtx)
+  const { setPlayerCBData } = useContext(LoginStatusCtx)
 
   const [tracks, setTracks] = useState([])
   const [query, setQuery] = useState('')
@@ -31,7 +32,7 @@ export default function SearchSongs() {
     })
   },[token])
 
-  const addToPlaylist = (resultURI, playlistid, playlistName) => {
+  const addToPlaylist = async (resultURI, playlistid, playlistName) => {
     addTrackToPlaylist(resultURI, playlistid, token)
     .then(result => {
       if(result.length > 0) {
@@ -56,9 +57,19 @@ export default function SearchSongs() {
     inputElement.current.value = ''
   }
 
-  function playSong(song) {
+  const playSong = async (song)  => {
+    await axios({ 
+      method: 'put', 
+      url: 'https://api.spotify.com/v1/me/player/play', 
+      headers: { 'Authorization': 'Bearer ' + token }, 
+      data: {
+        "uris": [song.uri],
+        "offset": { "position": 0 }
+      }
+    }).catch(error => {return console.error(error)})
     // save new URIS data to global context (playlist or track)
-    setPlayerURIS(song.uri)
+    setContextURI(song.uri)
+    setPlayerCBData(current => ({...current, type: 'track_update'}))
     // remove playlist ID as track is playing not playlist
     setPlaylistID('')
     setTracks([])
