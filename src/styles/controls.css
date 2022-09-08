@@ -116,15 +116,17 @@
 /*--------Playlist Message---------*/
 
 .playlist-update-message {
+  font-size: .8rem;
+  text-align: center;
   opacity: 0;
   pointer-events: none;
   position: absolute;
   background-color: var(--bg-blue);
   color: white;
-  padding: 10px 20px;
+  padding: 1rem;
   border: 1px solid var(--blue);
   border-radius: 5px;
-  bottom: 115px;
+  bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
   transition: opacity 200ms ease-in-out;
