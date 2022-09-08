@@ -1,12 +1,12 @@
 import { useContext } from "react";
-import { LoginStatusCtx } from "./login";
+import { GlobalContext } from "./login";
 import { NavLink } from "react-router-dom"
 import SearchSongs from "./func/searchSongs";
 
 function Header() {
 
-  const { token, setToken } = useContext(LoginStatusCtx)
-  const { username } = useContext(LoginStatusCtx)
+  const { token, setToken } = useContext(GlobalContext)
+  const { username } = useContext(GlobalContext)
 
   const logout = () => {
     setToken('')
