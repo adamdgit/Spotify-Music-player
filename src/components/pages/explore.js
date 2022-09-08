@@ -1,14 +1,14 @@
 import { useState, useRef, useContext, useEffect } from "react";
-import { LoginStatusCtx } from "../login";
+import { GlobalContext } from "../login";
 import { changePlaylistSong } from "../api/changePlaylistSong";
 import axios from "axios";
 
 export default function Explore() {
 
-  const { token } = useContext(LoginStatusCtx)
-  const { setContextURI } = useContext(LoginStatusCtx)
-  const { setPlaylistID } = useContext(LoginStatusCtx)
-  const { setPlayerCBData } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { setContextURI } = useContext(GlobalContext)
+  const { setPlaylistID } = useContext(GlobalContext)
+  const { setPlayerCBData } = useContext(GlobalContext)
 
   const [results, setResults] = useState([])
   const trackElement = useRef([])
@@ -44,9 +44,18 @@ export default function Explore() {
           {
             results.length !== 0 ?
             results.map((result, i) => {
+              if (result === null) return
               return (
                 <div key={i} ref={trackElement[i]} className={'explore-result'}>
-                  <img src={result.images[0].url} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
+                  <img src={
+                    result.images.length === 0 ?
+                    'no image found' :
+                    result.images[0].url
+                    } alt={
+                    result.images.length === 0 ?
+                    'no image found' :
+                    `${result.name} playlist art`
+                    } width={'200px'} height={'200px'} />
                   <h2>{result.name}</h2>
                   <p>{result.description}</p>
                   <button className="play" onClick={() => playPlaylist(result)}>
