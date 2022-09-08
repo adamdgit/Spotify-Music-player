@@ -1,21 +1,27 @@
 import { useEffect, useState, useContext } from "react";
 import { transferPlayback } from "../api/transferPlayback";
-import { LoginStatusCtx } from "../login";
+import { GlobalContext } from "../login";
 import { shufflePlaylist } from "../api/shufflePlaylist"
 import { repeatTrack } from "../api/repeatTrack";
+import { nextTrack } from "../api/nextTrack"
+import { previousTrack } from "../api/previousTrack,"
 
 export default function WebPlayback(props) {
 
   // global context
-  const { setPlayerCBData } = useContext(LoginStatusCtx)
-  const { setPlaylistID } = useContext(LoginStatusCtx)
-  const { setContextURI } = useContext(LoginStatusCtx)
+  const { setPlayerCBData } = useContext(GlobalContext)
+  const { setPlaylistID } = useContext(GlobalContext)
+  const { setContextURI } = useContext(GlobalContext)
+  // playlist update message
+  const { setMessage } = useContext(GlobalContext)
+  const { setShowMessage } = useContext(GlobalContext)
 
   const [player, setPlayer] = useState(undefined)
   const [isMuted, setIsMuted] = useState(false)
   const [is_paused, setPaused] = useState(true)
   const [is_active, setActive] = useState(false)
   const [shuffle, setShuffle] = useState(false)
+  const [repeat, setRepeat] = useState(false)
   const [current_track, setTrack] = useState()
   const [volume, setVolume] = useState(20)
 
@@ -32,40 +38,68 @@ export default function WebPlayback(props) {
           getOAuthToken: cb => { cb(props.token); },
           volume: 0.2
       })
+
       setPlayer(player)
+
       player.addListener('ready', ({ device_id }) => {
-        // transfer playback to webplayer SDK
-        transferPlayback(props.token, device_id)
+        // transfer playback to webplayer SDK after 4s
+        // otherwise spotify gives device id not found error??
+        setTimeout(() => {
+          transferPlayback(props.token, device_id)
+          setPlayerCBData(current => ({...current, type: 'player_ready'}))
+        }, 4000)
         console.log('Ready with Device ID', device_id);
       })
+
       player.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id);
       })
+
+      player.connect()
+
       player.addListener('player_state_changed', ( state => {
         if (!state) return
-        setPaused(state.paused)
+        setPlayerCBData(current => ({...current, track_id: state.track_window.current_track.id}))
         setContextURI(state.context.uri)
-        setPlaylistID(state.context.uri.split(":")[2])
+        // splits uri into strings in an array, then gets the last array item (id)
+        setPlaylistID(state.context.uri.split(":").pop())
+        setPaused(state.paused)
         setTrack(state.track_window.current_track)
-        setPlayerCBData(current => ({...current, track_id: state.track_window.current_track.id, type: 'player_ready'}))
         player.getCurrentState().then( state => { 
-            (!state)? setActive(false) : setActive(true) 
-        });
-       }));
-      player.connect()
-    }
+          (!state)? setActive(false) : setActive(true) 
+        })
+      }))
 
+    }
   }, [])
 
   const shuffleSongs = () => {
     // toggle shuffle between true/false
-    setShuffle(!shuffle)
     shufflePlaylist(props.token, !shuffle)
+    setShuffle(!shuffle)
+
+    if (shuffle === false) setMessage('Shuffle enabled')
+    else setMessage('Shuffle disabled')
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
   }
 
   const repeatSongs = () => {
-    // 2nd argument must be track, context or off
-    repeatTrack(props.token, 'context')
+    setRepeat(!repeat)
+    // check for opposite value as setRepeat won't update before if check
+    if (repeat === false) repeatTrack(props.token, 'track')
+    else repeatTrack(props.token, 'off')
+
+    if (repeat === false) setMessage('Repeat enabled') 
+    else setMessage('Repeat disabled')
+    setShowMessage(true)
+    // hide message after 2 seconds
+    setTimeout(() => {
+      setShowMessage(false)
+    }, 2000)
   }
 
   const changeVolume = (value) => {
@@ -105,7 +139,7 @@ export default function WebPlayback(props) {
           <svg viewBox="0 0 24 24" height="24px" width="24px" fill="currentcolor"><path d="M16.808 4.655l2.069 1.978h-.527c-1.656 0-3.312.68-4.458 1.814L12.797 9.75l1.179 1.246 1.317-1.527c.764-.794 1.91-1.247 3.057-1.247h.55l-2.07 2.014 1.178 1.179 4.005-3.993-4.026-3.945-1.178 1.179zm1.974 10.998l-1.974-1.888 1.18-1.179 4.024 3.945-4.004 3.993-1.178-1.179 1.954-1.901h-.434c-1.656 0-3.312-.625-4.458-1.667L8.242 9.8C7.35 9.071 6.204 8.55 4.93 8.55H2l.006-1.794 2.965.003c1.784 0 3.312.521 4.459 1.563l5.904 6.185c.765.73 1.911 1.146 3.058 1.146h.39zm-9.02-2.092l-1.52 1.394c-.892.793-2.038 1.36-3.312 1.36H2v1.588h2.93c1.783 0 3.312-.567 4.459-1.701l1.537-1.396-1.164-1.245z"></path></svg>
         </button>
         <button className="previous-btn" onClick={() => { 
-          player.previousTrack()
+          previousTrack(props.token)
           setPlayerCBData(current => ({...current, type: 'track_update'}))
         }} >
           <svg role="img" fill="currentcolor" 
@@ -133,7 +167,7 @@ export default function WebPlayback(props) {
           }
         </button>
         <button className="next-btn" onClick={() => { 
-          player.nextTrack(),
+          nextTrack(props.token),
           setPlayerCBData(current => ({...current, type: 'track_update'}))
         }} >
           <svg role="img" fill="currentcolor" 
@@ -142,7 +176,9 @@ export default function WebPlayback(props) {
           </svg>
         </button>
         <button className="loop-btn" 
-          onClick={() => {repeatSongs()}}>
+          onClick={() => {repeatSongs()}}
+          style={repeat === true? {color: 'var(--blue)'} : {}}
+        >
           <svg viewBox="0 0 24 24" height="24px" width="24px" fill="currentcolor"><path d="M3 6.929c0-.75.643-1.393 1.393-1.393h14.286L16.32 3.179 17.5 2l4.393 4.393-4.393 4.393-1.179-1.179L18.68 7.25H4.714V11H3V6.929zM2.107 17.607L6.5 13.214l1.179 1.179L5.32 16.75l13.965-.071v-3.965H21V17c0 .75-.643 1.393-1.393 1.393l-14.286.071 2.358 2.357L6.5 22l-4.393-4.393z"></path></svg>
         </button>
       </div>
