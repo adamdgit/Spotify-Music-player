@@ -7,7 +7,7 @@ import Explore from './pages/explore';
 import UserPlaylists from "./pages/userPlaylists";
 import EditPlaylist from "./pages/editPlaylist";
 
-export const LoginStatusCtx = React.createContext()
+export const GlobalContext = React.createContext()
 
 function Login() {
 
@@ -22,7 +22,6 @@ function Login() {
   const [playerCBData, setPlayerCBData] = useState({
     is_paused: true,
     progress_ms: 0,
-    volume: 0,
     type: '',
     track_id: ''
   })
@@ -68,7 +67,7 @@ function Login() {
   },[token])
   
   return (
-    <LoginStatusCtx.Provider value={{
+    <GlobalContext.Provider value={{
       token, setToken, 
       username, setUsername, 
       userID, setUserID, 
@@ -96,7 +95,7 @@ function Login() {
         <Controls />
       </>
     }
-    </LoginStatusCtx.Provider>
+    </GlobalContext.Provider>
   )
 
 }
