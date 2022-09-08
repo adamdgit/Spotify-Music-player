@@ -150,8 +150,10 @@ export default function EditPlaylist() {
 
   // cleanup arrays when playlist changes
   useEffect(() => {
-    setDraggables([])
-    setSongs([])
+    if (playlistID === playlistData?.id) {
+      setDraggables([])
+      setSongs([])
+    }
   },[playlistID, setSongs])
 
   useEffect(() => {
