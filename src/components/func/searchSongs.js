@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useRef, useEffect, useContext } from "react";
-import { LoginStatusCtx } from "../login";
+import { GlobalContext } from "../login";
 import { showHideAddToPlaylistBtn } from "./showHideAddToPlaylistBtn"
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist";
 import { sanitizeArtistNames } from "./sanitizeArtistNames";
@@ -10,13 +10,13 @@ import { searchSongs } from "../api/search";
 export default function SearchSongs() {
   
   // global context
-  const { token } = useContext(LoginStatusCtx)
-  const { setSongs } = useContext(LoginStatusCtx)
-  const { setContextURI } = useContext(LoginStatusCtx)
-  const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
-  const { setMessage } = useContext(LoginStatusCtx)
-  const { setShowMessage } = useContext(LoginStatusCtx)
-  const { setPlayerCBData } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { setSongs } = useContext(GlobalContext)
+  const { setContextURI } = useContext(GlobalContext)
+  const { playlistID, setPlaylistID } = useContext(GlobalContext)
+  const { setMessage } = useContext(GlobalContext)
+  const { setShowMessage } = useContext(GlobalContext)
+  const { setPlayerCBData } = useContext(GlobalContext)
 
   const [tracks, setTracks] = useState([])
   const [query, setQuery] = useState('')
