@@ -14,6 +14,7 @@ export async function removeTrackFromPlaylist(trackURI, token, playlistID) {
       }]
     }
   }).catch(error => errorMsg = error)
+  
   await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=50`, {
     headers: {
       Accept: 'application/json',
