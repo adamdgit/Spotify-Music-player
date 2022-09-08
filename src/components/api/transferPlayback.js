@@ -1,6 +1,6 @@
 import axios from "axios"
 
-let errorMsg
+let error
 
 export async function transferPlayback(token, device_id) {
   // transfer playback to web player SDK
@@ -11,7 +11,7 @@ export async function transferPlayback(token, device_id) {
     data: {
       'device_ids' : [device_id]
     }
-  }).catch(error => errorMsg = error)
+  }).catch(err => error = err)
 
-  if(errorMsg) return errorMsg
+  if(error) return error
 }
