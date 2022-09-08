@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
-import { LoginStatusCtx } from "../login";
+import { GlobalContext } from "../login";
 import axios from "axios";
 import { searchSongs } from "../api/search";
 import { changePlaylistDetails } from "../api/changePlaylistDetails"
@@ -15,11 +15,11 @@ export default function EditPlaylist() {
 
   const { id } = useParams()
   // global context
-  const { token } = useContext(LoginStatusCtx)
-  const { songs, setSongs } = useContext(LoginStatusCtx)
-  const { playlistID } = useContext(LoginStatusCtx)
-  const { message, setMessage } = useContext(LoginStatusCtx)
-  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { songs, setSongs } = useContext(GlobalContext)
+  const { playlistID } = useContext(GlobalContext)
+  const { setMessage } = useContext(GlobalContext)
+  const { setShowMessage } = useContext(GlobalContext)
 
   const [playlistName, setPlaylistName] = useState('')
   const [playlistDesc, setPlaylistDesc] = useState('')
@@ -42,7 +42,7 @@ export default function EditPlaylist() {
     }
   },[])
 
-  const changeOrder = async (dragElIndex, dragElNewIndex) => {
+  const changeOrder = (dragElIndex, dragElNewIndex) => {
     setTracks([])
     setDraggables([])
     // if currently playing playlist matches currently editing
@@ -65,7 +65,7 @@ export default function EditPlaylist() {
       })
   }
 
-  const removeTrack = async (trackURI) => {
+  const removeTrack = (trackURI) => {
     removeTrackFromPlaylist(trackURI, token, playlistData.id)
       .then(result => {
         if(result.length > 0) {
@@ -87,11 +87,15 @@ export default function EditPlaylist() {
     }, 2000)
   }
 
-  const changeDetails = async () => {
+  const changeDetails = (e) => {
+    e.preventDefault()
+    // simple validation
     if (playlistName === '' && playlistDesc === '') {
-      alert('Please enter a name or description')
-      return
+      return alert('Please enter a name or description')
     }
+    else if (playlistName === '') return alert('No name entered')
+    else if (playlistDesc === '') return alert('No description entered')
+
     changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
     setMessage('Playlist details updated')
     setShowMessage(true)
@@ -101,7 +105,7 @@ export default function EditPlaylist() {
     }, 2000)
   }
 
-  const addTrack = async (uri) => {
+  const addTrack = (uri) => {
     addTrackToPlaylist(uri, id, token)
     .then(result => {
       if(result.length > 0) {
@@ -132,16 +136,23 @@ export default function EditPlaylist() {
           'Content-Type': 'application/json',
         }
       }).then((res) => {
-        console.log(res.data)
-        setPlaylistData(res.data)
-        setTracks(res.data.tracks.items)
-        setOriginalName(res.data.name)
-        setOriginalDesc(res.data.description)
-      }).catch(error => console.error(error))
+        if (res.data) {
+          setPlaylistData(res.data)
+          setTracks(res.data.tracks.items)
+          setOriginalName(res.data.name)
+          setOriginalDesc(res.data.description)
+        } else { console.error(res) }
+      })
     }
     getPlaylists()
 
   },[])
+
+  // cleanup arrays when playlist changes
+  useEffect(() => {
+    setDraggables([])
+    setSongs([])
+  },[playlistID, setSongs])
 
   useEffect(() => {
     if(query === '') return
@@ -168,46 +179,60 @@ export default function EditPlaylist() {
 
     draggables.forEach(element => {
       element.addEventListener('dragstart', dragStart)
+      element.addEventListener('touchstart', dragStart)
     })
 
     function dragStart(e) {
-      console.log('dragstart')
-      let element = e.target
+      let element = null
+      // using touchstart listener, e.target could return a child
+      // of the draggable element, unlike dragstart which only returns
+      // the target containing the draggable html tag
+      // can't use dragstart listener for mobile touch events
+      if (e.type === 'touchstart') {
+        e.path.forEach(path => {
+          if (path.classList?.contains('draggable')) {
+            element = path
+          }
+        })
+      } else { element = e.target }
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
       document.body.appendChild(clone)
       clone.classList.add('clone')
+      if (e.type === 'touchstart') {
+        clone.style.left = `-${e.changedTouches[0].clientX}px`
+      } else {
+        clone.style.left = `-${e.offsetX}px`
+      }
       clone.style.height = `${element.offsetHeight}px`
       clone.style.width = `${element.offsetWidth}px`
       clone.style.position = 'absolute'
       clone.style.top = '-55px'
-      clone.style.left = `-${e.offsetX}px`
       element.style.opacity = '0.3'
-      // cancel drag listener, start listening for mousemove instead
+      // cancel drag listener, start listening for pointermove instead
       e.preventDefault()
 
-      document.addEventListener('mousemove', mouseMove)
+      document.addEventListener('pointermove', mouseMove)
       function mouseMove(e) {
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
-        let nearestNode = getNearestNode(e.clientY)
+        let nearestNode = getNearestNode(e.clientY, 'draggable2')
         container.current.insertBefore(element, nearestNode)
       }
 
-      document.addEventListener('mouseup', placeEl)
+      document.addEventListener('pointerup', placeEl)
       function placeEl() {
-        // remove listeners and place element
+        // remove listeners, place element, remove clone
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
-        document.removeEventListener('mousemove', mouseMove)
-        document.removeEventListener('mouseup', placeEl)
+        document.removeEventListener('pointermove', mouseMove)
+        document.removeEventListener('pointerup', placeEl)
         let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
         let htmlElToArray = Array.from(container.current.childNodes)
         let newIndex = htmlElToArray.indexOf(newElLocation)
         // Only send API request if element has moved positions
-        console.log(startIndex, newIndex)
         if(startIndex === newIndex) return
         setTimeout(() => {
           changeOrder(startIndex, newIndex)
@@ -217,6 +242,7 @@ export default function EditPlaylist() {
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
+        element.removeEventListener('touchstart', dragStart)
         element.removeEventListener('dragstart', dragStart)
       })
     }
@@ -232,7 +258,6 @@ export default function EditPlaylist() {
             <h1>{!playlistName ? originalName : playlistName}</h1>
             <h3>{!playlistDesc ? originalDesc : playlistDesc}</h3>
           </span>
-          <button className="play" onClick={() => changeDetails()}>Save changes</button>
         </div>
 
         <div className="create-playlist">
@@ -248,10 +273,11 @@ export default function EditPlaylist() {
             `${playlistData.name} playlist art`
             }/> 
         }
-          <span className="user-input-wrap">
+          <form className="user-input-wrap">
             <span className="change-details">
               <h3>Name:</h3>
-              <input 
+              <input
+                id="name"
                 type="text" 
                 className="edit-input" 
                 onChange={(e) => setPlaylistName(e.target.value)}
@@ -261,6 +287,7 @@ export default function EditPlaylist() {
             <span className="change-details">
               <h3>Description:</h3>
               <input 
+                id="description"
                 type="text" 
                 className="edit-input" 
                 onChange={(e) => setPlaylistDesc(e.target.value)}
@@ -272,7 +299,8 @@ export default function EditPlaylist() {
               <input type="checkbox" onClick={(e) => setIsPublic(e.target.checked)}/>
               <p>(Leave unchecked for private playlist)</p>
             </span>
-          </span>
+            <button className="play save-changes" onClick={(e) => changeDetails(e)}>Save changes</button>
+          </form>
         </div>
 
         {playlistData? 
@@ -281,7 +309,7 @@ export default function EditPlaylist() {
           playlistID === playlistData.id?
             songs.map((song, index) => {
               return (
-                <span key={index} data-index={index} className="draggable" draggable="true" ref={setDraggableElement}>
+                <span key={index} data-index={index} className="draggable2" draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
                   <img src={
                     song.track.album.images.length === 0 ?
@@ -293,7 +321,7 @@ export default function EditPlaylist() {
                       song.track.album.images.length === 0 ?
                     'no image found' :
                     `${song.track.name} album art`
-                    } draggable="false" />
+                    } />
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
@@ -309,7 +337,7 @@ export default function EditPlaylist() {
             : 
             tracks.map((song, index) => {
               return (
-                <span key={index} data-index={index} className="draggable" draggable="true" ref={setDraggableElement}>
+                <span key={index} data-index={index} className="draggable2" draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
                   <img src={
                     song.track.album.images.length === 0 ?
@@ -321,7 +349,7 @@ export default function EditPlaylist() {
                       song.track.album.images.length === 0 ?
                     'no image found' :
                     `${song.track.name} album art`
-                    } draggable="false" />
+                    } />
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
