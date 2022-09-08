@@ -1,7 +1,7 @@
 import axios from "axios";
 import CurrentSong from "./currentSong";
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
-import { LoginStatusCtx } from "./login";
+import { GlobalContext } from "./login";
 import { changePlaylistSong } from "./api/changePlaylistSong";
 import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
 import { changePlaylistOrder } from "./api/changePlaylistOrder"
@@ -15,15 +15,15 @@ import { getUserPlaylists } from "./api/getUserPlaylists"
 function PlaylistInfo({ playerIsHidden }) {
 
   // global context
-  const { token } = useContext(LoginStatusCtx)
-  const { contextURI } = useContext(LoginStatusCtx)
-  const { playerCBData } = useContext(LoginStatusCtx)
-  const { playlistID } = useContext(LoginStatusCtx)
-  const { songs, setSongs } = useContext(LoginStatusCtx)
-  const { userID } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { contextURI } = useContext(GlobalContext)
+  const { playerCBData } = useContext(GlobalContext)
+  const { playlistID } = useContext(GlobalContext)
+  const { songs, setSongs } = useContext(GlobalContext)
+  const { userID } = useContext(GlobalContext)
   // playlist update message
-  const { message, setMessage } = useContext(LoginStatusCtx)
-  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
+  const { setMessage } = useContext(GlobalContext)
+  const { setShowMessage } = useContext(GlobalContext)
 
   const [currentSong, setCurrentSong] = useState()
   const [playlistOwner, setPlaylistOwner] = useState('')
@@ -41,12 +41,13 @@ function PlaylistInfo({ playerIsHidden }) {
     }
   },[])
 
-  const removeTrack = async (trackURI) => {
+  const removeTrack = (trackURI) => {
     removeTrackFromPlaylist(trackURI, token, playlistID)
-      .then(result => {
-        if(result.length > 0) return setSongs(result)
-        console.error(result)
-      }) 
+      .then(result => { 
+        if (result.length === 0) return setSongs([])
+        if (result.length > 0) return setSongs(result)
+        else console.error(result) 
+      })
     setMessage('Song removed from playlist')
     setShowMessage(true)
     // hide message after 2 seconds
@@ -55,23 +56,24 @@ function PlaylistInfo({ playerIsHidden }) {
     }, 2000)
   }
 
-  const changeOrder = async (startIndex, newIndex) => {
+  const changeOrder = (startIndex, newIndex) => {
     // changes order of playlist item
     setSongs([])
     setDraggables([])
     changePlaylistOrder(startIndex, newIndex, token, playlistID)
-      .then(result => {
-        if(result.length > 0) return setSongs(result)
-        console.error(result)
+      .then(result => { 
+        if (result.length === 0) return setSongs([])
+        if (result.length > 0) return setSongs(result)
+        else console.error(result) 
       })
   }
 
-  const addToPlaylist = async (resultURI, playlistid) => {
+  const addToPlaylist = (resultURI, playlistid) => {
     addTrackToPlaylist(resultURI, playlistid, token)
-    .then(result => {
-      if(result.length > 0) return
-      console.error(result)
-    })
+      .then(result => { 
+        if (result) console.error(result) 
+      })
+
     document.querySelector('.show-p').classList.remove('show-p')
     setMessage('Song added to playlist')
     setShowMessage(true)
@@ -83,10 +85,11 @@ function PlaylistInfo({ playerIsHidden }) {
 
   useEffect(() => {
     getUserPlaylists(token)
-    .then(result => {
-      if(result.length > 0) return setPlaylists(result)
-      console.error(result)
-    })
+      .then(result => { 
+        if (result.length === 0) return setPlaylists([])
+        if (result.length > 0) return setPlaylists(result)
+        else console.error(result) 
+      })
   },[token])
 
   useEffect(() => {
@@ -135,7 +138,7 @@ function PlaylistInfo({ playerIsHidden }) {
       function mouseMove(e) {
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
-        let nearestNode = getNearestNode(e.clientY)
+        let nearestNode = getNearestNode(e.clientY, 'draggable')
         container.current.insertBefore(element, nearestNode)
       }
 
@@ -174,7 +177,6 @@ function PlaylistInfo({ playerIsHidden }) {
 
   // when player sends callback state update, run this effect
   useEffect(() => {
-    console.log(playerCBData.type)
     // only run effect on track updates
     if(playerCBData.type === 'track_update' || playerCBData.type === 'player_ready') {
 
@@ -185,9 +187,10 @@ function PlaylistInfo({ playerIsHidden }) {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           }
-        }).then((res) => {
-          setCurrentSong(res.data)
-        }).catch(error => console.error(error))
+        }).then(result => { 
+          if (result.data) return setCurrentSong(result.data)
+          else console.error(result) 
+        })
       }
       getCurrentTrack()
 
@@ -201,12 +204,14 @@ function PlaylistInfo({ playerIsHidden }) {
               'Content-Type': 'application/json',
             }
           }).then((res) => {
-            setPlaylistArt(res.data.images[0].url)
-            setPlaylistDesc(res.data.description)
-            setPlaylistName(res.data.name)
-            setSongs(res.data.tracks.items)
-            setPlaylistOwner(res.data.owner.id)
-          }).catch(error => console.error(error))
+            if (res.data) {
+              setPlaylistArt(res.data.images[0].url)
+              setPlaylistDesc(res.data.description)
+              setPlaylistName(res.data.name)
+              setSongs(res.data.tracks.items)
+              setPlaylistOwner(res.data.owner.id)
+            } else { console.error(res) }
+          })
         }
         getPlaylistItems()
       }
@@ -241,10 +246,11 @@ function PlaylistInfo({ playerIsHidden }) {
         <div className="container" ref={container}>
           {
             playlistID? songs.map((song, index) => {
+              if (song === null) return
               return (
                 <span key={index} data-index={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
-                  <button onClick={() => changePlaylistSong(index, token, contextURI)} className="play-song-btn" draggable="false" >
+                  <button onClick={() => changePlaylistSong(index, token, contextURI)} className="play-song-btn" >
                     <img src={
                       song.track.album.images.length === 0 ?
                       'no image found' :
@@ -255,7 +261,7 @@ function PlaylistInfo({ playerIsHidden }) {
                       song.track.album.images.length === 0 ?
                       'no image found' :
                       `${song.track.name} album art`
-                      } draggable="false" />
+                      } />
                   </button>
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
