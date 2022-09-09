@@ -58,6 +58,7 @@ export default function WebPlayback(props) {
 
       player.addListener('player_state_changed', ( state => {
         if (!state) return
+        console.log(state)
         setPlayerCBData(current => ({...current, track_id: state.track_window.current_track.id}))
         setContextURI(state.context.uri)
         // splits uri into strings in an array, then gets the last array item (id)
