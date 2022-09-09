@@ -32,7 +32,6 @@ function Login() {
   const [userID, setUserID] = useState('')
   const [songs, setSongs] = useState([])
   const [message, setMessage] = useState('')
-  const [showMessage, setShowMessage] = useState(false)
 
   useEffect(() => {
 
@@ -73,7 +72,6 @@ function Login() {
       userID, setUserID, 
       songs, setSongs, 
       message, setMessage, 
-      showMessage, setShowMessage, 
       playlistID, setPlaylistID, 
       contextURI, setContextURI, 
       playerOffset, setPlayerOffset, 

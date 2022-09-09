@@ -15,7 +15,6 @@ export default function SearchSongs() {
   const { setContextURI } = useContext(GlobalContext)
   const { playlistID, setPlaylistID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
-  const { setShowMessage } = useContext(GlobalContext)
   const { setPlayerCBData } = useContext(GlobalContext)
 
   const [tracks, setTracks] = useState([])
@@ -47,11 +46,6 @@ export default function SearchSongs() {
       console.error(result)
     })
     setMessage(`Song added to playlist: ${playlistName}`)
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
     setTracks([])
     document.querySelector('.show-p').classList.remove('show-p')
     inputElement.current.value = ''

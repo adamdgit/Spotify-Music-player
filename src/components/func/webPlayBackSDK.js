@@ -14,7 +14,6 @@ export default function WebPlayback(props) {
   const { setContextURI } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
-  const { setShowMessage } = useContext(GlobalContext)
 
   const [player, setPlayer] = useState(undefined)
   const [isMuted, setIsMuted] = useState(false)
@@ -80,11 +79,6 @@ export default function WebPlayback(props) {
 
     if (shuffle === false) setMessage('Shuffle enabled')
     else setMessage('Shuffle disabled')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   const repeatSongs = () => {
@@ -95,11 +89,6 @@ export default function WebPlayback(props) {
 
     if (repeat === false) setMessage('Repeat enabled') 
     else setMessage('Repeat disabled')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   const changeVolume = (value) => {

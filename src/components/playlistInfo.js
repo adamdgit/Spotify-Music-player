@@ -23,7 +23,6 @@ function PlaylistInfo({ playerIsHidden }) {
   const { userID } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
-  const { setShowMessage } = useContext(GlobalContext)
 
   const [currentSong, setCurrentSong] = useState()
   const [playlistOwner, setPlaylistOwner] = useState('')
@@ -49,11 +48,6 @@ function PlaylistInfo({ playerIsHidden }) {
         else console.error(result) 
       })
     setMessage('Song removed from playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   const changeOrder = (startIndex, newIndex) => {
@@ -76,11 +70,6 @@ function PlaylistInfo({ playerIsHidden }) {
 
     document.querySelector('.show-p').classList.remove('show-p')
     setMessage('Song added to playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   useEffect(() => {

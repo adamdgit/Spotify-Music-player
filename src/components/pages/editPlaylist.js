@@ -19,7 +19,6 @@ export default function EditPlaylist() {
   const { songs, setSongs } = useContext(GlobalContext)
   const { playlistID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
-  const { setShowMessage } = useContext(GlobalContext)
 
   const [playlistName, setPlaylistName] = useState('')
   const [playlistDesc, setPlaylistDesc] = useState('')
@@ -80,11 +79,6 @@ export default function EditPlaylist() {
         console.error(result)
       })
     setMessage('Song removed from playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   const changeDetails = (e) => {
@@ -98,11 +92,6 @@ export default function EditPlaylist() {
 
     changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
     setMessage('Playlist details updated')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   const addTrack = (uri) => {
@@ -117,11 +106,6 @@ export default function EditPlaylist() {
       console.error(result)
     })
     setMessage('Track added to playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   useEffect(() => {
