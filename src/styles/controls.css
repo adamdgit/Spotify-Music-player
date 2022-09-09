@@ -51,7 +51,7 @@
 .shuffle-btn:hover, .loop-btn:hover, 
 .next-btn:hover, .previous-btn:hover,
 .play-btn:hover, .volume-btn:hover,
-.show-hide-playlist-btn:hover {
+.show-hide-playlist-btn svg:hover {
   color:var(--blue);
 }
 
@@ -86,20 +86,29 @@
 
 .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  background: var(--blue);
+  background-color: var(--blue);
   width: 15px;
   height: 15px;
   border-radius: 50%;
 }
 
-.volume-slider::-webkit-slider-runnable-track {
-  -webkit-appearance: none;
+.show-hide-playlist-btn {
+  position: absolute;
+  right: 15px;
+  bottom: 122px;
+  padding: .3rem .5rem 0;
+  border-radius: 10px 10px 0 0;
+  border-left: 1px solid var(--secondary-blue);
+  border-top: 1px solid var(--secondary-blue);
+  border-right: 1px solid var(--secondary-blue);
 }
 
-.show-hide-playlist-btn {
-  width: fit-content;
-  height: fit-content;
+.show-hide-playlist-btn svg {
   transition: transform 300ms ease-in-out;
+}
+
+.rotate-btn {
+  transform: rotate(180deg);
 }
 
 .current-song {
@@ -107,10 +116,6 @@
   left: 20px;
   display: flex;
   gap: 1rem;
-}
-
-.rotate-btn {
-  transform: rotate(180deg);
 }
 
 /*--------Playlist Message---------*/
