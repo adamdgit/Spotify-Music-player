@@ -87,34 +87,17 @@ function PlaylistInfo({ playerIsHidden }) {
 
     draggables.forEach(element => {
       element.addEventListener('dragstart', dragStart)
-      element.addEventListener('touchstart', dragStart)
     })
 
     function dragStart(e) {
       let element = null
-      // using touchstart listener, e.target could return a child
-      // of the draggable element, unlike dragstart which only returns
-      // the target containing the draggable html tag
-      // can't use dragstart listener for mobile touch events
-      if (e.type === 'touchstart') {
-        e.path.forEach(path => {
-          if (path.classList?.contains('draggable')) {
-            element = path
-          }
-        })
-      } else {
-        element = e.target
-      }
+      element = e.target
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
       document.body.appendChild(clone)
       clone.classList.add('clone')
-      if (e.type === 'touchstart') {
-        clone.style.left = `-${e.changedTouches[0].clientX}px`
-      } else {
-        clone.style.left = `-${e.offsetX}px`
-      }
+      clone.style.left = `-${e.offsetX}px`
       clone.style.height = `${element.offsetHeight}px`
       clone.style.width = `${element.offsetWidth}px`
       clone.style.position = 'absolute'
@@ -152,7 +135,6 @@ function PlaylistInfo({ playerIsHidden }) {
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
-        element.removeEventListener('touchstart', dragStart)
         element.removeEventListener('dragstart', dragStart)
       })
     }
