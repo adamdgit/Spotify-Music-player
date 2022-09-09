@@ -175,7 +175,35 @@
   }
 
   .controls {
-    padding: 1rem;
+    padding: .8rem;
+  }
+
+  .playback-wrap {
+    grid-template-rows: 40px auto;
+    row-gap: .4rem;
+  }
+
+  .current-info {
+    grid-column: span 2;
+  }
+
+  .current-info img {
+    height: 60px;
+    width: 60px;
+  }
+
+  .player-btns {
+    grid-row: 1;
+    grid-column: span 3;
+  }
+
+  .volume-control {
+    grid-row: 2;
+    grid-column: 3;
+  }
+
+  .show-hide-playlist-btn {
+    bottom: 132px;
   }
 
   @media only screen and (max-width: 500px){ 
@@ -215,5 +243,9 @@
 
   .logout {
     margin-bottom: unset;
+  }
+
+  .playlist-update-message {
+    bottom: 132px;
   }
 }
