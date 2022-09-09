@@ -161,6 +161,11 @@ export default function EditPlaylist() {
 
   useEffect(() => {
 
+    // TODO: add draggable icon next to delete
+    // must use icon to move the element,
+    // so drag and drop works on mobile, as
+    // touch devices need to drag the screen to move up and down
+
     if(draggables.length === 0) return
 
     draggables.forEach(element => {
