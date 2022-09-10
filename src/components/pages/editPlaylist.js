@@ -5,11 +5,11 @@ import axios from "axios";
 import { searchSongs } from "../api/search";
 import { changePlaylistDetails } from "../api/changePlaylistDetails"
 import { sanitizeArtistNames } from "../func/sanitizeArtistNames"
-import { convertTime } from "../func/convertTime";
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { changePlaylistOrder } from "../api/changePlaylistOrder"
 import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
 import { getNearestNode } from "../func/getNearestNode";
+import EditPlaylistItem from "../EditPlaylistItem";
 
 export default function EditPlaylist() {
 
@@ -159,6 +159,8 @@ export default function EditPlaylist() {
     }
   },[query, token])
 
+  // Adds event listners for playlist items after the draggables array is filled
+  // useCallback provides update when html draggables are rendered
   useEffect(() => {
 
     // TODO: add draggable icon next to delete
@@ -169,23 +171,13 @@ export default function EditPlaylist() {
     if(draggables.length === 0) return
 
     draggables.forEach(element => {
-      element.addEventListener('dragstart', dragStart)
-      element.addEventListener('touchstart', dragStart)
+      element.children[6].addEventListener('pointerdown', dragStart)
     })
 
     function dragStart(e) {
+      console.log(e)
+      // TODO: get correct draggable parent element from pressed button
       let element = null
-      // using touchstart listener, e.target could return a child
-      // of the draggable element, unlike dragstart which only returns
-      // the target containing the draggable html tag
-      // can't use dragstart listener for mobile touch events
-      if (e.type === 'touchstart') {
-        e.path.forEach(path => {
-          if (path.classList?.contains('draggable')) {
-            element = path
-          }
-        })
-      } else { element = e.target }
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
@@ -233,8 +225,8 @@ export default function EditPlaylist() {
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
+        element.removeEventListener('pointerdown', dragStart)
         element.removeEventListener('touchstart', dragStart)
-        element.removeEventListener('dragstart', dragStart)
       })
     }
   },[draggables])
@@ -300,57 +292,25 @@ export default function EditPlaylist() {
           playlistID === playlistData.id?
             songs.map((song, index) => {
               return (
-                <span key={index} data-index={index} className="draggable2" draggable="true" ref={setDraggableElement}>
-                  <span>{index+1}</span>
-                  <img src={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    song.track.album.images.length === 3 ?
-                    song.track.album.images[2].url :
-                    song.track.album.images[0].url
-                    } alt={
-                      song.track.album.images.length === 0 ?
-                    'no image found' :
-                    `${song.track.name} album art`
-                    } />
-                  <span className="play-song-tooltip">Play</span>
-                  <span className="draggable-trackname">
-                    <h1>{song.track.name}</h1>
-                    <p>{sanitizeArtistNames(song.track.artists)}</p>
-                  </span>
-                  <p className="song-length">{convertTime(song.track.duration_ms)}</p>
-                  <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
-                  </button>
-                </span>
+                <EditPlaylistItem 
+                  key={index}
+                  song={song} 
+                  index={index} 
+                  func={removeTrack} 
+                  setDraggableElement={setDraggableElement}
+                />
               )
             }) 
             : 
             tracks.map((song, index) => {
               return (
-                <span key={index} data-index={index} className="draggable2" draggable="true" ref={setDraggableElement}>
-                  <span>{index+1}</span>
-                  <img src={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    song.track.album.images.length === 3 ?
-                    song.track.album.images[2].url :
-                    song.track.album.images[0].url
-                    } alt={
-                      song.track.album.images.length === 0 ?
-                    'no image found' :
-                    `${song.track.name} album art`
-                    } />
-                  <span className="play-song-tooltip">Play</span>
-                  <span className="draggable-trackname">
-                    <h1>{song.track.name}</h1>
-                    <p>{sanitizeArtistNames(song.track.artists)}</p>
-                  </span>
-                  <p className="song-length">{convertTime(song.track.duration_ms)}</p>
-                  <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
-                  </button>
-                </span>
+                <EditPlaylistItem 
+                  key={index}
+                  song={song} 
+                  index={index} 
+                  func={removeTrack} 
+                  setDraggableElement={setDraggableElement}
+                />
               )
             })
           }
