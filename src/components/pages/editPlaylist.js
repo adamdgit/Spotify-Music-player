@@ -4,11 +4,11 @@ import { GlobalContext } from "../login";
 import axios from "axios";
 import { searchSongs } from "../api/search";
 import { changePlaylistDetails } from "../api/changePlaylistDetails"
-import { sanitizeArtistNames } from "../func/sanitizeArtistNames"
+import { sanitizeArtistNames } from "../utils/sanitizeArtistNames"
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { changePlaylistOrder } from "../api/changePlaylistOrder"
 import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
-import { getNearestNode } from "../func/getNearestNode";
+import { getNearestNode } from "../utils/getNearestNode";
 import EditPlaylistItem from "../EditPlaylistItem";
 
 export default function EditPlaylist() {
@@ -163,30 +163,28 @@ export default function EditPlaylist() {
   // useCallback provides update when html draggables are rendered
   useEffect(() => {
 
-    // TODO: add draggable icon next to delete
-    // must use icon to move the element,
-    // so drag and drop works on mobile, as
-    // touch devices need to drag the screen to move up and down
-
     if(draggables.length === 0) return
 
     draggables.forEach(element => {
-      element.children[6].addEventListener('pointerdown', dragStart)
+      element.children[4].addEventListener('mousedown', dragStart)
+      element.children[4].addEventListener('touchstart', dragStart)
     })
 
     function dragStart(e) {
-      console.log(e)
-      // TODO: get correct draggable parent element from pressed button
-      let element = null
+      let element = e.target.parentElement
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
-      document.body.appendChild(clone)
+      document.getElementById('root').appendChild(clone)
       clone.classList.add('clone')
       if (e.type === 'touchstart') {
-        clone.style.left = `-${e.changedTouches[0].clientX}px`
+        clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
+        clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
+        clone.style.left = `-${e.changedTouches[0].pageX}px`
       } else {
-        clone.style.left = `-${e.offsetX}px`
+        clone.style.setProperty('--x', e.clientX + 'px')
+        clone.style.setProperty('--y', e.clientY + 'px')
+        clone.style.left = `-${e.layerX}px`
       }
       clone.style.height = `${element.offsetHeight}px`
       clone.style.width = `${element.offsetWidth}px`
@@ -196,21 +194,35 @@ export default function EditPlaylist() {
       // cancel drag listener, start listening for pointermove instead
       e.preventDefault()
 
-      document.addEventListener('pointermove', mouseMove)
+      document.addEventListener('mousemove', mouseMove)
+      document.addEventListener('touchmove', mouseMove)
       function mouseMove(e) {
-        clone.style.setProperty('--x', e.clientX + 'px')
-        clone.style.setProperty('--y', e.clientY + 'px')
-        let nearestNode = getNearestNode(e.clientY, 'draggable2')
-        container.current.insertBefore(element, nearestNode)
+        let nearestNode = null
+        if (e.type === 'touchmove') {
+          clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
+          clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
+          nearestNode = getNearestNode(e.changedTouches[0].clientY, 'edit-draggable')
+        } else {
+          clone.style.setProperty('--x', e.clientX + 'px')
+          clone.style.setProperty('--y', e.clientY + 'px')
+          nearestNode = getNearestNode(e.clientY, 'edit-draggable')
+        }
+        // prevents constant rendering of element, only inserts when element is different
+        if (nearestNode !== element && nearestNode !== element.nextSibling) {
+          container.current.insertBefore(element, nearestNode)
+        }
       }
 
-      document.addEventListener('pointerup', placeEl)
+      document.addEventListener('mouseup', placeEl)
+      document.addEventListener('touchend', placeEl)
       function placeEl() {
         // remove listeners, place element, remove clone
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
-        document.removeEventListener('pointermove', mouseMove)
-        document.removeEventListener('pointerup', placeEl)
+        document.removeEventListener('mousemove', mouseMove)
+        document.removeEventListener('mouseup', placeEl)
+        document.removeEventListener('touchmove', mouseMove)
+        document.removeEventListener('touchend', placeEl)
         let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
         let htmlElToArray = Array.from(container.current.childNodes)
@@ -225,7 +237,7 @@ export default function EditPlaylist() {
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
-        element.removeEventListener('pointerdown', dragStart)
+        element.removeEventListener('mousedown', dragStart)
         element.removeEventListener('touchstart', dragStart)
       })
     }
