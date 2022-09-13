@@ -1,8 +1,8 @@
 import { useState, useContext } from "react"
 import PlaylistInfo from "./playlistInfo"
 import { GlobalContext } from "./login";
-import WebPlayback from "./func/webPlayBackSDK";
-import StatusMessage from "./func/statusMessage";
+import WebPlayback from "./utils/webPlayBackSDK";
+import StatusMessage from "./utils/statusMessage";
 
 function Controls() {
 

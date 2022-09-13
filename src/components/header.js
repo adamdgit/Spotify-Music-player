@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { GlobalContext } from "./login";
 import { NavLink } from "react-router-dom"
-import SearchSongs from "./func/searchSongs";
+import SearchSongs from "./utils/searchSongs";
 
 function Header() {
 
