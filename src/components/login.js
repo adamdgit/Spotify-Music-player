@@ -6,6 +6,7 @@ import Controls from './controls';
 import Explore from './pages/explore';
 import UserPlaylists from "./pages/userPlaylists";
 import EditPlaylist from "./pages/editPlaylist";
+import Search from "./pages/search";
 
 export const GlobalContext = React.createContext()
 
@@ -88,6 +89,7 @@ function Login() {
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/playlists" element={<UserPlaylists token={token} userID={userID}/>} />
+          <Route path="/search" element={<Search />} />
           <Route path="/editPlaylist/:id" element={<EditPlaylist />} />
         </Routes>
         <Controls />
