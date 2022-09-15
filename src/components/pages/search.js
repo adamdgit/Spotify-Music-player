@@ -46,9 +46,7 @@ export default function SearchSongs() {
       console.error(result)
     })
     setMessage(`Song added to playlist: ${playlistName}`)
-    setSearchResults([])
     document.querySelector('.show-p').classList.remove('show-p')
-    inputElement.current.value = ''
   }
 
   const playSong = async (song)  => {
@@ -66,8 +64,6 @@ export default function SearchSongs() {
     setPlayerCBData(current => ({...current, type: 'track_update'}))
     // remove playlist ID as track is playing not playlist
     setPlaylistID('')
-    setSearchResults([])
-    inputElement.current.value = ''
   }
 
   useEffect(() => {
