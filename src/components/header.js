@@ -16,13 +16,16 @@ function Header() {
     <header className="header-bar">
       <div className="header-wrap">
         <ul className="nav-bar">
-          <NavLink to="/" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <NavLink to="/" 
+            className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
             <li>Explore</li>
           </NavLink>
-          <NavLink to="/playlists" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <NavLink to="/playlists" 
+            className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
             <li>Playlists</li>
           </NavLink>
-          <NavLink to="/search" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <NavLink to="/search" 
+            className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
             <li>Search</li>
           </NavLink>
         </ul>
