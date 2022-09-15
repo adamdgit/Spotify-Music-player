@@ -23,7 +23,7 @@ function PlaylistInfo({ playerIsHidden }) {
   const { userID } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
-
+  // component state
   const [currentSong, setCurrentSong] = useState()
   const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
@@ -41,6 +41,9 @@ function PlaylistInfo({ playerIsHidden }) {
   },[])
 
   const removeTrack = (trackURI) => {
+    // empty songs array before re-populating with new data
+    setSongs([])
+    setDraggables([])
     removeTrackFromPlaylist(trackURI, token, playlistID)
       .then(result => { 
         if (result.length === 0) return setSongs([])
@@ -51,7 +54,7 @@ function PlaylistInfo({ playerIsHidden }) {
   }
 
   const changeOrder = (startIndex, newIndex) => {
-    // changes order of playlist item
+    // empty songs array before re-populating with new data
     setSongs([])
     setDraggables([])
     changePlaylistOrder(startIndex, newIndex, token, playlistID)
@@ -72,6 +75,7 @@ function PlaylistInfo({ playerIsHidden }) {
     setMessage('Song added to playlist')
   }
 
+  // gets users playlists, for add-to-playlist button function
   useEffect(() => {
     getUserPlaylists(token)
       .then(result => { 
@@ -81,6 +85,8 @@ function PlaylistInfo({ playerIsHidden }) {
       })
   },[token])
 
+  // Adds event listners for playlist items after the draggables array is filled
+  // useCallback provides update when html draggables are rendered
   useEffect(() => {
 
     if(draggables.length === 0) return
@@ -95,6 +101,8 @@ function PlaylistInfo({ playerIsHidden }) {
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
+      clone.style.setProperty('--x', e.clientX + 'px')
+      clone.style.setProperty('--y', e.clientY + 'px')
       document.body.appendChild(clone)
       clone.classList.add('clone')
       clone.style.left = `-${e.offsetX}px`
@@ -150,7 +158,6 @@ function PlaylistInfo({ playerIsHidden }) {
   useEffect(() => {
     // only run effect on track updates
     if(playerCBData.type === 'track_update' || playerCBData.type === 'player_ready') {
-
       const getCurrentTrack = async () => {
         await axios.get(`https://api.spotify.com/v1/tracks/${playerCBData.track_id}`, {
           headers: {
@@ -174,14 +181,14 @@ function PlaylistInfo({ playerIsHidden }) {
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             }
-          }).then((res) => {
-            if (res.data) {
-              setPlaylistArt(res.data.images[0].url)
-              setPlaylistDesc(res.data.description)
-              setPlaylistName(res.data.name)
-              setSongs(res.data.tracks.items)
-              setPlaylistOwner(res.data.owner.id)
-            } else { console.error(res) }
+          }).then((result) => {
+            if (result.data) {
+              setPlaylistArt(result.data.images[0].url)
+              setPlaylistDesc(result.data.description)
+              setPlaylistName(result.data.name)
+              setSongs(result.data.tracks.items)
+              setPlaylistOwner(result.data.owner.id)
+            } else { console.error(result) }
           })
         }
         getPlaylistItems()
@@ -217,7 +224,7 @@ function PlaylistInfo({ playerIsHidden }) {
         <div className="container" ref={container}>
           {
             playlistID? songs.map((song, index) => {
-              if (song === null) return
+              if (song === null || song === undefined) return
               return (
                 <span key={index} data-index={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
