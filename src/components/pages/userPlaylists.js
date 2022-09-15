@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom"
 import { createPlaylist } from "../api/createPlaylist"
 import { changePlaylistSong } from "../api/changePlaylistSong";
 import { getUserPlaylists } from "../api/getUserPlaylists"
+import Loading from "../Loading";
 
 export default function UserPlaylists({...props}) {
 
@@ -14,7 +15,7 @@ export default function UserPlaylists({...props}) {
   const { userID } = useContext(GlobalContext)
   const { setPlayerCBData } = useContext(GlobalContext)
 
-  const [playlists, setPlaylists] = useState([])
+  const [playlists, setPlaylists] = useState()
   const navigate = useNavigate()
   
   const playPlaylist = (playlist) => {
@@ -39,7 +40,7 @@ export default function UserPlaylists({...props}) {
     getUserPlaylists(token)
     .then(result => {
       if (result.length === 0) return setPlaylists([])
-      if (result.length > 0) return setPlaylists(result)
+      else if (result.length > 0) return setPlaylists(result)
       else console.error(result) 
     })
   },[token])
@@ -56,9 +57,8 @@ export default function UserPlaylists({...props}) {
         <div className="user-playlists-wrap">
           <>
             {
-            playlists.length !== 0 ?
-            playlists.map((result, i) => {
-              if (result === null) return
+            playlists? playlists.map((result, i) => {
+              if (result === null || result === undefined) return
               return (
                 <div key={i} className={'my-playlists-result'}>
                   <img src={result.images.length !== 0 ? result.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
@@ -77,7 +77,8 @@ export default function UserPlaylists({...props}) {
                 </div>
               )
             })
-            : <h1>No playlists found</h1>
+            : playlists?.length === 0 ? <h1>No data found</h1>
+            : <Loading loadingMsg={'Fetching your playlists...'}/>
             }
           </>
         </div>
