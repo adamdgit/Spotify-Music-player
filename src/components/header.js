@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { GlobalContext } from "./login";
 import { NavLink } from "react-router-dom"
-import SearchSongs from "./utils/searchSongs";
 
 function Header() {
 
@@ -23,8 +22,10 @@ function Header() {
           <NavLink to="/playlists" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
             <li>Playlists</li>
           </NavLink>
+          <NavLink to="/search" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+            <li>Search</li>
+          </NavLink>
         </ul>
-        <SearchSongs />
         <span className="user-info">
           <span>
             <button onClick={logout} className="logout">Disconnect spotify</button>
