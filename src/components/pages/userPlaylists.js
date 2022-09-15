@@ -45,6 +45,12 @@ export default function UserPlaylists({...props}) {
     })
   },[token])
 
+  playlists?.sort((a, b) => {
+    if(a.owner.id === userID && b.owner.id === userID) return 0
+    if(a.owner.id === userID && b.owner.id !== userID) return -1
+    return 1
+  })
+
   return (
     <div className="page-wrap">
       <div className="main-content">
