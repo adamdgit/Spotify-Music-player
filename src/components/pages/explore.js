@@ -2,6 +2,7 @@ import { useState, useRef, useContext, useEffect } from "react";
 import { GlobalContext } from "../login";
 import { changePlaylistSong } from "../api/changePlaylistSong";
 import axios from "axios";
+import Loading from "../Loading";
 
 export default function Explore() {
 
@@ -42,9 +43,8 @@ export default function Explore() {
         <h1 className="featured">Spotify featured playlists:</h1>
         <div className="explore-wrap">
           {
-            results.length !== 0 ?
-            results.map((result, i) => {
-              if (result === null) return
+            results? results.map((result, i) => {
+              if (result === null || result === undefined) return
               return (
                 <div key={i} ref={trackElement[i]} className={'explore-result'}>
                   <img src={
@@ -64,7 +64,8 @@ export default function Explore() {
                 </div>
               )
             })
-            : <></>
+            : results?.length === 0 ? <h1>No data found</h1>
+            : <Loading loadingMsg={'Fetching featured playlists...'}/>
           }
         </div>
       </div>
