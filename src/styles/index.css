@@ -33,3 +33,17 @@ body {
   line-height: normal;
   overflow-x: hidden;
 }
+
+.loading {
+  display: grid;
+  place-items: center;
+}
+
+.react-logo {
+  animation: rotate 6s linear infinite;
+}
+
+@keyframes rotate {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}

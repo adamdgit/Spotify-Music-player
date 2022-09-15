@@ -1,6 +1,7 @@
 .controls {
   position: fixed;
   display: flex;
+  height: 125px;
   width: 100vw;
   padding: 1rem 1.4rem;
   left: 0;
@@ -9,6 +10,7 @@
   border-top: 1px solid var(--secondary-blue);
   z-index: 999;
   gap: 1rem;
+  justify-content: center;
 }
 
 .playback-wrap {
@@ -95,7 +97,7 @@
 .show-hide-playlist-btn {
   position: absolute;
   right: 15px;
-  bottom: 122px;
+  bottom: 124px;
   padding: .3rem .5rem 0;
   border-radius: 10px 10px 0 0;
   border-left: 1px solid var(--secondary-blue);
