@@ -300,7 +300,7 @@ export default function EditPlaylist() {
 
         {playlistData? 
         <div className="edit-songlist" ref={container}>
-          { // show global songs if playlists are the same, otherwise show selected playlist tracks
+          { // if currently playing playlist is also being edited, map over global state
           playlistID === playlistData.id?
             songs.map((song, index) => {
               return (
