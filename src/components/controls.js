@@ -1,15 +1,13 @@
 import { useState, useContext } from "react"
 import PlaylistInfo from "./playlistInfo"
 import { GlobalContext } from "./login";
-import WebPlayback from "./utils/webPlayBackSDK";
+import WebPlayback from "./webPlayBackSDK";
 import StatusMessage from "./utils/statusMessage";
 
 function Controls() {
 
   // global context
   const { token } = useContext(GlobalContext)
-  const { message, setMessage } = useContext(GlobalContext)
-  const { showMessage, setShowMessage } = useContext(GlobalContext)
 
   const [playerIsHidden, setPLayerIsHidden] = useState(true)
 
