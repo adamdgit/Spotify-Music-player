@@ -1,25 +1,24 @@
 import { useContext, useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
-import { LoginStatusCtx } from "../login";
+import { GlobalContext } from "../login";
 import axios from "axios";
 import { searchSongs } from "../api/search";
 import { changePlaylistDetails } from "../api/changePlaylistDetails"
-import { sanitizeArtistNames } from "../func/sanitizeArtistNames"
-import { convertTime } from "../func/convertTime";
+import { sanitizeArtistNames } from "../utils/sanitizeArtistNames"
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { changePlaylistOrder } from "../api/changePlaylistOrder"
 import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
-import { getNearestNode } from "../func/getNearestNode";
+import { getNearestNode } from "../utils/getNearestNode";
+import EditPlaylistItem from "../EditPlaylistItem";
 
 export default function EditPlaylist() {
 
   const { id } = useParams()
   // global context
-  const { token } = useContext(LoginStatusCtx)
-  const { songs, setSongs } = useContext(LoginStatusCtx)
-  const { playlistID } = useContext(LoginStatusCtx)
-  const { message, setMessage } = useContext(LoginStatusCtx)
-  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { songs, setSongs } = useContext(GlobalContext)
+  const { playlistID } = useContext(GlobalContext)
+  const { setMessage } = useContext(GlobalContext)
 
   const [playlistName, setPlaylistName] = useState('')
   const [playlistDesc, setPlaylistDesc] = useState('')
@@ -42,7 +41,7 @@ export default function EditPlaylist() {
     }
   },[])
 
-  const changeOrder = async (dragElIndex, dragElNewIndex) => {
+  const changeOrder = (dragElIndex, dragElNewIndex) => {
     setTracks([])
     setDraggables([])
     // if currently playing playlist matches currently editing
@@ -65,7 +64,7 @@ export default function EditPlaylist() {
       })
   }
 
-  const removeTrack = async (trackURI) => {
+  const removeTrack = (trackURI) => {
     removeTrackFromPlaylist(trackURI, token, playlistData.id)
       .then(result => {
         if(result.length > 0) {
@@ -80,28 +79,22 @@ export default function EditPlaylist() {
         console.error(result)
       })
     setMessage('Song removed from playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
-  const changeDetails = async () => {
+  const changeDetails = (e) => {
+    e.preventDefault()
+    // simple validation
     if (playlistName === '' && playlistDesc === '') {
-      alert('Please enter a name or description')
-      return
+      return alert('Please enter a name or description')
     }
+    else if (playlistName === '') return alert('No name entered')
+    else if (playlistDesc === '') return alert('No description entered')
+
     changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
     setMessage('Playlist details updated')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
-  const addTrack = async (uri) => {
+  const addTrack = (uri) => {
     addTrackToPlaylist(uri, id, token)
     .then(result => {
       if(result.length > 0) {
@@ -113,11 +106,6 @@ export default function EditPlaylist() {
       console.error(result)
     })
     setMessage('Track added to playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
   useEffect(() => {
@@ -132,16 +120,25 @@ export default function EditPlaylist() {
           'Content-Type': 'application/json',
         }
       }).then((res) => {
-        console.log(res.data)
-        setPlaylistData(res.data)
-        setTracks(res.data.tracks.items)
-        setOriginalName(res.data.name)
-        setOriginalDesc(res.data.description)
-      }).catch(error => console.error(error))
+        if (res.data) {
+          setPlaylistData(res.data)
+          setTracks(res.data.tracks.items)
+          setOriginalName(res.data.name)
+          setOriginalDesc(res.data.description)
+        } else { console.error(res) }
+      })
     }
     getPlaylists()
 
   },[])
+
+  // cleanup arrays when playlist changes
+  useEffect(() => {
+    if (playlistID === playlistData?.id) {
+      setDraggables([])
+      setSongs([])
+    }
+  },[playlistID, setSongs])
 
   useEffect(() => {
     if(query === '') return
@@ -162,52 +159,75 @@ export default function EditPlaylist() {
     }
   },[query, token])
 
+  // Adds event listners for playlist items after the draggables array is filled
+  // useCallback provides update when html draggables are rendered
   useEffect(() => {
 
     if(draggables.length === 0) return
 
     draggables.forEach(element => {
-      element.addEventListener('dragstart', dragStart)
+      element.children[4].addEventListener('mousedown', dragStart)
+      element.children[4].addEventListener('touchstart', dragStart)
     })
 
     function dragStart(e) {
-      console.log('dragstart')
-      let element = e.target
+      let element = e.target.parentElement
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
-      document.body.appendChild(clone)
+      document.getElementById('root').appendChild(clone)
       clone.classList.add('clone')
+      if (e.type === 'touchstart') {
+        clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
+        clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
+        clone.style.left = `-${e.changedTouches[0].pageX}px`
+      } else {
+        clone.style.setProperty('--x', e.clientX + 'px')
+        clone.style.setProperty('--y', e.clientY + 'px')
+        clone.style.left = `-${e.layerX}px`
+      }
       clone.style.height = `${element.offsetHeight}px`
       clone.style.width = `${element.offsetWidth}px`
       clone.style.position = 'absolute'
       clone.style.top = '-55px'
-      clone.style.left = `-${e.offsetX}px`
       element.style.opacity = '0.3'
-      // cancel drag listener, start listening for mousemove instead
+      // cancel drag listener, start listening for pointermove instead
       e.preventDefault()
 
       document.addEventListener('mousemove', mouseMove)
+      document.addEventListener('touchmove', mouseMove)
       function mouseMove(e) {
-        clone.style.setProperty('--x', e.clientX + 'px')
-        clone.style.setProperty('--y', e.clientY + 'px')
-        let nearestNode = getNearestNode(e.clientY)
-        container.current.insertBefore(element, nearestNode)
+        let nearestNode = null
+        if (e.type === 'touchmove') {
+          clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
+          clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
+          nearestNode = getNearestNode(e.changedTouches[0].clientY, 'edit-draggable')
+        } else {
+          clone.style.setProperty('--x', e.clientX + 'px')
+          clone.style.setProperty('--y', e.clientY + 'px')
+          nearestNode = getNearestNode(e.clientY, 'edit-draggable')
+        }
+        // prevents constant rendering of element, only inserts when element is different
+        if (nearestNode !== element && nearestNode !== element.nextSibling) {
+          container.current.insertBefore(element, nearestNode)
+        }
       }
 
       document.addEventListener('mouseup', placeEl)
+      document.addEventListener('touchend', placeEl)
       function placeEl() {
-        // remove listeners and place element
+        // remove listeners, place element, remove clone
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
         document.removeEventListener('mousemove', mouseMove)
         document.removeEventListener('mouseup', placeEl)
+        document.removeEventListener('touchmove', mouseMove)
+        document.removeEventListener('touchend', placeEl)
         let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
         let htmlElToArray = Array.from(container.current.childNodes)
         let newIndex = htmlElToArray.indexOf(newElLocation)
         // Only send API request if element has moved positions
-        console.log(startIndex, newIndex)
         if(startIndex === newIndex) return
         setTimeout(() => {
           changeOrder(startIndex, newIndex)
@@ -217,7 +237,8 @@ export default function EditPlaylist() {
     // cleanup event listeners on component re-render
     return () => {
       draggables.forEach(element => {
-        element.removeEventListener('dragstart', dragStart)
+        element.removeEventListener('mousedown', dragStart)
+        element.removeEventListener('touchstart', dragStart)
       })
     }
   },[draggables])
@@ -232,7 +253,6 @@ export default function EditPlaylist() {
             <h1>{!playlistName ? originalName : playlistName}</h1>
             <h3>{!playlistDesc ? originalDesc : playlistDesc}</h3>
           </span>
-          <button className="play" onClick={() => changeDetails()}>Save changes</button>
         </div>
 
         <div className="create-playlist">
@@ -248,10 +268,11 @@ export default function EditPlaylist() {
             `${playlistData.name} playlist art`
             }/> 
         }
-          <span className="user-input-wrap">
+          <form className="user-input-wrap">
             <span className="change-details">
               <h3>Name:</h3>
-              <input 
+              <input
+                id="name"
                 type="text" 
                 className="edit-input" 
                 onChange={(e) => setPlaylistName(e.target.value)}
@@ -261,6 +282,7 @@ export default function EditPlaylist() {
             <span className="change-details">
               <h3>Description:</h3>
               <input 
+                id="description"
                 type="text" 
                 className="edit-input" 
                 onChange={(e) => setPlaylistDesc(e.target.value)}
@@ -272,66 +294,37 @@ export default function EditPlaylist() {
               <input type="checkbox" onClick={(e) => setIsPublic(e.target.checked)}/>
               <p>(Leave unchecked for private playlist)</p>
             </span>
-          </span>
+            <button className="play save-changes" onClick={(e) => changeDetails(e)}>Save changes</button>
+          </form>
         </div>
+
+        <h2 style={{textAlign: 'center', marginBottom: '1rem'}}>Edit tracks:</h2>
 
         {playlistData? 
         <div className="edit-songlist" ref={container}>
-          { // show global songs if playlists are the same, otherwise show selected playlist tracks
+          { // if currently playing playlist is also being edited, map over global state
           playlistID === playlistData.id?
             songs.map((song, index) => {
               return (
-                <span key={index} data-index={index} className="draggable" draggable="true" ref={setDraggableElement}>
-                  <span>{index+1}</span>
-                  <img src={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    song.track.album.images.length === 3 ?
-                    song.track.album.images[2].url :
-                    song.track.album.images[0].url
-                    } alt={
-                      song.track.album.images.length === 0 ?
-                    'no image found' :
-                    `${song.track.name} album art`
-                    } draggable="false" />
-                  <span className="play-song-tooltip">Play</span>
-                  <span className="draggable-trackname">
-                    <h1>{song.track.name}</h1>
-                    <p>{sanitizeArtistNames(song.track.artists)}</p>
-                  </span>
-                  <p className="song-length">{convertTime(song.track.duration_ms)}</p>
-                  <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
-                  </button>
-                </span>
+                <EditPlaylistItem 
+                  key={index}
+                  song={song} 
+                  index={index} 
+                  func={removeTrack} 
+                  setDraggableElement={setDraggableElement}
+                />
               )
             }) 
             : 
             tracks.map((song, index) => {
               return (
-                <span key={index} data-index={index} className="draggable" draggable="true" ref={setDraggableElement}>
-                  <span>{index+1}</span>
-                  <img src={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    song.track.album.images.length === 3 ?
-                    song.track.album.images[2].url :
-                    song.track.album.images[0].url
-                    } alt={
-                      song.track.album.images.length === 0 ?
-                    'no image found' :
-                    `${song.track.name} album art`
-                    } draggable="false" />
-                  <span className="play-song-tooltip">Play</span>
-                  <span className="draggable-trackname">
-                    <h1>{song.track.name}</h1>
-                    <p>{sanitizeArtistNames(song.track.artists)}</p>
-                  </span>
-                  <p className="song-length">{convertTime(song.track.duration_ms)}</p>
-                  <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
-                  </button>
-                </span>
+                <EditPlaylistItem 
+                  key={index}
+                  song={song} 
+                  index={index} 
+                  func={removeTrack} 
+                  setDraggableElement={setDraggableElement}
+                />
               )
             })
           }

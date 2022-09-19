@@ -6,8 +6,9 @@ import Controls from './controls';
 import Explore from './pages/explore';
 import UserPlaylists from "./pages/userPlaylists";
 import EditPlaylist from "./pages/editPlaylist";
+import Search from "./pages/search";
 
-export const LoginStatusCtx = React.createContext()
+export const GlobalContext = React.createContext()
 
 function Login() {
 
@@ -20,23 +21,18 @@ function Login() {
   // Global context items
   const [token, setToken] = useState('')
   const [playerCBData, setPlayerCBData] = useState({
-    is_playing: true,
+    is_paused: true,
     progress_ms: 0,
-    volume: 0,
-    deviceId: '',
-    track_id: '',
     type: '',
-    error: '',
-    error_type: ''
+    track_id: ''
   })
-  const [playerURIS, setPlayerURIS] = useState('')
+  const [contextURI, setContextURI] = useState('')
   const [playerOffset, setPlayerOffset] = useState(0)
   const [playlistID, setPlaylistID] = useState('')
   const [username, setUsername] = useState('')
   const [userID, setUserID] = useState('')
   const [songs, setSongs] = useState([])
   const [message, setMessage] = useState('')
-  const [showMessage, setShowMessage] = useState(false)
 
   useEffect(() => {
 
@@ -71,15 +67,14 @@ function Login() {
   },[token])
   
   return (
-    <LoginStatusCtx.Provider value={{
+    <GlobalContext.Provider value={{
       token, setToken, 
       username, setUsername, 
       userID, setUserID, 
       songs, setSongs, 
       message, setMessage, 
-      showMessage, setShowMessage, 
       playlistID, setPlaylistID, 
-      playerURIS, setPlayerURIS, 
+      contextURI, setContextURI, 
       playerOffset, setPlayerOffset, 
       playerCBData, setPlayerCBData}}>
     {
@@ -94,12 +89,13 @@ function Login() {
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/playlists" element={<UserPlaylists token={token} userID={userID}/>} />
+          <Route path="/search" element={<Search />} />
           <Route path="/editPlaylist/:id" element={<EditPlaylist />} />
         </Routes>
         <Controls />
       </>
     }
-    </LoginStatusCtx.Provider>
+    </GlobalContext.Provider>
   )
 
 }

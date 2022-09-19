@@ -1,7 +1,7 @@
 .page-wrap {
   position: fixed;
-  margin-top: 100px;
-  width: 100%;
+  top: 100px;
+  width: 100vw;
   height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
@@ -31,10 +31,11 @@
 
 .my-playlists-result {
   display: grid;
-  grid-template-columns: 130px 1fr 1fr 70px 70px;
+  grid-template-columns: auto 1fr 1fr 60px 50px;
   border-bottom: 1px solid var(--secondary-blue);
-  padding:15px;
+  padding: 1.5rem;
   align-items: center;
+  gap: 1rem;
 }
 
 .explore-result:hover, .my-playlists-result:hover {

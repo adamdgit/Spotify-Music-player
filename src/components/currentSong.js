@@ -1,7 +1,7 @@
+import Loading from "./Loading"
 
 export default function CurrentSong({...props}) {
  
-
   let currentSong = props.currentSong
 
     /* 
@@ -50,14 +50,21 @@ export default function CurrentSong({...props}) {
               }
             </p>
             </li>
-            <li><h3>Album: </h3><p>{currentSong.album.name}</p></li>
-            <li><h3>Released: </h3><p>{currentSong.album.release_date}</p></li>
+            <li>
+              <h3>Album: </h3>
+              <p>{currentSong.album.name}</p>
+            </li>
+            <li>
+              <h3>Released: </h3>
+              <p>{currentSong.album.release_date}</p>
+            </li>
           </ul>
         </span>
-      : 
+      : currentSong?.length === 0 ?
         <span className="song-info">
-          No song currently playing..
+          No song data found.
         </span>
+      : <Loading loadingMsg={'Loading spotify data...'} />
     }
 
     <div className="lyrics-wrap">

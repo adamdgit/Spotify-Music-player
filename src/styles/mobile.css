@@ -10,17 +10,14 @@
   }
 
   .page-wrap {
-    margin-top: 180px;
-    height: calc(100vh - 280px);
+    top: 125px;
+    height: calc(100vh - 240px);
   }
 
-  .main-content {
-    padding: 50px 10px;
-  }
+  .main-content { padding: 2rem 1rem; }
 
-  .featured {
-    text-align: center;
-  }
+  .featured { text-align: center; }
+  .edit-heading { text-align: center; }
 
   .playlist-info-wrap {
     display: grid;
@@ -29,12 +26,22 @@
     text-align: center;
   }
 
+  .explore-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
   .explore-result {
-    grid-template-columns:unset;
-    grid-template-rows:1fr 60px auto 60px;
+    grid-template-columns: unset;
+    grid-template-rows: auto auto auto auto;
     justify-items: center;
     text-align: center;
     font-size: .9rem;
+    gap: 1rem;
+  }
+
+  .explore-result h2 {
+    grid-row: 1;
   }
 
   .user-playlists-header {
@@ -43,7 +50,8 @@
 
   .user-playlists-wrap {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, 300px);
+    justify-content: center;
   }
 
   .my-playlists-result {
@@ -63,6 +71,8 @@
   .my-playlists-result img {
     grid-row: 2;
     grid-column: span 2;
+    width: 200px;
+    height: 200px;
   }
 
   .my-playlists-result a {
@@ -86,10 +96,11 @@
   }
 
   .playlist-wrap {
-    top: 180px;
+    top: 125px;
     grid-template-columns: unset;
     overflow-y: auto;
-    height: calc(100vh - 325px);
+    height: calc(100vh - 240px);
+    width: unset;
   }
 
   .playlist {
@@ -145,14 +156,13 @@
 
   .header-wrap {
     grid-template-columns: unset;
-    grid-template-rows: auto auto auto;
     gap: 1rem;
   }
 
   .nav-bar {
     margin-top: unset;
     min-width: 100px;
-    grid-row: 3;
+    grid-row: 2;
   }
 
   .search-results-wrap {
@@ -160,8 +170,42 @@
     padding: 10px;
   }
 
-  .controls {
-    padding: 1rem;
+  .controls { padding: .8rem; }
+
+  .shuffle-btn svg, .loop-btn svg, 
+  .next-btn svg, .previous-btn svg,
+  .volume-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .play-btn svg { width: 30px; height: 30px; }
+
+  .playback-wrap { 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 32px auto; 
+  }
+
+  .current-info {
+    grid-column: span 3;
+  }
+
+  .current-info img {
+    height: 60px;
+    width: 60px;
+  }
+
+  .current-track { font-size: .8rem; }
+  .current-artist { font-size: .6rem; }
+
+  .player-btns {
+    grid-row: 1;
+    grid-column: span 4;
+  }
+
+  .volume-control {
+    grid-row: 2;
+    grid-column: 4;
   }
 
   @media only screen and (max-width: 500px){ 
@@ -183,6 +227,11 @@
     }
   }
 
+  .search-songs-wrap {
+    justify-content: center;
+    justify-items: center;
+  }
+
   .search-bar {
     height: fit-content;
   }
@@ -201,5 +250,27 @@
 
   .logout {
     margin-bottom: unset;
+  }
+
+  .playlist-update-message {
+    bottom: 132px;
+  }
+
+  .create-playlist {
+    grid-template-columns: unset;
+    justify-content: center;
+    justify-items: center;
+  }
+
+  .playlist-info {
+    text-align: center;
+  }
+
+  .user-input-wrap {
+    height: fit-content;
+  }
+
+  .save-changes {
+    justify-self: center;
   }
 }

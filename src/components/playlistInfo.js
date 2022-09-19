@@ -1,31 +1,29 @@
-import React from 'react';
 import axios from "axios";
 import CurrentSong from "./currentSong";
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
-import { LoginStatusCtx } from "./login";
+import { GlobalContext } from "./login";
 import { changePlaylistSong } from "./api/changePlaylistSong";
 import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
 import { changePlaylistOrder } from "./api/changePlaylistOrder"
 import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
-import { showHideAddToPlaylistBtn } from "./func/showHideAddToPlaylistBtn"
-import { convertTime } from "./func/convertTime"
-import { sanitizeArtistNames } from "./func/sanitizeArtistNames"
-import { getNearestNode } from "./func/getNearestNode"
+import { showHideAddToPlaylistBtn } from "./utils/showHideAddToPlaylistBtn"
+import { convertTime } from "./utils/convertTime"
+import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
+import { getNearestNode } from "./utils/getNearestNode"
 import { getUserPlaylists } from "./api/getUserPlaylists"
 
 function PlaylistInfo({ playerIsHidden }) {
 
   // global context
-  const { token } = useContext(LoginStatusCtx)
-  const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
-  const { playerCBData, setPlayerCBData } = useContext(LoginStatusCtx)
-  const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
-  const { songs, setSongs } = useContext(LoginStatusCtx)
-  const { userID, setUserID } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { contextURI } = useContext(GlobalContext)
+  const { playerCBData } = useContext(GlobalContext)
+  const { playlistID } = useContext(GlobalContext)
+  const { songs, setSongs } = useContext(GlobalContext)
+  const { userID } = useContext(GlobalContext)
   // playlist update message
-  const { message, setMessage } = useContext(LoginStatusCtx)
-  const { showMessage, setShowMessage } = useContext(LoginStatusCtx)
-
+  const { setMessage } = useContext(GlobalContext)
+  // component state
   const [currentSong, setCurrentSong] = useState()
   const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
@@ -42,75 +40,72 @@ function PlaylistInfo({ playerIsHidden }) {
     }
   },[])
 
-  const removeTrack = async (trackURI) => {
+  const removeTrack = (trackURI) => {
+    // empty songs array before re-populating with new data
+    setSongs([])
+    setDraggables([])
     removeTrackFromPlaylist(trackURI, token, playlistID)
-      .then(result => {
-        if(result.length > 0) return setSongs(result)
-        console.error(result)
-      }) 
+      .then(result => { 
+        if (result.length === 0) return setSongs([])
+        if (result.length > 0) return setSongs(result)
+        else console.error(result) 
+      })
     setMessage('Song removed from playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
-  const changeOrder = async (startIndex, newIndex) => {
-    // changes order of playlist item
+  const changeOrder = (startIndex, newIndex) => {
+    // empty songs array before re-populating with new data
     setSongs([])
     setDraggables([])
     changePlaylistOrder(startIndex, newIndex, token, playlistID)
-      .then(result => {
-        if(result.length > 0) return setSongs(result)
-        console.error(result)
+      .then(result => { 
+        if (result.length === 0) return setSongs([])
+        if (result.length > 0) return setSongs(result)
+        else console.error(result) 
       })
   }
 
-  const addToPlaylist = async (resultURI, playlistid) => {
+  const addToPlaylist = (resultURI, playlistid) => {
     addTrackToPlaylist(resultURI, playlistid, token)
-    .then(result => {
-      if(result.length > 0) return
-      console.error(result)
-    })
+      .then(result => { 
+        if (result) console.error(result) 
+      })
+
     document.querySelector('.show-p').classList.remove('show-p')
     setMessage('Song added to playlist')
-    setShowMessage(true)
-    // hide message after 2 seconds
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 2000)
   }
 
+  // gets users playlists, for add-to-playlist button function
   useEffect(() => {
     getUserPlaylists(token)
-    .then(result => {
-      if(result.length > 0) return setPlaylists(result)
-      console.error(result)
-    })
+      .then(result => { 
+        if (result.length === 0) return setPlaylists([])
+        if (result.length > 0) return setPlaylists(result)
+        else console.error(result) 
+      })
   },[token])
 
+  // Adds event listners for playlist items after the draggables array is filled
+  // useCallback provides update when html draggables are rendered
   useEffect(() => {
 
     if(draggables.length === 0) return
 
     draggables.forEach(element => {
       element.addEventListener('dragstart', dragStart)
-      element.addEventListener('touchstart', dragStart)
     })
 
     function dragStart(e) {
-      let element = e.target
+      let element = null
+      element = e.target
       let startIndex = draggables.indexOf(element)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
+      clone.style.setProperty('--x', e.clientX + 'px')
+      clone.style.setProperty('--y', e.clientY + 'px')
       document.body.appendChild(clone)
       clone.classList.add('clone')
-      if (e.type === 'touchstart') {
-        clone.style.left = `-${e.changedTouches[0].clientX}px`
-      } else {
-        clone.style.left = `-${e.offsetX}px`
-      }
+      clone.style.left = `-${e.offsetX}px`
       clone.style.height = `${element.offsetHeight}px`
       clone.style.width = `${element.offsetWidth}px`
       clone.style.position = 'absolute'
@@ -119,32 +114,21 @@ function PlaylistInfo({ playerIsHidden }) {
       // cancel drag listener, start listening for mousemove instead
       e.preventDefault()
 
-      document.addEventListener('mousemove', mouseMove)
-      document.addEventListener('touchmove', mouseMove)
+      document.addEventListener('pointermove', mouseMove)
       function mouseMove(e) {
-        if (e.type === 'touchmove') {
-          clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
-          clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
-          let nearestNode = getNearestNode(e.changedTouches[0].clientY)
-          container.current.insertBefore(element, nearestNode)
-        } else {
-          clone.style.setProperty('--x', e.clientX + 'px')
-          clone.style.setProperty('--y', e.clientY + 'px')
-          let nearestNode = getNearestNode(e.clientY)
-          container.current.insertBefore(element, nearestNode)
-        }
+        clone.style.setProperty('--x', e.clientX + 'px')
+        clone.style.setProperty('--y', e.clientY + 'px')
+        let nearestNode = getNearestNode(e.clientY, 'draggable')
+        container.current.insertBefore(element, nearestNode)
       }
 
-      document.addEventListener('mouseup', placeEl)
-      document.addEventListener('touchend', placeEl)
+      document.addEventListener('pointerup', placeEl)
       function placeEl() {
         // remove listeners, place element, remove clone
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
-        document.removeEventListener('mousemove', mouseMove)
-        document.removeEventListener('mouseup', placeEl)
-        document.removeEventListener('touchmove', mouseMove)
-        document.removeEventListener('touchend', placeEl)
+        document.removeEventListener('pointermove', mouseMove)
+        document.removeEventListener('pointerup', placeEl)
         let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
         let htmlElToArray = Array.from(container.current.childNodes)
@@ -173,10 +157,7 @@ function PlaylistInfo({ playerIsHidden }) {
   // when player sends callback state update, run this effect
   useEffect(() => {
     // only run effect on track updates
-    if(playerCBData.type === 'track_update') {
-
-      console.log('track update callback')
-
+    if(playerCBData.type === 'track_update' || playerCBData.type === 'player_ready') {
       const getCurrentTrack = async () => {
         await axios.get(`https://api.spotify.com/v1/tracks/${playerCBData.track_id}`, {
           headers: {
@@ -184,34 +165,37 @@ function PlaylistInfo({ playerIsHidden }) {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           }
-        }).then((res) => {
-          setCurrentSong(res.data)
-        }).catch(error => console.error(error))
+        }).then(result => { 
+          if (result.data) return setCurrentSong(result.data)
+          else console.error(result) 
+        })
       }
       getCurrentTrack()
 
       // only run when playlist is playing, not single track
       if(playlistID) {
-        const getPlaylistItems = async () => {
+        const getPlaylistData = async () => {
           await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}?limit=50`, {
             headers: {
               Accept: 'application/json',
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             }
-          }).then((res) => {
-            setPlaylistArt(res.data.images[0].url)
-            setPlaylistDesc(res.data.description)
-            setPlaylistName(res.data.name)
-            setSongs(res.data.tracks.items)
-            setPlaylistOwner(res.data.owner.id)
-          }).catch(error => console.error(error))
+          }).then((result) => {
+            if (result.data) {
+              setPlaylistArt(result.data.images[0].url)
+              setPlaylistDesc(result.data.description)
+              setPlaylistName(result.data.name)
+              setSongs(result.data.tracks.items)
+              setPlaylistOwner(result.data.owner.id)
+            } else { console.error(result) }
+          })
         }
-        getPlaylistItems()
+        getPlaylistData()
       }
     }
 
-  },[playerCBData, setSongs, playlistID, token])
+  },[playerCBData, token])
 
   return (
     <div style={!playlistID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
@@ -240,21 +224,22 @@ function PlaylistInfo({ playerIsHidden }) {
         <div className="container" ref={container}>
           {
             playlistID? songs.map((song, index) => {
+              if (song === null || song === undefined) return
               return (
                 <span key={index} data-index={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
-                  <button onClick={() => changePlaylistSong(index, token, playerURIS)} className="play-song-btn" draggable="false" >
-                  <img src={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    song.track.album.images.length === 3 ?
-                    song.track.album.images[2].url :
-                    song.track.album.images[0].url
-                    } alt={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    `${song.track.name} album art`
-                    } draggable="false" />
+                  <button onClick={() => changePlaylistSong(index, token, contextURI)} className="play-song-btn" >
+                    <img src={
+                      song.track.album.images.length === 0 ?
+                      'no image found' :
+                      song.track.album.images.length === 3 ?
+                      song.track.album.images[2].url :
+                      song.track.album.images[0].url
+                      } alt={
+                      song.track.album.images.length === 0 ?
+                      'no image found' :
+                      `${song.track.name} album art`
+                      } />
                   </button>
                   <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
@@ -265,11 +250,11 @@ function PlaylistInfo({ playerIsHidden }) {
                   {
                     playlistOwner === userID ?
                     <button className="remove-track-btn" title="remove track from playlist" onClick={() => removeTrack(song.track.uri)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="10px" viewBox="0 0 320 400">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="15px" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
                     </button>
                     :
                     <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylistBtn(e.target)}>
-                      <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
+                      <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512"><path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
                       <span className="choose-playlist">
                         <h3>Add to playlist:</h3>
                         <ul>

@@ -1,22 +1,25 @@
 import { useState, useRef, useContext, useEffect } from "react";
-import { LoginStatusCtx } from "../login";
+import { GlobalContext } from "../login";
+import { changePlaylistSong } from "../api/changePlaylistSong";
 import axios from "axios";
+import Loading from "../Loading";
 
 export default function Explore() {
 
-  const { token } = useContext(LoginStatusCtx)
-  const { playerURIS, setPlayerURIS } = useContext(LoginStatusCtx)
-  const { playerOffset, setPlayerOffset } = useContext(LoginStatusCtx)
-  const { playlistID, setPlaylistID } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { setContextURI } = useContext(GlobalContext)
+  const { setPlaylistID } = useContext(GlobalContext)
+  const { setPlayerCBData } = useContext(GlobalContext)
 
   const [results, setResults] = useState([])
   const trackElement = useRef([])
 
   function playPlaylist(playlist){
     // save currently playing playlist data to global context
-    setPlayerURIS(playlist.uri)
+    setContextURI(playlist.uri)
     setPlaylistID(playlist.id)
-    setPlayerOffset(0)
+    changePlaylistSong(0, token, playlist.uri)
+    setPlayerCBData(current => ({...current, type: 'track_update'}))
   }
  
   useEffect(() => {
@@ -38,13 +41,21 @@ export default function Explore() {
     <div className="page-wrap">
       <div className="main-content">
         <h1 className="featured">Spotify featured playlists:</h1>
-        <div className="searchResults">
+        <div className="explore-wrap">
           {
-            results.length !== 0 ?
-            results.map((result, i) => {
+            results? results.map((result, i) => {
+              if (result === null || result === undefined) return
               return (
                 <div key={i} ref={trackElement[i]} className={'explore-result'}>
-                  <img src={result.images[0].url} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
+                  <img src={
+                    result.images.length === 0 ?
+                    'no image found' :
+                    result.images[0].url
+                    } alt={
+                    result.images.length === 0 ?
+                    'no image found' :
+                    `${result.name} playlist art`
+                    } width={'200px'} height={'200px'} />
                   <h2>{result.name}</h2>
                   <p>{result.description}</p>
                   <button className="play" onClick={() => playPlaylist(result)}>
@@ -53,7 +64,8 @@ export default function Explore() {
                 </div>
               )
             })
-            : <></>
+            : results?.length === 0 ? <h1>No data found</h1>
+            : <Loading loadingMsg={'Fetching featured playlists...'}/>
           }
         </div>
       </div>

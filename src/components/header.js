@@ -1,12 +1,11 @@
 import { useContext } from "react";
-import { LoginStatusCtx } from "./login";
+import { GlobalContext } from "./login";
 import { NavLink } from "react-router-dom"
-import SearchSongs from "./func/searchSongs";
 
 function Header() {
 
-  const { token, setToken } = useContext(LoginStatusCtx)
-  const { username } = useContext(LoginStatusCtx)
+  const { token, setToken } = useContext(GlobalContext)
+  const { username } = useContext(GlobalContext)
 
   const logout = () => {
     setToken('')
@@ -17,14 +16,19 @@ function Header() {
     <header className="header-bar">
       <div className="header-wrap">
         <ul className="nav-bar">
-          <NavLink to="/" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <NavLink to="/" 
+            className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
             <li>Explore</li>
           </NavLink>
-          <NavLink to="/playlists" className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+          <NavLink to="/playlists" 
+            className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
             <li>Playlists</li>
           </NavLink>
+          <NavLink to="/search" 
+            className={(navData) => (navData.isActive ? "nav-item active" : 'nav-item')}>
+            <li>Search</li>
+          </NavLink>
         </ul>
-        <SearchSongs />
         <span className="user-info">
           <span>
             <button onClick={logout} className="logout">Disconnect spotify</button>

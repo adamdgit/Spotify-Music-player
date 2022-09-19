@@ -1,47 +1,70 @@
 import { useEffect, useContext, useState } from "react"
-import { LoginStatusCtx } from "../login";
-import { NavLink } from "react-router-dom"
+import { GlobalContext } from "../login";
+import { NavLink, useNavigate } from "react-router-dom"
 import { createPlaylist } from "../api/createPlaylist"
 import { changePlaylistSong } from "../api/changePlaylistSong";
 import { getUserPlaylists } from "../api/getUserPlaylists"
+import Loading from "../Loading";
 
 export default function UserPlaylists({...props}) {
 
   // global context
-  const { token } = useContext(LoginStatusCtx)
-  const { setPlayerURIS } = useContext(LoginStatusCtx)
-  const { setPlaylistID } = useContext(LoginStatusCtx)
-  const { userID } = useContext(LoginStatusCtx)
+  const { token } = useContext(GlobalContext)
+  const { setContextURI } = useContext(GlobalContext)
+  const { setPlaylistID } = useContext(GlobalContext)
+  const { userID } = useContext(GlobalContext)
+  const { setPlayerCBData } = useContext(GlobalContext)
 
-  const [playlists, setPlaylists] = useState([])
+  const [playlists, setPlaylists] = useState()
+  const navigate = useNavigate()
   
-  function playPlaylist(playlist){
+  const playPlaylist = (playlist) => {
     // save currently playing playlist data to global context
-    setPlayerURIS(playlist.uri)
+    setContextURI(playlist.uri)
     setPlaylistID(playlist.id)
     changePlaylistSong(0, token, playlist.uri)
+    setPlayerCBData(current => ({...current, type: 'track_update'}))
+  }
+
+  const createNewPlaylist = () => {
+    // TODO: create playlist -> get playlist iD ->
+    // -> redirect to edit page
+    createPlaylist(props.token, props.userID)
+    .then(result => {
+      if (result.id) navigate(`/editPlaylist/${result.id}`)
+      else console.error(result)
+    })
   }
 
   useEffect(() => {
     getUserPlaylists(token)
     .then(result => {
-      if(result.length > 0) return setPlaylists(result)
-      console.error(result)
+      if (result.length === 0) return setPlaylists([])
+      else if (result.length > 0) return setPlaylists(result)
+      else console.error(result) 
     })
   },[token])
+
+  playlists?.sort((a, b) => {
+    if(a.owner.id === userID && b.owner.id === userID) return 0
+    if(a.owner.id === userID && b.owner.id !== userID) return -1
+    return 1
+  })
 
   return (
     <div className="page-wrap">
       <div className="main-content">
         <div className="user-playlists-header">
           <h1>My Playlists</h1>
-          <button className="play" onClick={() => createPlaylist(props.token, props.userID)}>Create Playlist</button>
+          <button className="play" onClick={() => createNewPlaylist()}>
+            Create Playlist
+          </button>
         </div>
         <div className="user-playlists-wrap">
           <>
             {
-            playlists.length !== 0 ?
-            playlists.map((result, i) => {
+            playlists? playlists.map((result, i) => {
+              if (result === null || result === undefined) return
               return (
                 <div key={i} className={'my-playlists-result'}>
                   <img src={result.images.length !== 0 ? result.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
@@ -60,7 +83,8 @@ export default function UserPlaylists({...props}) {
                 </div>
               )
             })
-            : <h1>No playlists found</h1>
+            : playlists?.length === 0 ? <h1>No data found</h1>
+            : <Loading loadingMsg={'Fetching your playlists...'}/>
             }
           </>
         </div>
