@@ -14,13 +14,10 @@
     height: calc(100vh - 240px);
   }
 
-  .main-content {
-    padding: 50px 20px;
-  }
+  .main-content { padding: 2rem 1rem; }
 
-  .featured {
-    text-align: center;
-  }
+  .featured { text-align: center; }
+  .edit-heading { text-align: center; }
 
   .playlist-info-wrap {
     display: grid;
@@ -175,9 +172,18 @@
 
   .controls { padding: .8rem; }
 
+  .shuffle-btn svg, .loop-btn svg, 
+  .next-btn svg, .previous-btn svg,
+  .volume-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .play-btn svg { width: 30px; height: 30px; }
+
   .playback-wrap { 
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 40px auto; 
+    grid-template-rows: 32px auto; 
   }
 
   .current-info {
@@ -221,6 +227,11 @@
     }
   }
 
+  .search-songs-wrap {
+    justify-content: center;
+    justify-items: center;
+  }
+
   .search-bar {
     height: fit-content;
   }
@@ -243,5 +254,23 @@
 
   .playlist-update-message {
     bottom: 132px;
+  }
+
+  .create-playlist {
+    grid-template-columns: unset;
+    justify-content: center;
+    justify-items: center;
+  }
+
+  .playlist-info {
+    text-align: center;
+  }
+
+  .user-input-wrap {
+    height: fit-content;
+  }
+
+  .save-changes {
+    justify-self: center;
   }
 }
