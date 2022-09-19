@@ -50,8 +50,14 @@ export default function CurrentSong({...props}) {
               }
             </p>
             </li>
-            <li><h3>Album: </h3><p>{currentSong.album.name}</p></li>
-            <li><h3>Released: </h3><p>{currentSong.album.release_date}</p></li>
+            <li>
+              <h3>Album: </h3>
+              <p>{currentSong.album.name}</p>
+            </li>
+            <li>
+              <h3>Released: </h3>
+              <p>{currentSong.album.release_date}</p>
+            </li>
           </ul>
         </span>
       : currentSong?.length === 0 ?
