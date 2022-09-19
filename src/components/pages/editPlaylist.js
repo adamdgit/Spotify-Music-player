@@ -298,6 +298,8 @@ export default function EditPlaylist() {
           </form>
         </div>
 
+        <h2 style={{textAlign: 'center', marginBottom: '1rem'}}>Edit tracks:</h2>
+
         {playlistData? 
         <div className="edit-songlist" ref={container}>
           { // if currently playing playlist is also being edited, map over global state
