@@ -174,7 +174,7 @@ function PlaylistInfo({ playerIsHidden }) {
 
       // only run when playlist is playing, not single track
       if(playlistID) {
-        const getPlaylistItems = async () => {
+        const getPlaylistData = async () => {
           await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}?limit=50`, {
             headers: {
               Accept: 'application/json',
@@ -191,7 +191,7 @@ function PlaylistInfo({ playerIsHidden }) {
             } else { console.error(result) }
           })
         }
-        getPlaylistItems()
+        getPlaylistData()
       }
     }
 
