@@ -9,7 +9,7 @@ import Loading from "./Loading";
 
 export default function WebPlayback(props) {
 
-  // global context
+  // global contexts
   const { playerCBData, setPlayerCBData } = useContext(GlobalContext)
   const { setPlaylistID } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
