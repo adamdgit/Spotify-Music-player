@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { transferPlayback } from "./api/transferPlayback";
 import { GlobalContext } from "./login";
 import { shufflePlaylist } from "./api/shufflePlaylist"
@@ -6,10 +6,12 @@ import { repeatTrack } from "./api/repeatTrack";
 import { nextTrack } from "./api/nextTrack"
 import { previousTrack } from "./api/previousTrack,"
 import Loading from "./Loading";
+import { convertTime } from "./utils/convertTime";
 
 export default function WebPlayback(props) {
 
   // global context
+  const { token } = useContext(GlobalContext)
   const { playerCBData, setPlayerCBData } = useContext(GlobalContext)
   const { setPlaylistID } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
@@ -19,11 +21,22 @@ export default function WebPlayback(props) {
   const [player, setPlayer] = useState(undefined)
   const [isMuted, setIsMuted] = useState(false)
   const [is_paused, setPaused] = useState(true)
-  const [is_active, setActive] = useState(false)
   const [shuffle, setShuffle] = useState(false)
   const [repeat, setRepeat] = useState(false)
   const [current_track, setTrack] = useState()
   const [volume, setVolume] = useState(20)
+  const [songLength, setSongLength] = useState(0) // milliseconds
+  const [loading, setLoading] = useState(false)
+  const [currentTrackPos, setPos] = useState(0) // milliseconds
+
+  const [timeline, setTimeline] = useState()
+  const timelineCB = useCallback(node => {
+    if(node != null) {
+      setTimeline(node)
+    }
+  },[])
+
+  let runOnce = false
 
   useEffect(() => {
     const script = document.createElement("script")
@@ -42,12 +55,7 @@ export default function WebPlayback(props) {
       setPlayer(player)
 
       player.addListener('ready', ({ device_id }) => {
-        // transfer playback to webplayer SDK after 4s
-        // otherwise spotify gives device id not found error??
-        setTimeout(() => {
-          transferPlayback(props.token, device_id)
-          setPlayerCBData(current => ({...current, type: 'player_ready'}))
-        }, 4000)
+        transferPlayback(props.token, device_id)
         console.log('Ready with Device ID', device_id);
       })
 
@@ -58,23 +66,28 @@ export default function WebPlayback(props) {
       player.connect()
 
       player.addListener('player_state_changed', ( state => {
-        if (!state) return
-        setPlayerCBData(current => ({...current, track_id: state.track_window.current_track.id}))
+        if(!state) return
+        console.log(state)
+        if (runOnce === false) {
+          setPlayerCBData(current => ({...current, type: 'player_ready'}))
+          runOnce = true
+        }
+        setLoading(state.loading)
+        setPos(state.position)
+        setTrack(state.track_window.current_track)
+        setPaused(state.paused)
+        setShuffle(state.shuffle)
+        setPlayerCBData(current => ({...current, track_id: state.track_window.current_track?.id}))
+        setSongLength(state.duration)
         setContextURI(state.context.uri)
         // check if URI is playlist or not
-        if (!state.context.uri.includes('playlist')) {
+        if (!state.context.uri?.includes('playlist')) {
           setPlaylistID('')
         } else {
           // splits uri into 3 strings, returns last string (playlist id)
-          setPlaylistID(state.context.uri.split(":").pop())
+          setPlaylistID(state.context.uri?.split(":").pop())
         }
-        setPaused(state.paused)
-        setTrack(state.track_window.current_track)
-        player.getCurrentState().then( state => { 
-          (!state)? setActive(false) : setActive(true) 
-        })
       }))
-
     }
   }, [])
 
@@ -88,6 +101,8 @@ export default function WebPlayback(props) {
   }
 
   const repeatSongs = () => {
+    // TODO: repeatmode has 3 modes 0,1,2 
+    // 0 - off, 1 - repeat, 2 - repeat once
     setRepeat(!repeat)
     // check for opposite value as setRepeat won't update before if check
     if (repeat === false) repeatTrack(props.token, 'track')
@@ -107,11 +122,52 @@ export default function WebPlayback(props) {
     });
   }
 
+  const timelineSeek = (e) => {
+    let rect = timeline.getBoundingClientRect()
+    let percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width
+    let value = songLength * percent
+    // seek requires value in milliseconds
+    player.seek(value).then(() => {
+      console.log('Changed position!');
+    });
+  }
+
+  useEffect(() => {
+    if (!timeline) return
+    timeline.addEventListener('click', timelineSeek)
+
+    return () => timeline.removeEventListener('click', timelineSeek)
+    
+  },[timeline])
+
+  useEffect(() => {
+
+    if (is_paused === false) {
+      if (loading === true) setPos(0)
+      const timelineUpdate = setInterval(() => {
+        setPos(value => value +=1000)
+      }, 1000)
+      return () => clearInterval(timelineUpdate)
+    }
+
+  }, [is_paused])
+
   return (
     <>
       {
       playerCBData.type !== '' ?
       <div className="playback-wrap">
+
+        <div className="timeline-seek">
+          <span>{convertTime(currentTrackPos)}</span>
+            <span className="timeline" ref={timelineCB}>
+              <span className="timeline-thumb" style={{'--progress': `-${100 - (currentTrackPos / songLength * 100)}%`}}>
+                <span className="thumb-indicator"></span>
+              </span>
+            </span>
+          <span>{convertTime(songLength)}</span>
+        </div>
+
         <div className="current-info">
           <img src={
             current_track? current_track.album.images[0].url 
