@@ -21,8 +21,6 @@ function Login() {
   // Global context items
   const [token, setToken] = useState('')
   const [playerCBData, setPlayerCBData] = useState({
-    is_paused: true,
-    progress_ms: 0,
     type: '',
     track_id: ''
   })
