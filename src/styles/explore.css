@@ -23,9 +23,10 @@
 
 .explore-result {
   display: grid;
-  grid-template-columns: 130px 1fr 1fr 100px;
+  grid-template-columns: 110px 1fr 1fr auto;
+  gap: 1rem;
   border-bottom: 1px solid var(--secondary-blue);
-  padding:15px;
+  padding: 1rem;
   align-items: center;
 }
 
