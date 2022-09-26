@@ -17,7 +17,7 @@ function PlaylistInfo({ playerIsHidden }) {
   // global context
   const { token } = useContext(GlobalContext)
   const { contextURI } = useContext(GlobalContext)
-  const { playerCBData } = useContext(GlobalContext)
+  const { playerCBData, setPlayerCBData } = useContext(GlobalContext)
   const { playlistID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
@@ -154,10 +154,12 @@ function PlaylistInfo({ playerIsHidden }) {
     setSongs([])
   },[playlistID, setSongs])
 
-  // when player sends callback state update, run this effect
+  // when player sends callback for track_id update run effect
   useEffect(() => {
-    // only run effect on track updates
-    if(playerCBData.type === 'track_update' || playerCBData.type === 'player_ready') {
+
+    console.log(playerCBData)
+
+    if(playerCBData.type === 'player_ready' || playerCBData.type === 'track_update') {
       const getCurrentTrack = async () => {
         await axios.get(`https://api.spotify.com/v1/tracks/${playerCBData.track_id}`, {
           headers: {
@@ -171,7 +173,6 @@ function PlaylistInfo({ playerIsHidden }) {
         })
       }
       getCurrentTrack()
-
       // only run when playlist is playing, not single track
       if(playlistID) {
         const getPlaylistData = async () => {
@@ -195,7 +196,7 @@ function PlaylistInfo({ playerIsHidden }) {
       }
     }
 
-  },[playerCBData, token])
+  },[playerCBData.track_id])
 
   return (
     <div style={!playlistID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
@@ -228,7 +229,10 @@ function PlaylistInfo({ playerIsHidden }) {
               return (
                 <span key={index} data-index={index} className={playerCBData.track_id === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
-                  <button onClick={() => changePlaylistSong(index, token, contextURI)} className="play-song-btn" >
+                  <button onClick={() => {
+                    changePlaylistSong(index, token, contextURI)
+                    setPlayerCBData(current => ({...current, type: 'track_update'}))
+                  }} className="play-song-btn" >
                     <img src={
                       song.track.album.images.length === 0 ?
                       'no image found' :
