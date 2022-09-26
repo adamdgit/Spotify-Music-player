@@ -2,7 +2,7 @@
 export function sanitizeArtistNames(artists) {
   let names = []
   artists.map(artistName => {
-    names.push(artistName.name)
+    return names.push(artistName.name)
   })
   return names.toString()
 }
