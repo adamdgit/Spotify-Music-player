@@ -3,7 +3,7 @@
   display: flex;
   height: 125px;
   width: 100vw;
-  padding: 1rem 1.4rem;
+  padding: 1rem;
   left: 0;
   bottom: 0;
   background-color: #111;
@@ -16,13 +16,63 @@
 .playback-wrap {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   width: 100%;
 }
+
+/*-----Timeline styles-----*/
+
+.timeline-seek {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  grid-row: 2;
+  grid-column: 2;
+}
+
+.timeline-seek input {
+  width: 100%;
+}
+
+.timeline {
+  --progress: -100%;
+  position: relative;
+  height: 6px;
+  width: 100%;
+  background-color: #888;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.timeline-thumb {
+  position: absolute;
+  left: var(--progress);
+  height: 6px;
+  width: 100%;
+  background-color: #fff;
+}
+
+.timeline-seek:hover .timeline-thumb {
+  background-color: var(--blue);
+}
+
+.thumb-indicator {
+  position: absolute;
+  height: 6px; 
+  width: 6px;
+  background-color: var(--blue);
+  right: 0;
+}
+
+/*-----Controls-----*/
 
 .current-info {
   display: flex;
   justify-self: flex-start;
   gap: 1rem;
+  grid-row: span 2;
+  grid-column: 1;
 }
 
 .current-track {
@@ -40,6 +90,7 @@
   display: flex;
   gap: 1rem;
   justify-self: center;
+  grid-column: 2;
 }
 
 .shuffle-btn, .loop-btn, 
