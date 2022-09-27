@@ -22,12 +22,12 @@ export default function WebPlayback(props) {
   const [isMuted, setIsMuted] = useState(false)
   const [is_paused, setPaused] = useState(true)
   const [shuffle, setShuffle] = useState(false)
-  const [repeat, setRepeat] = useState(false)
   const [current_track, setTrack] = useState()
   const [volume, setVolume] = useState(20)
   const [songLength, setSongLength] = useState(0) // milliseconds
   const [loading, setLoading] = useState(false)
   const [currentTrackPos, setPos] = useState(0) // milliseconds
+  const [repeatMode, setRepeatMode] = useState(0)
 
   const [timeline, setTimeline] = useState()
   const timelineCB = useCallback(node => {
@@ -77,6 +77,8 @@ export default function WebPlayback(props) {
         setTrack(state.track_window.current_track)
         setPaused(state.paused)
         setShuffle(state.shuffle)
+        // bug with repeat mode? api call not updating repeat mode
+        setRepeatMode(state.repeat_mode)
         setPlayerCBData(current => ({...current, track_id: state.track_window.current_track?.id}))
         setSongLength(state.duration)
         setContextURI(state.context.uri)
@@ -101,15 +103,27 @@ export default function WebPlayback(props) {
   }
 
   const repeatSongs = () => {
-    // TODO: repeatmode has 3 modes 0,1,2 
-    // 0 - off, 1 - repeat, 2 - repeat once
-    setRepeat(!repeat)
-    // check for opposite value as setRepeat won't update before if check
-    if (repeat === false) repeatTrack(props.token, 'track')
-    else repeatTrack(props.token, 'off')
-
-    if (repeat === false) setMessage('Repeat enabled') 
-    else setMessage('Repeat disabled')
+    // 0 = off, 1 = repeat context, 2 = repeat track
+    switch(repeatMode) {
+      case 0:
+        console.log('context')
+        setRepeatMode(repeatMode + 1)
+        repeatTrack(props.token, 'context')
+        break
+      case 1:
+        console.log('track')
+        setRepeatMode(repeatMode + 1)
+        repeatTrack(props.token, 'track')
+        break
+      case 2:
+        console.log('off')
+        setRepeatMode(0)
+        repeatTrack(props.token, 'off')
+        break
+      default: 
+       setRepeatMode(0)
+       repeatTrack(props.token, 'off')
+    }
   }
 
   const changeVolume = (value) => {
@@ -123,9 +137,11 @@ export default function WebPlayback(props) {
   }
 
   const timelineSeek = (e) => {
-    let rect = timeline.getBoundingClientRect()
-    let percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width
-    let value = songLength * percent
+    const rect = timeline.getBoundingClientRect()
+    const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width
+    // FIX: songlength not updating when song changes???
+    const value = songLength * percent
+    console.log(percent, songLength)
     // seek requires value in milliseconds
     player.seek(value).then(() => {
       console.log('Changed position!');
@@ -135,9 +151,7 @@ export default function WebPlayback(props) {
   useEffect(() => {
     if (!timeline) return
     timeline.addEventListener('click', timelineSeek)
-
     return () => timeline.removeEventListener('click', timelineSeek)
-    
   },[timeline])
 
   useEffect(() => {
@@ -233,9 +247,22 @@ export default function WebPlayback(props) {
           </button>
           <button className="loop-btn" 
             onClick={() => {repeatSongs()}}
-            style={repeat === true? {color: 'var(--blue)'} : {}}
+            style={repeatMode === 0 ? {} : repeatMode === 1 ? {color: 'var(--blue)'} : {color: 'var(--blue)'}}
           >
-            <svg viewBox="0 0 24 24" height="24px" width="24px" fill="currentcolor"><path d="M3 6.929c0-.75.643-1.393 1.393-1.393h14.286L16.32 3.179 17.5 2l4.393 4.393-4.393 4.393-1.179-1.179L18.68 7.25H4.714V11H3V6.929zM2.107 17.607L6.5 13.214l1.179 1.179L5.32 16.75l13.965-.071v-3.965H21V17c0 .75-.643 1.393-1.393 1.393l-14.286.071 2.358 2.357L6.5 22l-4.393-4.393z"></path></svg>
+            {
+              repeatMode === 0 ? 
+                <svg role="img" height="20" width="20" viewBox="0 0 16 16" fill="currentcolor">
+                  <path d="M0 4.75A3.75 3.75 0 013.75 1h8.5A3.75 3.75 0 0116 4.75v5a3.75 3.75 0 01-3.75 3.75H9.81l1.018 1.018a.75.75 0 11-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 111.06 1.06L9.811 12h2.439a2.25 2.25 0 002.25-2.25v-5a2.25 2.25 0 00-2.25-2.25h-8.5A2.25 2.25 0 001.5 4.75v5A2.25 2.25 0 003.75 12H5v1.5H3.75A3.75 3.75 0 010 9.75v-5z"></path>
+                </svg>
+              : repeatMode === 1 ?
+                <svg role="img" height="20" width="20" viewBox="0 0 16 16" fill="currentcolor">
+                  <path d="M0 4.75A3.75 3.75 0 013.75 1h8.5A3.75 3.75 0 0116 4.75v5a3.75 3.75 0 01-3.75 3.75H9.81l1.018 1.018a.75.75 0 11-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 111.06 1.06L9.811 12h2.439a2.25 2.25 0 002.25-2.25v-5a2.25 2.25 0 00-2.25-2.25h-8.5A2.25 2.25 0 001.5 4.75v5A2.25 2.25 0 003.75 12H5v1.5H3.75A3.75 3.75 0 010 9.75v-5z"></path>
+                </svg>
+              : 
+                <svg role="img" height="20" width="20" viewBox="0 0 16 16" fill="currentcolor">
+                  <path d="M0 4.75A3.75 3.75 0 013.75 1h.75v1.5h-.75A2.25 2.25 0 001.5 4.75v5A2.25 2.25 0 003.75 12H5v1.5H3.75A3.75 3.75 0 010 9.75v-5zM12.25 2.5h-.75V1h.75A3.75 3.75 0 0116 4.75v5a3.75 3.75 0 01-3.75 3.75H9.81l1.018 1.018a.75.75 0 11-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 111.06 1.06L9.811 12h2.439a2.25 2.25 0 002.25-2.25v-5a2.25 2.25 0 00-2.25-2.25z"></path><path d="M9.12 8V1H7.787c-.128.72-.76 1.293-1.787 1.313V3.36h1.57V8h1.55z"></path>
+                </svg>
+            }
           </button>
         </div>
   
