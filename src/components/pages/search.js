@@ -65,7 +65,8 @@ export default function SearchSongs() {
     }).catch(error => {return console.error(error)})
     // save new URIS data to global context (playlist or track)
     setContextURI(song.uri)
-    setPlayerCBData(current => ({...current, type: 'track_update', track_id: song.id}))
+    setPlayerCBData(current => ({...current, type: 'track_update'}))
+    setPlayerCBData(current => ({...current, track_id: song.id}))
     // remove playlist ID as track is playing not playlist
     setPlaylistID('')
   }
