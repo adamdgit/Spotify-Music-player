@@ -95,11 +95,15 @@
     justify-self: center;
   }
 
+  .show-hide-playlist-btn {
+    bottom: 149px;
+  }
+
   .playlist-wrap {
     top: 125px;
     grid-template-columns: unset;
     overflow-y: auto;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 260px);
     width: unset;
   }
 
@@ -170,7 +174,10 @@
     padding: 10px;
   }
 
-  .controls { padding: .8rem; }
+  .controls { 
+    height: 150px;
+    padding: .8rem; 
+  }
 
   .shuffle-btn svg, .loop-btn svg, 
   .next-btn svg, .previous-btn svg,
@@ -186,8 +193,14 @@
     grid-template-rows: 32px auto; 
   }
 
+  .timeline-seek {
+    grid-row: 1;
+    grid-column: span 4;
+  }
+
   .current-info {
     grid-column: span 3;
+    grid-row: 3;
   }
 
   .current-info img {
@@ -199,12 +212,12 @@
   .current-artist { font-size: .6rem; }
 
   .player-btns {
-    grid-row: 1;
+    grid-row: 2;
     grid-column: span 4;
   }
 
   .volume-control {
-    grid-row: 2;
+    grid-row: 3;
     grid-column: 4;
   }
 
@@ -253,7 +266,7 @@
   }
 
   .playlist-update-message {
-    bottom: 132px;
+    bottom: 145px;
   }
 
   .create-playlist {
