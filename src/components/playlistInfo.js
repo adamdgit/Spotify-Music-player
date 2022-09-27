@@ -68,7 +68,7 @@ function PlaylistInfo({ playerIsHidden }) {
   const addToPlaylist = (resultURI, playlistid) => {
     addTrackToPlaylist(resultURI, playlistid, token)
       .then(result => { 
-        if (result) console.error(result) 
+        if (!result.length > 0) console.error(result) 
       })
 
     document.querySelector('.show-p').classList.remove('show-p')
