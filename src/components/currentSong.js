@@ -1,9 +1,7 @@
 import Loading from "./Loading"
 
-export default function CurrentSong({...props}) {
+export default function CurrentSong({ currentSong }) {
  
-  let currentSong = props.currentSong
-
     /* 
       useEffect(() => {
         if(currentSong) {
