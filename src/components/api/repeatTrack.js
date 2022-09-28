@@ -1,7 +1,7 @@
 import axios from "axios"
 
 let errorMsg
-// type must be track or context
+// type must be track, context or off
 export async function repeatTrack(token, type){
   await axios({ 
     method: 'put', 
