@@ -6,35 +6,27 @@ import { repeatTrack } from "./api/repeatTrack";
 import { nextTrack } from "./api/nextTrack"
 import { previousTrack } from "./api/previousTrack,"
 import Loading from "./Loading";
-import { convertTime } from "./utils/convertTime";
+import Timeline from "./Timeline";
+import VolumeControl from "./VolumeControl";
 
 export default function WebPlayback(props) {
 
   // global context
-  const { token } = useContext(GlobalContext)
-  const { playerCBData, setPlayerCBData } = useContext(GlobalContext)
+  const { playerCBType, setPlayerCBType } = useContext(GlobalContext)
+  const { setCurrentTrackID } = useContext(GlobalContext)
   const { setPlaylistID } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
 
   const [player, setPlayer] = useState(undefined)
-  const [isMuted, setIsMuted] = useState(false)
   const [is_paused, setPaused] = useState(true)
   const [shuffle, setShuffle] = useState(false)
   const [current_track, setTrack] = useState()
-  const [volume, setVolume] = useState(20)
   const [songLength, setSongLength] = useState(0) // milliseconds
   const [loading, setLoading] = useState(false)
   const [currentTrackPos, setPos] = useState(0) // milliseconds
   const [repeatMode, setRepeatMode] = useState(0)
-
-  const [timeline, setTimeline] = useState()
-  const timelineCB = useCallback(node => {
-    if(node != null) {
-      setTimeline(node)
-    }
-  },[])
 
   let runOnce = false
 
@@ -55,8 +47,8 @@ export default function WebPlayback(props) {
       setPlayer(player)
 
       player.addListener('ready', ({ device_id }) => {
-        transferPlayback(props.token, device_id)
         console.log('Ready with Device ID', device_id);
+        transferPlayback(props.token, device_id)
       })
 
       player.addListener('not_ready', ({ device_id }) => {
@@ -69,7 +61,7 @@ export default function WebPlayback(props) {
         if(!state) return
         console.log(state)
         if (runOnce === false) {
-          setPlayerCBData(current => ({...current, type: 'player_ready'}))
+          setPlayerCBType('player_ready')
           runOnce = true
         }
         setLoading(state.loading)
@@ -79,7 +71,7 @@ export default function WebPlayback(props) {
         setShuffle(state.shuffle)
         // bug with repeat mode? api call not updating repeat mode
         setRepeatMode(state.repeat_mode)
-        setPlayerCBData(current => ({...current, track_id: state.track_window.current_track?.id}))
+        setCurrentTrackID(state.track_window.current_track?.id)
         setSongLength(state.duration)
         setContextURI(state.context.uri)
         // check if URI is playlist or not
@@ -106,19 +98,19 @@ export default function WebPlayback(props) {
     // 0 = off, 1 = repeat context, 2 = repeat track
     switch(repeatMode) {
       case 0:
-        console.log('context')
         setRepeatMode(repeatMode + 1)
         repeatTrack(props.token, 'context')
+        setMessage('Repeat context on')
         break
       case 1:
-        console.log('track')
         setRepeatMode(repeatMode + 1)
         repeatTrack(props.token, 'track')
+        setMessage('Repeat track on')
         break
       case 2:
-        console.log('off')
         setRepeatMode(0)
         repeatTrack(props.token, 'off')
+        setMessage('Repeat disabled')
         break
       default: 
        setRepeatMode(0)
@@ -126,61 +118,20 @@ export default function WebPlayback(props) {
     }
   }
 
-  const changeVolume = (value) => {
-    if (+value > 0) setIsMuted(false) 
-    else setIsMuted(true)
-    setVolume(value)
-    let convertedValue = (+value / 100)
-    player.setVolume(convertedValue).then(() => {
-      console.log('Volume updated!');
-    });
-  }
-
-  const timelineSeek = (e) => {
-    const rect = timeline.getBoundingClientRect()
-    const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width
-    // FIX: songlength not updating when song changes???
-    const value = songLength * percent
-    console.log(percent, songLength)
-    // seek requires value in milliseconds
-    player.seek(value).then(() => {
-      console.log('Changed position!');
-    });
-  }
-
-  useEffect(() => {
-    if (!timeline) return
-    timeline.addEventListener('click', timelineSeek)
-    return () => timeline.removeEventListener('click', timelineSeek)
-  },[timeline])
-
-  useEffect(() => {
-
-    if (is_paused === false) {
-      if (loading === true) setPos(0)
-      const timelineUpdate = setInterval(() => {
-        setPos(value => value +=1000)
-      }, 1000)
-      return () => clearInterval(timelineUpdate)
-    }
-
-  }, [is_paused])
-
   return (
     <>
       {
-      playerCBData.type !== '' ?
+      playerCBType !== '' ?
       <div className="playback-wrap">
 
-        <div className="timeline-seek">
-          <span>{convertTime(currentTrackPos)}</span>
-            <span className="timeline" ref={timelineCB}>
-              <span className="timeline-thumb" style={{'--progress': `-${100 - (currentTrackPos / songLength * 100)}%`}}>
-                <span className="thumb-indicator"></span>
-              </span>
-            </span>
-          <span>{convertTime(songLength)}</span>
-        </div>
+        <Timeline 
+          songLength={songLength} 
+          currentTrackPos={currentTrackPos} 
+          setPos={setPos}
+          loading={loading}
+          is_paused={is_paused}
+          player={player}
+        />
 
         <div className="current-info">
           <img src={
@@ -210,7 +161,7 @@ export default function WebPlayback(props) {
           </button>
           <button className="previous-btn" onClick={() => { 
             previousTrack(props.token)
-            setPlayerCBData(current => ({...current, type: 'track_update'}))
+            setPlayerCBType('track_update')
           }} >
             <svg role="img" fill="currentcolor" 
               height="24px" width="24px" viewBox="0 0 16 16">
@@ -219,7 +170,7 @@ export default function WebPlayback(props) {
           </button>
           <button className="play-btn" onClick={() => { 
             player.togglePlay()
-            setPlayerCBData(current => ({...current, type: 'track_play_pause'}))
+            setPlayerCBType('track_play_pause')
           }} >
             { 
             is_paused ? 
@@ -238,8 +189,8 @@ export default function WebPlayback(props) {
           </button>
           <button className="next-btn" onClick={() => { 
             nextTrack(props.token)
-            setPlayerCBData(current => ({...current, type: 'track_update'}))
-          }} >
+            setPlayerCBType('track_update')
+          }}>
             <svg role="img" fill="currentcolor" 
               height="24px" width="24px" viewBox="0 0 16 16">
               <path d="M12.7 1a.7.7 0 00-.7.7v5.15L2.05 1.107A.7.7 0 001 1.712v12.575a.7.7 0 001.05.607L12 9.149V14.3a.7.7 0 00.7.7h1.6a.7.7 0 00.7-.7V1.7a.7.7 0 00-.7-.7h-1.6z"></path>
@@ -266,18 +217,9 @@ export default function WebPlayback(props) {
           </button>
         </div>
   
-        <span className="volume-control">
-          <input className="volume-slider" type="range" min="0" max="100" value={volume} onChange={(e) => {changeVolume(e.target.value)}} />
-          <button className="volume-btn" onClick={() => {
-            setIsMuted(!isMuted)
-            isMuted === false ? changeVolume(0) : changeVolume(20) 
-          }}>
-            {
-              isMuted === true ? <svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 576 512"><path d="M301.1 34.8C312.6 40 320 51.4 320 64V448c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352H64c-35.3 0-64-28.7-64-64V224c0-35.3 28.7-64 64-64h67.8L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3zM425 167l55 55 55-55c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-55 55 55 55c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-55-55-55 55c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l55-55-55-55c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"/></svg>
-              : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="20px" fill="currentcolor"><path d="M412.6 182c-10.28-8.334-25.41-6.867-33.75 3.402c-8.406 10.24-6.906 25.35 3.375 33.74C393.5 228.4 400 241.8 400 255.1c0 14.17-6.5 27.59-17.81 36.83c-10.28 8.396-11.78 23.5-3.375 33.74c4.719 5.806 11.62 8.802 18.56 8.802c5.344 0 10.75-1.779 15.19-5.399C435.1 311.5 448 284.6 448 255.1S435.1 200.4 412.6 182zM473.1 108.2c-10.22-8.334-25.34-6.898-33.78 3.34c-8.406 10.24-6.906 25.35 3.344 33.74C476.6 172.1 496 213.3 496 255.1s-19.44 82.1-53.31 110.7c-10.25 8.396-11.75 23.5-3.344 33.74c4.75 5.775 11.62 8.771 18.56 8.771c5.375 0 10.75-1.779 15.22-5.431C518.2 366.9 544 313 544 255.1S518.2 145 473.1 108.2zM534.4 33.4c-10.22-8.334-25.34-6.867-33.78 3.34c-8.406 10.24-6.906 25.35 3.344 33.74C559.9 116.3 592 183.9 592 255.1s-32.09 139.7-88.06 185.5c-10.25 8.396-11.75 23.5-3.344 33.74C505.3 481 512.2 484 519.2 484c5.375 0 10.75-1.779 15.22-5.431C601.5 423.6 640 342.5 640 255.1S601.5 88.34 534.4 33.4zM301.2 34.98c-11.5-5.181-25.01-3.076-34.43 5.29L131.8 160.1H48c-26.51 0-48 21.48-48 47.96v95.92c0 26.48 21.49 47.96 48 47.96h83.84l134.9 119.8C272.7 477 280.3 479.8 288 479.8c4.438 0 8.959-.9314 13.16-2.835C312.7 471.8 320 460.4 320 447.9V64.12C320 51.55 312.7 40.13 301.2 34.98z"></path></svg>
-            }
-          </button>
-        </span>
+        <VolumeControl 
+          player={player}
+        />
   
       </div>
       : <Loading loadingMsg={'Loading spotify player...'} />
