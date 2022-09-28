@@ -20,17 +20,14 @@ function Login() {
 
   // Global context items
   const [token, setToken] = useState('')
-  const [playerCBData, setPlayerCBData] = useState({
-    type: '',
-    track_id: ''
-  })
-  const [contextURI, setContextURI] = useState('')
-  const [playerOffset, setPlayerOffset] = useState(0)
+  const [playerCBType, setPlayerCBType] = useState('')
+  const [currentTrackID, setCurrentTrackID] = useState('')
+  const [contextURI, setContextURI] = useState('') // album, playlist etc
   const [playlistID, setPlaylistID] = useState('')
   const [username, setUsername] = useState('')
   const [userID, setUserID] = useState('')
-  const [songs, setSongs] = useState([])
-  const [message, setMessage] = useState('')
+  const [songs, setSongs] = useState([]) // playlist items
+  const [message, setMessage] = useState('') // playlist update message
 
   useEffect(() => {
 
@@ -73,8 +70,9 @@ function Login() {
       message, setMessage, 
       playlistID, setPlaylistID, 
       contextURI, setContextURI, 
-      playerOffset, setPlayerOffset, 
-      playerCBData, setPlayerCBData}}>
+      playerCBType, setPlayerCBType,
+      currentTrackID, setCurrentTrackID
+    }}>
     {
     !token ?
       <div className="login-wrap">
