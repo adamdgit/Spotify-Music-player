@@ -6,7 +6,8 @@
 }
 
 .user-playlists-header button {
-  padding: 1rem;
+  width: 140px;
+  height: 50px;
 }
 
 .create-playlist {

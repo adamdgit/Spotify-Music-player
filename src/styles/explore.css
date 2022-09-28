@@ -32,7 +32,7 @@
 
 .my-playlists-result {
   display: grid;
-  grid-template-columns: auto 1fr 1fr 60px 50px;
+  grid-template-columns: auto 1fr 1fr 60px 60px;
   border-bottom: 1px solid var(--secondary-blue);
   padding: 1.5rem;
   align-items: center;
@@ -53,16 +53,12 @@
   background-color: var(--bg-blue);
   border: 1px solid var(--secondary-blue);
   border-radius: 4px;
-  padding: 6px 10px 4px 10px;
+  width: 60px;
+  height: 40px;
   color: white;
   font-size: .9rem;
   justify-self: flex-end;
   box-shadow: inset 2px 2px 5px black;
-}
-
-.edit {
-  padding: .5rem 1rem;
-  width: fit-content;
 }
 
 .play:hover {
