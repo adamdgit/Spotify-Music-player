@@ -13,7 +13,6 @@ export default function UserPlaylists({...props}) {
   const { setContextURI } = useContext(GlobalContext)
   const { setPlaylistID } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
-  const { setPlayerCBData } = useContext(GlobalContext)
 
   const [playlists, setPlaylists] = useState()
   const navigate = useNavigate()
@@ -23,7 +22,6 @@ export default function UserPlaylists({...props}) {
     setContextURI(playlist.uri)
     setPlaylistID(playlist.id)
     changePlaylistSong(0, token, playlist.uri)
-    setPlayerCBData(current => ({...current, type: 'track_update'}))
   }
 
   const createNewPlaylist = () => {
