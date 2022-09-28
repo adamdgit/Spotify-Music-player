@@ -46,6 +46,7 @@
 }
 
 .timeline-thumb {
+  pointer-events: none; /* prevent onclick registering thumb as target instead of timeline */
   position: absolute;
   left: var(--progress);
   height: 6px;
@@ -127,6 +128,11 @@
   gap: 1rem;
   align-items: center;
   justify-self: end;
+}
+
+.volume-control .timeline {
+  max-width: 150px;
+  min-width: 70px;
 }
 
 .volume-slider {
