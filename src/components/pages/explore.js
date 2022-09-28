@@ -9,7 +9,6 @@ export default function Explore() {
   const { token } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
   const { setPlaylistID } = useContext(GlobalContext)
-  const { setPlayerCBData } = useContext(GlobalContext)
 
   const [results, setResults] = useState([])
   const trackElement = useRef([])
@@ -19,7 +18,6 @@ export default function Explore() {
     setContextURI(playlist.uri)
     setPlaylistID(playlist.id)
     changePlaylistSong(0, token, playlist.uri)
-    setPlayerCBData(current => ({...current, type: 'track_update'}))
   }
  
   useEffect(() => {
@@ -59,7 +57,7 @@ export default function Explore() {
                   <h2>{result.name}</h2>
                   <p>{result.description}</p>
                   <button className="play" onClick={() => playPlaylist(result)}>
-                    <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+                    <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
                   </button>
                 </div>
               )
