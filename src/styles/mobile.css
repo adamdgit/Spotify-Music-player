@@ -19,6 +19,8 @@
   .featured { text-align: center; }
   .edit-heading { text-align: center; }
 
+  .header-bar { padding: 0 .8rem; }
+
   .playlist-info-wrap {
     display: grid;
     gap: unset;
@@ -169,6 +171,10 @@
     grid-row: 2;
   }
 
+  .nav-bar .nav-item {
+    font-size: .9rem;
+  }
+
   .search-results-wrap {
     z-index: 999;
     padding: 10px;
@@ -191,11 +197,6 @@
   .playback-wrap { 
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 32px auto; 
-  }
-
-  .timeline-seek {
-    grid-row: 1;
-    grid-column: span 4;
   }
 
   .current-info {
@@ -221,6 +222,11 @@
     grid-column: 4;
   }
 
+  .timeline-seek {
+    grid-row: 1;
+    grid-column: span 4;
+  }
+
   @media only screen and (max-width: 500px){ 
     .search-result {
       grid-template-columns: unset;
@@ -238,6 +244,10 @@
     .add-to-playlist, .play {
       justify-self: center;
     }
+    
+    .volume-control .timeline {
+      width: 70px;
+    }
   }
 
   .search-songs-wrap {
@@ -250,15 +260,7 @@
   }
 
   .user-info {
-    grid-row: 1;
-    justify-self: center;
     margin-top: 1rem;
-  }
-
-  .user-info span {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
   }
 
   .logout {

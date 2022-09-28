@@ -131,8 +131,7 @@
 }
 
 .volume-control .timeline {
-  max-width: 150px;
-  min-width: 70px;
+  width: 100px;
 }
 
 .volume-slider {

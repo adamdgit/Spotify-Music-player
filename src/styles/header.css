@@ -1,7 +1,7 @@
 .header-bar {
   position: fixed;
   background-color: #111;
-  padding: 0 20px;
+  padding: 0 2rem;
   border-bottom: 5px solid var(--secondary-blue);
   box-shadow: 0 5px 12px #111;
   width: 100vw;
@@ -32,18 +32,18 @@
 }
 
 .nav-bar .nav-item {
-  color: white;
-  text-decoration: none;
-  list-style: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  color: white;
+  text-decoration: none;
+  list-style: none;
   padding:10px;
   width: 100%;
   height: 50px;
   border-bottom: none;
   border-radius: 5px 5px 0 0;
-  font-size: 1.2rem;
   cursor: pointer;
   z-index: 998;
 }
@@ -58,6 +58,13 @@
 
 .active {
   background-color: var(--secondary-blue);
+}
+
+.user-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 .search-bar {
@@ -104,30 +111,31 @@
 }
 
 .login {
-  display: grid;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  gap: 2rem;
   background-color: var(--primary-blue);
   border: 1px solid var(--secondary-blue);
   border-radius: 4px;
-  width: 400px;
   color: white;
-  padding: 40px;
+  padding: 1rem 2rem;
   text-align: center;
   font-size: 2rem;
   text-decoration: none;
 }
 
 .logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   background-color: var(--primary-blue);
   border: 1px solid var(--secondary-blue);
   border-radius: 4px;
-  width: 150px;
-  height: 40px;
+  padding: 5px 20px;
   color: white;
-  display: grid;
-  align-items: center;
-  justify-items: center;
   font-size: .9rem;
-  margin-bottom: 10px;
 }
 
 .login:hover, .logout:hover {
