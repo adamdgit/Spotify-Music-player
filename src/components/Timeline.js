@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { convertTime } from "./utils/convertTime"
 
 export default function Timeline({ ...props }) {
@@ -29,7 +29,6 @@ export default function Timeline({ ...props }) {
       <span>{convertTime(props.currentTrackPos)}</span>
         <span className="timeline" onClick={(e) => timelineSeek(e)}>
           <span className="timeline-thumb" style={{'--progress': `-${100 - (props.currentTrackPos / props.songLength * 100)}%`}}>
-            <span className="thumb-indicator"></span>
           </span>
         </span>
       <span>{convertTime(props.songLength)}</span>
