@@ -15,7 +15,7 @@ export default function SearchSongs() {
   const { setContextURI } = useContext(GlobalContext)
   const { playlistID, setPlaylistID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
-  const { setPlayerCBData } = useContext(GlobalContext)
+  const { userID } = useContext(GlobalContext)
 
   const [searchResults, setSearchResults] = useState([])
   const [query, setQuery] = useState('')
@@ -26,7 +26,14 @@ export default function SearchSongs() {
   useEffect(() => {
     getUserPlaylists(token)
     .then(result => {
-      if(result.length > 0) return setPlaylists(result)
+      if(result.length > 0) return (
+        // only show user owned playlists as you can't add songs to a playlist not owned by you
+        setPlaylists(
+          result?.filter(a => {
+            if(a.owner.id === userID) return a
+          })
+        )
+      )
       console.error(result)
     })
   },[token])
@@ -65,8 +72,6 @@ export default function SearchSongs() {
     }).catch(error => {return console.error(error)})
     // save new URIS data to global context (playlist or track)
     setContextURI(song.uri)
-    setPlayerCBData(current => ({...current, type: 'track_update'}))
-    setPlayerCBData(current => ({...current, track_id: song.id}))
     // remove playlist ID as track is playing not playlist
     setPlaylistID('')
   }
