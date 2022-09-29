@@ -98,6 +98,7 @@
 .next-btn, .previous-btn,
 .play-btn, .volume-btn,
 .show-hide-playlist-btn {
+  position: relative;
   background-color: #111;
   color: #eee;
 }
@@ -209,4 +210,27 @@
 
 .show {
   opacity: 1;
+}
+
+.tooltip {
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary-blue);
+  color: white;
+  border-radius: 5px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 40px;
+  width: max-content;
+  padding: 0 20px;
+  box-shadow: 0 5px 10px #111;
+}
+
+.playback-wrap * button:hover .tooltip {
+  display: flex;
 }
