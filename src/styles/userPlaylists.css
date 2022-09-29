@@ -102,5 +102,6 @@
 
 .save-changes {
   justify-self: flex-start;
-  padding: 1rem;
+  width: 150px;
+  height: 60px;
 }

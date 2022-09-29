@@ -231,6 +231,7 @@
   box-shadow: 0 5px 10px #111;
 }
 
-.playback-wrap * button:hover .tooltip {
+.playback-wrap * button:hover .tooltip,
+.edit-songlist * button:hover .tooltip {
   display: flex;
 }
