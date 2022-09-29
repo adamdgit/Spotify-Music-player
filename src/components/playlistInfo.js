@@ -76,12 +76,19 @@ function PlaylistInfo({ playerIsHidden }) {
     setMessage('Song added to playlist')
   }
 
-  // gets users playlists, for add-to-playlist button function
+  // gets users playlists, for add-to-playlist button
   useEffect(() => {
     getUserPlaylists(token)
       .then(result => { 
         if (result.length === 0) return setPlaylists([])
-        if (result.length > 0) return setPlaylists(result)
+        if (result.length > 0) return (
+          // only show user owned playlists as you can't add songs to a playlist not owned by you
+          setPlaylists(
+            result?.filter(a => {
+              if(a.owner.id === userID) return a
+            })
+          )
+        )
         else console.error(result) 
       })
   },[token])
