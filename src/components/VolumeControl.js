@@ -8,6 +8,7 @@ export default function VolumeControl({ ...props }) {
   const [percent, setPercent] = useState(0.3) // int between 0-1
   
   const changeVolume = (e) => {
+    if (isMuted === true) setIsMuted(false)
     const rect = e.target.getBoundingClientRect()
     let calcPercent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width
     setPercent(calcPercent) 
@@ -30,7 +31,6 @@ export default function VolumeControl({ ...props }) {
       </button>
       <span className="timeline" onPointerDown={(e) => changeVolume(e)}>
         <span className="timeline-thumb" style={{'--progress': `-${100 - (percent * 100)}%`}}>
-          <span className="thumb-indicator"></span>
         </span>
       </span>
     </div>
