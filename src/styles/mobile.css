@@ -30,7 +30,8 @@
 
   .explore-wrap {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, 300px);
+    justify-content: center;
   }
 
   .explore-result {
@@ -110,6 +111,7 @@
   }
 
   .playlist {
+    justify-content: unset;
     background-color: var(--primary-blue);
     overflow-y: unset;
     height: 100%;
