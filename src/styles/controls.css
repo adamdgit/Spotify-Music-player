@@ -54,17 +54,11 @@
   background-color: #fff;
 }
 
-.timeline-seek:hover .timeline-thumb {
+.timeline-seek:hover .timeline-thumb,
+.volume-control:hover .timeline-thumb {
   background-color: var(--blue);
 }
 
-.thumb-indicator {
-  position: absolute;
-  height: 6px; 
-  width: 6px;
-  background-color: var(--blue);
-  right: 0;
-}
 
 /*-----Controls-----*/
 
