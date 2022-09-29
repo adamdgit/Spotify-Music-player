@@ -3,15 +3,16 @@ import Tooltip from "./Tooltip";
 
 export default function VolumeControl({ ...props }) {
 
-  const [prevVolume, setPrevVolume] = useState(30)
+  const [prevVolume, setPrevVolume] = useState(0.3)
   const [isMuted, setIsMuted] = useState(false)
   const [percent, setPercent] = useState(0.3) // int between 0-1
   
   const changeVolume = (e) => {
     const rect = e.target.getBoundingClientRect()
-    setPercent(Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width) 
-    setPrevVolume(percent)
-    props.player.setVolume(Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width)
+    let calcPercent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width
+    setPercent(calcPercent) 
+    setPrevVolume(calcPercent)
+    props.player.setVolume(calcPercent)
   }
 
   return (
