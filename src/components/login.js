@@ -4,7 +4,7 @@ import axios from "axios";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
-import UserPlaylists from "./pages/playlists";
+import Playlists from "./pages/playlists";
 import EditPlaylist from "./pages/editPlaylist";
 import Search from "./pages/search";
 
@@ -16,7 +16,7 @@ function Login() {
   const REDIRECT_URI = "http://localhost:3000"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
-  const SCOPE = 'user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-modify-public%20playlist-read-private%20streaming'
+  const SCOPE = 'user-top-read%20user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-modify-public%20playlist-read-private%20streaming'
 
   // Global context items
   const [token, setToken] = useState('')
@@ -86,8 +86,8 @@ function Login() {
       <>
         <Header />
         <Routes>
-          <Route path="/" element={<Explore />} />
-          <Route path="/playlists" element={<UserPlaylists token={token} userID={userID}/>} />
+          <Route path="/" element={<Playlists />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/search" element={<Search />} />
           <Route path="/editPlaylist/:id" element={<EditPlaylist />} />
         </Routes>
