@@ -32,7 +32,7 @@
 
 .explore-result {
   display: grid;
-  grid-template-columns: 110px 1fr 1fr auto;
+  grid-template-columns: 110px 200px minmax(100px, auto) auto;
   gap: 1rem;
   border-bottom: 1px solid var(--secondary-blue);
   padding: 1rem;
@@ -66,6 +66,11 @@
   height: 110px;
 }
 
+.explore-result p { 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .play {
   background-color: var(--bg-blue);
   border: 1px solid var(--secondary-blue);
@@ -81,4 +86,45 @@
 .play:hover {
   border: 1px solid var(--blue);
   color: var(--blue);
+}
+
+.artist-wrap {
+  display: grid;
+  gap: 2rem;
+  overflow-x: hidden;
+}
+
+.artist {
+  display: grid;
+  gap: 1rem;
+}
+
+.my-playlists-result .add-to-playlist {
+  justify-self: flex-end;
+  width: 60px;
+}
+
+.artist-top-songs {
+  padding: 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);
+  justify-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.artist-top-songs .my-playlists-result {
+  font-size: .8rem;
+  grid-template-rows: 150px 25px 15px 40px;
+  padding: 1rem;
+  width: 100%;
+  background-color: var(--secondary-blue);
+  border-radius: 10px;
+}
+
+.artists-names, .song-name {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
 }
