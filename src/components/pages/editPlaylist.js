@@ -184,7 +184,7 @@ export default function EditPlaylist() {
       } else {
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
-        clone.style.left = `-${e.layerX}px`
+        clone.style.left = `-${e.target.offsetLeft}px`
       }
       clone.style.height = `${element.offsetHeight}px`
       clone.style.width = `${element.offsetWidth}px`
@@ -249,9 +249,9 @@ export default function EditPlaylist() {
 
         <h1 className="edit-heading">Playlist editor:</h1>
         <div className="playlist-info">
-          <span>
-            <h1>{!playlistName ? originalName : playlistName}</h1>
-            <h3>{!playlistDesc ? originalDesc : playlistDesc}</h3>
+          <span style={{display:'grid', gap: '1rem'}}>
+            <h1 style={{fontSize: '3.5rem'}}>{!playlistName ? originalName : playlistName}</h1>
+            <h3 style={{fontSize: '2rem'}}>{!playlistDesc ? originalDesc : playlistDesc}</h3>
           </span>
         </div>
 
