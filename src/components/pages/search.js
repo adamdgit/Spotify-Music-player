@@ -6,6 +6,7 @@ import { addTrackToPlaylist } from "../api/addTrackToPlaylist";
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { getUserPlaylists } from "../api/getUserPlaylists"
 import { searchSongs } from "../api/search";
+import { playTrack } from "../api/playTrack";
 
 export default function SearchSongs() {
   
@@ -57,19 +58,11 @@ export default function SearchSongs() {
   }
 
   const playSong = async (song)  => {
-    // TODO: export to api folder
-    // fix callback update so playlist info updates correctly
-    // currently type is being read as track_play_pause instead of track_update
-    console.log(song)
-    await axios({ 
-      method: 'put', 
-      url: 'https://api.spotify.com/v1/me/player/play', 
-      headers: { 'Authorization': 'Bearer ' + token }, 
-      data: {
-        "uris": [song.uri],
-        "offset": { "position": 0 }
-      }
-    }).catch(error => {return console.error(error)})
+    playTrack(token, song)
+    .then(result => {
+      if (!result) return
+      console.error(result)
+    })
     // save new URIS data to global context (playlist or track)
     setContextURI(song.uri)
     // remove playlist ID as track is playing not playlist
