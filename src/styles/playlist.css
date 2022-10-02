@@ -19,7 +19,9 @@
 .song-category {
   display: grid;
   grid-template-columns: 40px 80px auto 60px;
+  justify-self: center;
   width: 100%;
+  max-width: 1000px;
   height: 50px;
   text-transform: uppercase;
   border-bottom: 1px solid var(--secondary-blue);
@@ -27,12 +29,10 @@
   padding: 1.2rem 10px;
   margin: 0 0 20px 0;
   font-size: .6rem;
-  max-width: 800px;
 }
 
 .playlist {
   display: grid;
-  justify-content: center;
   background-color: var(--primary-blue);
   overflow-y: auto;
   border-top: 3px solid var(--secondary-blue);
@@ -43,9 +43,10 @@
 .playlist-info-wrap {
   display: flex;
   align-items: center;
+  justify-self: center;
   gap: 2rem;
   padding: 2rem 0;
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .playlist-title, .playlist-desc {
@@ -62,7 +63,9 @@
 
 .container {
   position: relative;
-  max-width: 800px;
+  justify-self: center;
+  max-width: 1000px;
+  width: 100%;
 }
 
 .draggable, .edit-draggable {
@@ -255,4 +258,10 @@
 .edit-playlist-details {
   display: grid;
   gap: 2rem;
+}
+
+.play-song-btn:hover .tooltip {
+  display: flex;
+  top: 30px;
+  left: 10px;
 }

@@ -17,8 +17,17 @@
   padding: 20px;
 }
 
+.explore-wrap {
+  margin-top: 3rem;
+}
+
 .featured {
   padding: 1rem 0 3rem 0;
+}
+
+.user-playlists-wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 33.3%);
 }
 
 .explore-result {
@@ -32,10 +41,12 @@
 
 .my-playlists-result {
   display: grid;
-  grid-template-columns: auto 1fr 1fr 60px 60px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 200px auto auto 50px;
+  justify-items: center;
   border-bottom: 1px solid var(--secondary-blue);
   padding: 1.5rem;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
 }
 
@@ -44,7 +55,13 @@
   box-shadow: 0 7px 15px #111;
 }
 
-.explore-result img, .my-playlists-result img {
+.my-playlists-result img { grid-column: span 2; }
+.my-playlists-result h2 { grid-column: span 2; }
+.my-playlists-result p { grid-column: span 2; }
+.my-playlists-result a { grid-row: 4; justify-self: flex-end;}
+.my-playlists-result button { grid-row: 4; justify-self: flex-start;}
+
+.explore-result img {
   width: 110px;
   height: 110px;
 }
