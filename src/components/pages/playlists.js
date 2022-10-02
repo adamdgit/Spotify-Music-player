@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom"
 import { createPlaylist } from "../api/createPlaylist"
 import { changePlaylistSong } from "../api/changePlaylistSong";
 import { getUserPlaylists } from "../api/getUserPlaylists"
+import { getFeaturedPlaylists } from "../api/getFeaturedPlaylists"
 import Loading from "../Loading";
 
 export default function UserPlaylists({...props}) {
@@ -13,8 +14,10 @@ export default function UserPlaylists({...props}) {
   const { setContextURI } = useContext(GlobalContext)
   const { setPlaylistID } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
-
+  // users playlists results
   const [playlists, setPlaylists] = useState()
+  // featured results
+  const [results, setResults] = useState([])
   const navigate = useNavigate()
   
   const playPlaylist = (playlist) => {
@@ -25,8 +28,6 @@ export default function UserPlaylists({...props}) {
   }
 
   const createNewPlaylist = () => {
-    // TODO: create playlist -> get playlist iD ->
-    // -> redirect to edit page
     createPlaylist(props.token, props.userID)
     .then(result => {
       if (result.id) navigate(`/editPlaylist/${result.id}`)
@@ -35,19 +36,28 @@ export default function UserPlaylists({...props}) {
   }
 
   useEffect(() => {
+
     getUserPlaylists(token)
     .then(result => {
-      if (result.length === 0) return setPlaylists([])
-      else if (result.length > 0) return setPlaylists(result)
+      console.log(result)
+      if (result?.length === 0) return setPlaylists([])
+      // sort by user owned first
+      else if (result?.length > 0) return setPlaylists(result?.sort((a, b) => {
+        if(a.owner.id === userID && b.owner.id === userID) return 0
+        if(a.owner.id === userID && b.owner.id !== userID) return -1
+        return 1
+      }))
       else console.error(result) 
     })
-  },[token])
 
-  playlists?.sort((a, b) => {
-    if(a.owner.id === userID && b.owner.id === userID) return 0
-    if(a.owner.id === userID && b.owner.id !== userID) return -1
-    return 1
-  })
+    getFeaturedPlaylists(token)
+    .then(result => {
+      if (result?.length === 0) return setResults([])
+      else if (result?.length > 0) return setResults(result)
+      else console.error(result) 
+    })
+
+  },[token])
 
   return (
     <div className="page-wrap">
@@ -86,6 +96,36 @@ export default function UserPlaylists({...props}) {
             }
           </>
         </div>
+
+        <div className="explore-wrap">
+        <h1 className="featured">Spotify featured playlists:</h1>
+          {
+            results? results.map((result, i) => {
+              if (result === null || result === undefined) return
+              return (
+                <div key={i} className={'explore-result'}>
+                  <img src={
+                    result.images.length === 0 ?
+                    'no image found' :
+                    result.images[0].url
+                    } alt={
+                    result.images.length === 0 ?
+                    'no image found' :
+                    `${result.name} playlist art`
+                    } width={'200px'} height={'200px'} />
+                  <h2>{result.name}</h2>
+                  <p>{result.description}</p>
+                  <button className="play" onClick={() => playPlaylist(result)}>
+                    <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+                  </button>
+                </div>
+              )
+            })
+            : results?.length === 0 ? <h1>No data found</h1>
+            : <Loading loadingMsg={'Fetching featured playlists...'}/>
+          }
+        </div>
+
       </div>
     </div>
   )

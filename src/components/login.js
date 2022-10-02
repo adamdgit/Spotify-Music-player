@@ -4,7 +4,7 @@ import axios from "axios";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
-import UserPlaylists from "./pages/userPlaylists";
+import UserPlaylists from "./pages/playlists";
 import EditPlaylist from "./pages/editPlaylist";
 import Search from "./pages/search";
 
