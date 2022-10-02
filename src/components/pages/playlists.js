@@ -7,7 +7,7 @@ import { getUserPlaylists } from "../api/getUserPlaylists"
 import { getFeaturedPlaylists } from "../api/getFeaturedPlaylists"
 import Loading from "../Loading";
 
-export default function UserPlaylists({...props}) {
+export default function Playlists() {
 
   // global context
   const { token } = useContext(GlobalContext)
@@ -28,7 +28,7 @@ export default function UserPlaylists({...props}) {
   }
 
   const createNewPlaylist = () => {
-    createPlaylist(props.token, props.userID)
+    createPlaylist(token, userID)
     .then(result => {
       if (result.id) navigate(`/editPlaylist/${result.id}`)
       else console.error(result)
@@ -42,7 +42,7 @@ export default function UserPlaylists({...props}) {
       console.log(result)
       if (result?.length === 0) return setPlaylists([])
       // sort by user owned first
-      else if (result?.length > 0) return setPlaylists(result?.sort((a, b) => {
+      if (result?.length > 0) return setPlaylists(result?.sort((a, b) => {
         if(a.owner.id === userID && b.owner.id === userID) return 0
         if(a.owner.id === userID && b.owner.id !== userID) return -1
         return 1
@@ -57,7 +57,7 @@ export default function UserPlaylists({...props}) {
       else console.error(result) 
     })
 
-  },[token])
+  },[userID])
 
   return (
     <div className="page-wrap">
