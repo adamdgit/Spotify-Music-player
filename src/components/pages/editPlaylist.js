@@ -10,6 +10,7 @@ import { changePlaylistOrder } from "../api/changePlaylistOrder"
 import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
 import { getNearestNode } from "../utils/getNearestNode";
 import EditPlaylistItem from "../EditPlaylistItem";
+import Loading from "../Loading";
 
 export default function EditPlaylist() {
 
@@ -298,12 +299,14 @@ export default function EditPlaylist() {
           </form>
         </div>
 
-        <h2 style={{textAlign: 'center', marginBottom: '1rem'}}>Edit tracks:</h2>
+        <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Edit tracks:</h2>
 
         {playlistData? 
         <div className="edit-songlist" ref={container}>
           { // if currently playing playlist is also being edited, map over global state
-          playlistID === playlistData.id?
+          songs.length === 0 || tracks.length === 0? 
+          <Loading loadingMsg={'Updating...'}/>
+          : playlistID === playlistData.id?
             songs.map((song, index) => {
               return (
                 <EditPlaylistItem 
