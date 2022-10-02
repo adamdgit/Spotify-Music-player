@@ -11,6 +11,7 @@ import { convertTime } from "./utils/convertTime"
 import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
 import { getNearestNode } from "./utils/getNearestNode"
 import { getUserPlaylists } from "./api/getUserPlaylists"
+import Tooltip from "./Tooltip";
 
 function PlaylistInfo({ playerIsHidden }) {
 
@@ -240,6 +241,7 @@ function PlaylistInfo({ playerIsHidden }) {
                     changePlaylistSong(index, token, contextURI)
                     setPlayerCBType('track_update')
                   }} className="play-song-btn" >
+                    <Tooltip tip={'Play'} />
                     <img src={
                       song.track.album.images.length === 0 ?
                       'no image found' :
@@ -252,7 +254,6 @@ function PlaylistInfo({ playerIsHidden }) {
                       `${song.track.name} album art`
                       } />
                   </button>
-                  <span className="play-song-tooltip">Play</span>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
                     <p>{sanitizeArtistNames(song.track.artists)}</p>
