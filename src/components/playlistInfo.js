@@ -17,12 +17,12 @@ function PlaylistInfo({ playerIsHidden }) {
 
   // global context
   const { token } = useContext(GlobalContext)
+  const { userID } = useContext(GlobalContext)
   const { contextURI } = useContext(GlobalContext)
   const { playerCBType, setPlayerCBType } = useContext(GlobalContext)
-  const { currentTrackID, setCurrentTrackID } = useContext(GlobalContext)
+  const { currentTrackID } = useContext(GlobalContext)
   const { playlistID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
-  const { userID } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
   // component state
@@ -80,9 +80,9 @@ function PlaylistInfo({ playerIsHidden }) {
   // gets users playlists, for add-to-playlist button
   useEffect(() => {
     getUserPlaylists(token)
-      .then(result => { 
-        if (result.length === 0) return setPlaylists([])
-        if (result.length > 0) return (
+      .then(result => {
+        if (result?.length === 0) return setPlaylists([])
+        if (result?.length > 0) return (
           // only show user owned playlists as you can't add songs to a playlist not owned by you
           setPlaylists(
             result?.filter(a => {
@@ -92,7 +92,7 @@ function PlaylistInfo({ playerIsHidden }) {
         )
         else console.error(result) 
       })
-  },[token])
+  },[userID])
 
   // Adds event listners for playlist items after the draggables array is filled
   // useCallback provides update when html draggables are rendered
@@ -241,7 +241,7 @@ function PlaylistInfo({ playerIsHidden }) {
                     changePlaylistSong(index, token, contextURI)
                     setPlayerCBType('track_update')
                   }} className="play-song-btn" >
-                    <Tooltip tip={'Play'} />
+                  <Tooltip tip={'Play'} />
                     <img src={
                       song.track.album.images.length === 0 ?
                       'no image found' :
