@@ -67,42 +67,6 @@
   gap: 1rem;
 }
 
-.search-bar {
-  position: relative;
-  width:100%;
-  min-width: 140px;
-  max-width: 900px;
-  border: 1px solid var(--secondary-blue);
-  box-shadow: inset 3px 3px 5px #000;
-  background-color: var(--bg-blue);
-  padding: 5px;
-  margin-top: 2rem;
-}
-
-.search-bar .search {
-  color: white;
-  height: 30px;
-  width: 100%;
-  padding: 0 10px;
-  background-color: var(--bg-blue);
-}
-
-.search-bar .search-btn {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  background-color: var(--primary-blue);
-  color: white;
-}
-
-.search-bar:hover {
-  border: 1px solid var(--blue);
-}
-
-.search-bar input:focus {
-  outline: 0;
-}
-
 .login-wrap {
   margin-top: 200px;
   display: grid;
@@ -115,7 +79,7 @@
   justify-items: center;
   align-items: center;
   gap: 2rem;
-  background-color: var(--primary-blue);
+  background-color: var(--bg-blue);
   border: 1px solid var(--secondary-blue);
   border-radius: 4px;
   color: white;
@@ -146,91 +110,4 @@
 .account {
   font-size: .8rem;
   text-align: center;
-}
-
-/*-----Search results dropdown-----*/
-.search-results-wrap {
-  display: none;
-  background-color: var(--bg-blue);
-  box-shadow: 0 5px 12px #111;
-  padding: 1rem 2rem;
-  z-index: 777;
-  width:100%;
-  min-width: 140px;
-  max-width: 900px;
-}
-
-.show-search {
-  display: block;
-}
-
-.search-result {
-  font-size: .9rem;
-  display: grid;
-  grid-template-columns: 90px auto 60px 60px;
-  gap: 1rem;
-  padding: 15px 0;
-  align-items: center;
-  border-bottom: 1px solid var(--secondary-blue);
-}
-
-.search-result:hover {
-  border-bottom: 1px solid var(--blue);
-}
-
-.add-to-playlist {
-  position: relative;
-  background-color: var(--bg-blue);
-  border: 1px solid var(--secondary-blue);
-  border-radius: 4px;
-  width: 40px;
-  height: 40px;
-  color: white;
-  font-size: .9rem;
-  justify-self: center;
-  box-shadow: inset 2px 2px 5px black;
-}
-
-.choose-playlist {
-  display: none;
-  color:white;
-  background:var(--primary-blue);
-  max-height: 350px;
-  border-radius: 10px;
-  position: absolute;
-  z-index: 888;
-  left:-250px;
-  top:35px;
-  box-shadow: 1px 1px 10px black;
-  padding: 10px 20px;
-  overflow-y: auto;
-}
-
-.choose-playlist h3 {
-  padding: 10px;
-}
-
-.choose-playlist ul li {
-  width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border: 1px solid var(--secondary-blue);
-  border-radius: 5px;
-  padding: 15px 20px;
-  margin: 10px 0;
-}
-
-.choose-playlist ul li:hover {
-  color: var(--blue);
-  border-color: var(--blue);
-}
-
-.show-p {
-  display: block;
-}
-
-.add-to-playlist:hover {
-  color: var(--blue);
-  border:1px solid var(--blue)
 }
