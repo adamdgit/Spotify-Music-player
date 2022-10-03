@@ -4,7 +4,7 @@ import './styles/index.css';
 import './styles/header.css';
 import './styles/controls.css'
 import './styles/playlist.css'
-import './styles/explore.css'
+import './styles/main.css'
 import './styles/userPlaylists.css'
 import './styles/mobile.css'
 import Login from './components/login';
