@@ -1,22 +1,28 @@
 
 export function showHideAddToPlaylistBtn(e) {
-  if(!e.classList.contains('add-to-playlist')) return
-  // if add to playlist button is clicked but a different buttons hidden
-  // element is showing, hide it
-  if(e.classList.contains('add-to-playlist') && document.querySelector('.show-p') && !e.querySelector('.show-p')) {
-    document.querySelector('.show-p').classList.remove('show-p')
+  // modal is child of button clicked
+  let clickedNode = e.childNodes[1]
+
+  if (clickedNode.classList.contains('show-p')) {
+    return clickedNode.classList.remove('show-p')
   }
-  // if hidden element is shown, hide it
-  if(e.querySelector('.show-p')) {
-    e.querySelector('.show-p').classList.remove('show-p')
-  //if hidden element is hidden, show it
-  } else {
-    e.querySelector('.choose-playlist').classList.add('show-p')
+
+  // hide any nodes already open
+  let nodes = document.querySelectorAll('.show-p')
+  nodes.forEach(node => {
+    node.classList.remove('show-p')
+  })
+
+  clickedNode.classList.add('show-p')
+
+  // prevent modal displaying outside of screen
+  // 125px is height of controls panel
+  if(clickedNode.getBoundingClientRect().bottom > (document.querySelector('.page-wrap').offsetHeight + 125)) {
+    clickedNode.style.top = `-${clickedNode.clientHeight}px`
   }
-  // if modal appears below the screen, change its position so user can see it
-  // +100 is a magic number, accounting for padding and margins as javascript
-  // does not have a built in way to get an elements height including those properties
-  if(e.querySelector('.choose-playlist').getBoundingClientRect().bottom > (document.querySelector('.page-wrap').offsetHeight + 100)) {
-    e.querySelector('.choose-playlist').style.top = '-355px'
+
+  if(clickedNode.getBoundingClientRect().left < 5) {
+    clickedNode.style.left = '0px'
+    clickedNode.style.right = 'unset'
   }
 }
