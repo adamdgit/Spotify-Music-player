@@ -18,7 +18,7 @@ export default function EditPlaylist() {
   // global context
   const { token } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
-  const { playlistID } = useContext(GlobalContext)
+  const { contextID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
 
   const [playlistName, setPlaylistName] = useState('')
@@ -47,7 +47,7 @@ export default function EditPlaylist() {
     setDraggables([])
     // if currently playing playlist matches currently editing
     // empty songs to prepare for loading new songs from API
-    if (playlistID === playlistData.id) {
+    if (contextID === playlistData.id) {
       setSongs([])
     }
     changePlaylistOrder(dragElIndex, dragElNewIndex, token, id)
@@ -56,7 +56,7 @@ export default function EditPlaylist() {
           // user can edit playlist that is not currently playing
           // we check if currently playing matches currently editing
           // and sync changes that are made
-          if (playlistID === playlistData.id) {
+          if (contextID === playlistData.id) {
             return setSongs(result)
           }
           return setTracks(result)
@@ -72,7 +72,7 @@ export default function EditPlaylist() {
           // user can edit playlist that is not currently playing
           // we check if currently playing matches currently editing
           // and sync changes that are made
-          if (playlistID === playlistData.id) {
+          if (contextID === playlistData.id) {
             return setSongs(result)
           }
           return setTracks(result)
@@ -99,7 +99,7 @@ export default function EditPlaylist() {
     addTrackToPlaylist(uri, id, token)
     .then(result => {
       if(result.length > 0) {
-        if (playlistID === playlistData.id) {
+        if (contextID === playlistData.id) {
           return setSongs(result)
         }
         return setTracks(result)
@@ -136,11 +136,11 @@ export default function EditPlaylist() {
 
   // cleanup arrays when playlist changes
   useEffect(() => {
-    if (playlistID === playlistData?.id) {
+    if (contextID === playlistData?.id) {
       setDraggables([])
       setSongs([])
     }
-  },[playlistID, setSongs])
+  },[contextID, setSongs])
 
   useEffect(() => {
     if(query === '') return
@@ -302,7 +302,7 @@ export default function EditPlaylist() {
         <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Edit tracks:</h2>
 
         <div className="edit-songlist" ref={container}>
-          {playlistID === playlistData.id?
+          {contextID === playlistData.id?
             songs.map((song, index) => {
               return (
                 <EditPlaylistItem 
