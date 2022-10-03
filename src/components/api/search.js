@@ -12,7 +12,8 @@ export async function searchSongs(token, query) {
     },
     params: {
       q: query,
-      type: 'track'
+      type: 'track,album,playlist',
+      limit: 10
     }
   }).then((res) => {
     result = res.data
