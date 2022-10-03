@@ -28,33 +28,30 @@
     text-align: center;
   }
 
-  .explore-wrap {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    justify-content: center;
-  }
-
-  .explore-result {
-    grid-template-columns: unset;
-    grid-template-rows: auto auto auto auto;
-    justify-items: center;
-    text-align: center;
-    font-size: .9rem;
-    gap: 1rem;
-  }
-
-  .explore-result h2 {
-    grid-row: 1;
-  }
-
   .user-playlists-header {
     justify-content: center;
   }
 
   .user-playlists-wrap {
+    grid-template-columns: unset;
+  }
+
+  .result-large {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    justify-content: center;
+    grid-template-rows: unset;
+    grid-template-columns: 100px 1fr 1fr 60px 60px;
+    align-items: center;
+    justify-items: flex-start;
+    padding: 1rem;
+  }
+
+  .result-large img {
+    width: 100px; height: 100px;
+  }
+
+  .result-large > * {
+    grid-column: unset;
+    grid-row: unset;
   }
 
   .my-playlists-result {
@@ -94,8 +91,9 @@
     display: none;
   }
 
-  .explore-result button {
-    justify-self: center;
+  .artist-top-songs, .search-results-wrap {
+    grid-template-columns: unset;
+    gap: 1rem;
   }
 
   .show-hide-playlist-btn {
@@ -175,11 +173,6 @@
 
   .nav-bar .nav-item {
     font-size: .9rem;
-  }
-
-  .search-results-wrap {
-    z-index: 999;
-    padding: 10px;
   }
 
   .controls { 
