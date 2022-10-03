@@ -14,7 +14,7 @@ export default function Explore() {
   const { userID } = useContext(GlobalContext)
   const { setSongs } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
-  const { playlistID, setPlaylistID } = useContext(GlobalContext)
+  const { contextID, setContextID } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
 
@@ -29,7 +29,7 @@ export default function Explore() {
           // Only update currently playing song data if
           // playlist IDs match, as we need to sync the newly
           // added song to the current playlist
-          if (playlistID === playlistid) {
+          if (contextID === playlistid) {
             return setSongs(result)
           }
           return
@@ -49,7 +49,7 @@ export default function Explore() {
     // save new URIS data to global context (playlist or track)
     setContextURI(song.uri)
     // remove playlist ID as track is playing not playlist
-    setPlaylistID('')
+    setContextID('')
   }
 
   useEffect(() => {
