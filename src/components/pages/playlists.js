@@ -37,9 +37,9 @@ export default function Playlists() {
 
   useEffect(() => {
 
+    if (!userID) return
     getUserPlaylists(token)
     .then(result => {
-      console.log(result)
       if (result?.length === 0) return setPlaylists([])
       // sort by user owned first
       if (result?.length > 0) return setPlaylists(result?.sort((a, b) => {
@@ -57,7 +57,7 @@ export default function Playlists() {
       else console.error(result) 
     })
 
-  },[userID])
+  },[token, userID])
 
   return (
     <div className="page-wrap">
@@ -69,41 +69,39 @@ export default function Playlists() {
           </button>
         </div>
         <div className="user-playlists-wrap">
-          <>
-            {
-            playlists? playlists.map((result, i) => {
-              if (result === null || result === undefined) return
-              return (
-                <div key={i} className={'my-playlists-result'}>
-                  <img src={result.images.length !== 0 ? result.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
-                  <h2>{result.name}</h2>
-                  <p>{result.description}</p>
-                  {
-                    result.owner.id !== userID 
-                    ? <button></button>
-                    : <NavLink to={`/editPlaylist/${result.id}`} className="edit-link">
-                        <button className="play edit">Edit</button>
-                      </NavLink>
-                  }
-                  <button className="play" onClick={() => playPlaylist(result)}>
-                    <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
-                  </button>
-                </div>
-              )
-            })
-            : playlists?.length === 0 ? <h1>No data found</h1>
-            : <Loading loadingMsg={'Fetching your playlists...'}/>
-            }
-          </>
+          {
+          playlists? playlists.map((result, i) => {
+            if (result === null || result === undefined) return <></>
+            return (
+              <div key={i} className={'result-large'}>
+                <img src={result.images.length !== 0 ? result.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
+                <h2>{result.name}</h2>
+                <p>{result.description}</p>
+                {
+                  result.owner.id !== userID 
+                  ? <button></button>
+                  : <NavLink to={`/editPlaylist/${result.id}`} className="edit-link">
+                      <button className="play edit">Edit</button>
+                    </NavLink>
+                }
+                <button className="play" onClick={() => playPlaylist(result)}>
+                  <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+                </button>
+              </div>
+            )
+          })
+          : playlists?.length === 0 ? <h1>No data found</h1>
+          : <Loading loadingMsg={'Fetching your playlists...'}/>
+          }
         </div>
 
-        <div className="explore-wrap">
         <h1 className="featured">Spotify featured playlists:</h1>
+        <div className="user-playlists-wrap">
           {
             results? results.map((result, i) => {
-              if (result === null || result === undefined) return
+              if (result === null || result === undefined) return <></>
               return (
-                <div key={i} className={'explore-result'}>
+                <div key={i} className={'result-large'}>
                   <img src={
                     result.images.length === 0 ?
                     'no image found' :
@@ -115,7 +113,7 @@ export default function Playlists() {
                     } width={'200px'} height={'200px'} />
                   <h2>{result.name}</h2>
                   <p>{result.description}</p>
-                  <button className="play" onClick={() => playPlaylist(result)}>
+                  <button className="play" onClick={() => playPlaylist(result)} style={{justifySelf: 'center', gridColumn: 'span 2'}}>
                     <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
                   </button>
                 </div>
