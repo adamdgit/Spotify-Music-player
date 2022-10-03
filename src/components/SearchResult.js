@@ -9,13 +9,11 @@ import { saveAlbum } from "./api/saveAlbum"
 
 export default function SearchResult({...props}) {
 
-  console.log(props)
-
   // global context
   const { token } = useContext(GlobalContext)
   const { setSongs } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
-  const { playlistID, setPlaylistID } = useContext(GlobalContext)
+  const { contextID, setContextID} = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
 
   const addToPlaylist = async (resultURI, playlistid, playlistName) => {
@@ -25,7 +23,7 @@ export default function SearchResult({...props}) {
         // Only update currently playing song data if
         // playlist IDs match, as we need to sync the newly
         // added song to the current playlist
-        if (playlistID === playlistid) {
+        if (contextID === playlistid) {
           return setSongs(result)
         }
         return
@@ -45,7 +43,7 @@ export default function SearchResult({...props}) {
     // save new URIS data to global context (playlist or track)
     setContextURI(song.uri)
     // remove playlist ID as track is playing not playlist
-    setPlaylistID('')
+    setContextID('')
   }
 
   const follow = async (id, name) => {
