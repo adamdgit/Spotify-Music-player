@@ -15,7 +15,7 @@ export default function WebPlayback(props) {
   // global context
   const { playerCBType, setPlayerCBType } = useContext(GlobalContext)
   const { setCurrentTrackID } = useContext(GlobalContext)
-  const { setPlaylistID } = useContext(GlobalContext)
+  const { setContextID } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
@@ -75,13 +75,8 @@ export default function WebPlayback(props) {
         setCurrentTrackID(state.track_window.current_track?.id)
         setSongLength(state.duration)
         setContextURI(state.context.uri)
-        // check if URI is playlist or not
-        if (!state.context.uri?.includes('playlist')) {
-          setPlaylistID('')
-        } else {
-          // splits uri into 3 strings, returns last string (playlist id)
-          setPlaylistID(state.context.uri?.split(":").pop())
-        }
+        // splits uri into 3 strings, returns last string (context id)
+        setContextID(state.context.uri?.split(":").pop())
       }))
     }
   }, [])
