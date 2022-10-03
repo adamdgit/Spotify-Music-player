@@ -18,21 +18,16 @@ export default function Library() {
   const { setContextID } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
+  const { setSongs } = useContext(GlobalContext)
   // users playlists results
   const [playlists, setPlaylists] = useState([])
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
-  
-  const playPlaylist = (playlist) => {
-    // save currently playing playlist data to global context
-    setContextURI(playlist.uri)
-    setContextID(playlist.id)
-    changePlaylistSong(0, token, playlist.uri)
-  }
 
   const playContext = (context) => {
-    console.log(context)
-    // save currently playing playlist data to global context
+    // clear playlist songs to allow new songs to be populated
+    setSongs([])
+    // save selected playlist data to global context
     setContextURI(context.uri)
     setContextID(context.id)
     changePlaylistSong(0, token, context.uri)
@@ -118,7 +113,7 @@ export default function Library() {
                       <button className="play">Edit</button>
                     </NavLink>
                 }
-                <button className="play" onClick={() => playPlaylist(result)}>
+                <button className="play" onClick={() => playContext(result)}>
                   <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
                 </button>
               </div>
