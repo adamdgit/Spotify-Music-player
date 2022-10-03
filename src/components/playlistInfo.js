@@ -21,7 +21,7 @@ function PlaylistInfo({ playerIsHidden }) {
   const { contextURI } = useContext(GlobalContext)
   const { playerCBType, setPlayerCBType } = useContext(GlobalContext)
   const { currentTrackID } = useContext(GlobalContext)
-  const { playlistID } = useContext(GlobalContext)
+  const { contextID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
@@ -46,7 +46,7 @@ function PlaylistInfo({ playerIsHidden }) {
     // empty songs array before re-populating with new data
     setSongs([])
     setDraggables([])
-    removeTrackFromPlaylist(trackURI, token, playlistID)
+    removeTrackFromPlaylist(trackURI, token, contextID)
       .then(result => { 
         if (result.length === 0) return setSongs([])
         if (result.length > 0) return setSongs(result)
@@ -59,7 +59,7 @@ function PlaylistInfo({ playerIsHidden }) {
     // empty songs array before re-populating with new data
     setSongs([])
     setDraggables([])
-    changePlaylistOrder(startIndex, newIndex, token, playlistID)
+    changePlaylistOrder(startIndex, newIndex, token, contextID)
       .then(result => { 
         if (result.length === 0) return setSongs([])
         if (result.length > 0) return setSongs(result)
@@ -162,7 +162,7 @@ function PlaylistInfo({ playerIsHidden }) {
   useEffect(() => {
     setDraggables([])
     setSongs([])
-  },[playlistID, setSongs])
+  },[contextID, setSongs])
 
   // when player updates currentTrackID get new track info
   useEffect(() => {
@@ -183,9 +183,9 @@ function PlaylistInfo({ playerIsHidden }) {
       }
       getCurrentTrack()
       // only run when playlist is playing, not single track
-      if(playlistID) {
+      if(contextID) {
         const getPlaylistData = async () => {
-          await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}?limit=50`, {
+          await axios.get(`https://api.spotify.com/v1/playlists/${contextID}?limit=50`, {
             headers: {
               Accept: 'application/json',
               Authorization: `Bearer ${token}`,
@@ -208,11 +208,11 @@ function PlaylistInfo({ playerIsHidden }) {
   },[currentTrackID])
 
   return (
-    <div style={!playlistID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
+    <div style={!contextID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
       
       <CurrentSong currentSong={currentSong} />
 
-      <div className={!playlistID ? "hidden" : "playlist"}>
+      <div className={!contextID ? "hidden" : "playlist"}>
         <div className="playlist-info-wrap">
           <img className="playlist-art" 
             src={playlistArt? playlistArt : 'no image found'} 
@@ -233,8 +233,8 @@ function PlaylistInfo({ playerIsHidden }) {
         
         <div className="container" ref={container}>
           {
-            playlistID? songs.map((song, index) => {
-              if (song === null || song === undefined) return
+            contextID? songs.map((song, index) => {
+              if (song === null || song === undefined) return null
               return (
                 <span key={index} data-index={index} className={currentTrackID === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={setDraggableElement}>
                   <span>{index+1}</span>
