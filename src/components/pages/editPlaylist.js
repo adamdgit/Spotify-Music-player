@@ -114,6 +114,7 @@ export default function EditPlaylist() {
     if(!id) return
 
     const getPlaylists = async () => {
+      console.log('get playlists data')
       await axios.get(`https://api.spotify.com/v1/playlists/${id}`, {
         headers: {
           Accept: 'application/json',
@@ -131,7 +132,7 @@ export default function EditPlaylist() {
     }
     getPlaylists()
 
-  },[])
+  },[token, id])
 
   // cleanup arrays when playlist changes
   useEffect(() => {
@@ -255,10 +256,9 @@ export default function EditPlaylist() {
             <h3 style={{fontSize: '2rem'}}>{!playlistDesc ? originalDesc : playlistDesc}</h3>
           </span>
         </div>
-
+     {playlistData ?
+     <>
         <div className="create-playlist">
-        {!playlistData ?
-          <h1>No playlist data found</h1> :
           <img src={
             playlistData.images.length === 0 ?
             'no image found' :
@@ -268,7 +268,7 @@ export default function EditPlaylist() {
             'no image found' :
             `${playlistData.name} playlist art`
             }/> 
-        }
+        
           <form className="user-input-wrap">
             <span className="change-details">
               <h3>Name:</h3>
@@ -301,12 +301,8 @@ export default function EditPlaylist() {
 
         <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Edit tracks:</h2>
 
-        {playlistData? 
         <div className="edit-songlist" ref={container}>
-          { // if currently playing playlist is also being edited, map over global state
-          songs.length === 0 || tracks.length === 0? 
-          <Loading loadingMsg={'Updating...'}/>
-          : playlistID === playlistData.id?
+          {playlistID === playlistData.id?
             songs.map((song, index) => {
               return (
                 <EditPlaylistItem 
@@ -332,8 +328,9 @@ export default function EditPlaylist() {
             })
           }
         </div>
-        : <h1>No songs in playlist</h1>
-        }
+      </>
+      : <Loading loadingMsg={'Loading playlist info...'}/>
+    }
       </div>
 
       <div className="search-songs-wrap">
