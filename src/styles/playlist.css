@@ -25,7 +25,7 @@
   height: 50px;
   text-transform: uppercase;
   border-bottom: 1px solid var(--secondary-blue);
-  background: linear-gradient(180deg, rgba(18,22,27,1) 0%, rgba(255,255,255,0) 75%);
+  background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bg-blue) 75%);
   padding: 1.2rem 10px;
   margin: 0 0 20px 0;
   font-size: .6rem;
