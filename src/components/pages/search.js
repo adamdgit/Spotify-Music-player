@@ -17,8 +17,11 @@ export default function SearchSongs() {
   const { playlistID, setPlaylistID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
+  // tracks, albums, playlist results
+  const [tracksResults, setTracksResults] = useState([])
+  const [playlistResults, setPlaylistResults] = useState([])
+  const [albumResults, setAlbumsResults] = useState([])
 
-  const [searchResults, setSearchResults] = useState([])
   const [query, setQuery] = useState('')
   const [playlists, setPlaylists] = useState([])
   const searchElement = useRef()
@@ -32,6 +35,7 @@ export default function SearchSongs() {
         setPlaylists(
           result?.filter(a => {
             if(a.owner.id === userID) return a
+            return null
           })
         )
       )
@@ -76,7 +80,11 @@ export default function SearchSongs() {
       const search = async () => {
         searchSongs(token, query)
           .then(result => {
-            if(result.length !== 0) return setSearchResults(result.tracks.items)
+            if(result.tracks.items.length !== 0) {
+              setTracksResults(result.tracks.items)
+              setAlbumsResults(result.albums.items)
+              setPlaylistResults(result.playlists.items)
+            }
             return console.error(result)
           })
       }
@@ -92,7 +100,7 @@ export default function SearchSongs() {
     <div className="page-wrap" style={{backgroundColor: 'var(--bg-blue)'}}>
       <div className="main-content" style={{backgroundColor: 'var(--primary-blue)'}}>
 
-        <h1>Search songs:</h1>
+        <h1>Search:</h1>
         <div className="search-bar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="search-btn" fill="currentcolor" width="20px"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
           <input ref={inputElement} type='search' 
@@ -102,13 +110,13 @@ export default function SearchSongs() {
           />
         </div>
 
-        <div ref={searchElement} className={searchResults.length === 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
+        <div ref={searchElement} className={tracksResults.length === 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
           {
-            searchResults.length !== 0 ?
-            searchResults.map((result, i) => {
-              if (result === null || result === undefined) return
+            tracksResults.length !== 0 ?
+            tracksResults.map((result, i) => {
+              if (result === null || result === undefined) return null
               return (
-              <div key={i} className={'search-result'}>
+              <div key={i} className="result-small">
                 <img src={
                   result.album.images.length === 0 ?
                   'no image found' :
@@ -146,7 +154,7 @@ export default function SearchSongs() {
             })
             : <></>
           }
-          </div>
+        </div>
 
       </div>
     </div>
