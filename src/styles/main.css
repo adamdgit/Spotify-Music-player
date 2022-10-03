@@ -30,7 +30,6 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 200px auto auto 50px;
   justify-items: center;
-  align-items: flex-start;
   text-align: center;
   gap: 1rem;
   background-color: var(--secondary-blue);
@@ -45,7 +44,13 @@
 
 .result-large img { grid-column: span 2; }
 .result-large h2 { grid-column: span 2; }
-.result-large p { grid-column: span 2; }
+.result-large p { 
+  grid-column: span 2; 
+  justify-self: normal;
+  max-height: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .result-large a { grid-row: 4; justify-self: flex-end;}
 .result-large button { grid-row: 4; justify-self: flex-start;}
 
