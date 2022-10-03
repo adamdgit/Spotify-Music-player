@@ -3,10 +3,10 @@
 :root {
   --img-width: 70px;
   --img-width-mobile: 60px;
-  --blue:rgb(58, 209, 255);
-  --primary-blue:rgb(33, 37, 44);
-  --secondary-blue:rgb(58, 67, 82);
-  --bg-blue:rgb(23, 25, 29);
+  --blue:rgb(96, 217, 251);
+  --primary-blue:rgb(23 26 30);
+  --secondary-blue:rgb(49 57 70);
+  --bg-blue:rgb(9 12 18);
   --max-page-width: 1300px;
 }
 
