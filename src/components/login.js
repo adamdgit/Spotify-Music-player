@@ -4,7 +4,7 @@ import axios from "axios";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
-import Playlists from "./pages/playlists";
+import Playlists from "./pages/library";
 import EditPlaylist from "./pages/editPlaylist";
 import Search from "./pages/search";
 
@@ -16,14 +16,14 @@ function Login() {
   const REDIRECT_URI = "http://localhost:3000"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
-  const SCOPE = 'user-top-read%20user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-modify-public%20playlist-read-private%20streaming'
+  const SCOPE = 'user-library-read%20user-library-modify%20user-top-read%20user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-modify-public%20playlist-read-private%20streaming'
 
   // Global context items
   const [token, setToken] = useState('')
   const [playerCBType, setPlayerCBType] = useState('')
   const [currentTrackID, setCurrentTrackID] = useState('')
   const [contextURI, setContextURI] = useState('') // album, playlist etc
-  const [playlistID, setPlaylistID] = useState('')
+  const [contextID, setContextID] = useState('')
   const [username, setUsername] = useState('')
   const [userID, setUserID] = useState('')
   const [songs, setSongs] = useState([]) // playlist items
@@ -68,7 +68,7 @@ function Login() {
       userID, setUserID, 
       songs, setSongs, 
       message, setMessage, 
-      playlistID, setPlaylistID, 
+      contextID, setContextID, 
       contextURI, setContextURI, 
       playerCBType, setPlayerCBType,
       currentTrackID, setCurrentTrackID
