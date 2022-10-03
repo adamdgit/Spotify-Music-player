@@ -87,6 +87,7 @@ function PlaylistInfo({ playerIsHidden }) {
           setPlaylists(
             result?.filter(a => {
               if(a.owner.id === userID) return a
+              return null
             })
           )
         )
