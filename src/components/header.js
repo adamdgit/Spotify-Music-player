@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom"
 
 function Header() {
 
-  const { token, setToken } = useContext(GlobalContext)
+  const { setToken } = useContext(GlobalContext)
   const { username } = useContext(GlobalContext)
 
   const logout = () => {
