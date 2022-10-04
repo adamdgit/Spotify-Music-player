@@ -27,32 +27,35 @@
 
 .result-large {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 200px auto auto 50px;
-  justify-items: center;
-  text-align: center;
   gap: 1rem;
-  background-color: var(--secondary-blue);
-  border-bottom: 1px solid var(--secondary-blue);
+  background-color: var(--bg-blue);
+  border: 1px solid var(--secondary-blue);
   padding: 1.5rem;
 }
 
-.result-large:hover {
-  border-bottom: 1px solid var(--blue);
-  box-shadow: 0 7px 15px #111;
+.user {
+  border: 1px solid #777;
 }
 
-.result-large img { grid-column: span 2; }
-.result-large h2 { grid-column: span 2; }
+.result-large:hover {
+  border: 1px solid var(--blue);
+}
+
+.result-large img:hover {
+  cursor: pointer;
+}
+
+.result-large img { 
+  width: 100%;
+  height: 100%;
+ }
+
 .result-large p { 
-  grid-column: span 2; 
   justify-self: normal;
   max-height: 110px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.result-large a { grid-row: 4; justify-self: flex-end;}
-.result-large button { grid-row: 4; justify-self: flex-start;}
 
 .play {
   background-color: var(--bg-blue);
