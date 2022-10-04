@@ -47,7 +47,7 @@ export default function Library() {
     .then(result => {
       console.log(result)
     })
-    setMessage(`${name} removed`)
+    setMessage({msg: `${name} removed`, needsUpdate: true})
   }
 
   const unfollow = (id, name) => {
@@ -55,7 +55,7 @@ export default function Library() {
     .then(result => {
       console.log(result)
     })
-    setMessage(`${name} unFollowed`)
+    setMessage({msg: `${name} unFollowed`, needsUpdate: true})
   }
 
   useEffect(() => {

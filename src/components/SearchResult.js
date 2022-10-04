@@ -30,7 +30,7 @@ export default function SearchResult({...props}) {
       }
       console.error(result)
     })
-    setMessage(`Song added to playlist: ${playlistName}`)
+    setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
     document.querySelector('.show-p').classList.remove('show-p')
   }
 
@@ -51,7 +51,7 @@ export default function SearchResult({...props}) {
     .then(result => {
       console.log(result)
     })
-    setMessage(`${name} Followed`)
+    setMessage({msg: `${name} Followed`, needsUpdate: true})
   }
 
   const album = async (id, name) => {
@@ -59,7 +59,7 @@ export default function SearchResult({...props}) {
     .then(result => {
       console.log(result)
     })
-    setMessage(`${name} Saved`)
+    setMessage({msg: `${name} Saved`, needsUpdate: true})
   }
 
   return (

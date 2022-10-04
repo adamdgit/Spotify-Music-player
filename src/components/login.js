@@ -27,7 +27,7 @@ function Login() {
   const [username, setUsername] = useState('')
   const [userID, setUserID] = useState('')
   const [songs, setSongs] = useState([]) // playlist items
-  const [message, setMessage] = useState('') // playlist update message
+  const [message, setMessage] = useState({msg: '', needsUpdate: false}) // playlist update message
 
   useEffect(() => {
 

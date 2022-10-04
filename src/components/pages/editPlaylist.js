@@ -26,7 +26,7 @@ export default function EditPlaylist() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [isPublic, setIsPublic] = useState(false)
-
+  const [error, setError] = useState(false)
   const [originalName, setOriginalName] = useState('')
   const [originalDesc, setOriginalDesc] = useState('')
   const [playlistData, setPlaylistData] = useState()
@@ -79,20 +79,34 @@ export default function EditPlaylist() {
         }
         console.error(result)
       })
-    setMessage('Song removed from playlist')
+    setMessage({msg: 'Song removed from playlist', needsUpdate: true})
   }
 
   const changeDetails = (e) => {
     e.preventDefault()
     // simple validation
     if (playlistName === '' && playlistDesc === '') {
-      return alert('Please enter a name or description')
+      return setError(true)
     }
-    else if (playlistName === '') return alert('No name entered')
-    else if (playlistDesc === '') return alert('No description entered')
-
+    if (playlistName === '' && playlistDesc !== '') {
+      setError(false)
+      changePlaylistDetails(token, id, playlistDesc, originalName, isPublic)
+      setOriginalDesc(playlistDesc)
+      setMessage({msg: 'Playlist details updated', needsUpdate: true})
+      return
+    }
+    if (playlistName !== '' && playlistDesc === '') {
+      setError(false)
+      changePlaylistDetails(token, id, originalDesc, playlistName, isPublic)
+      setOriginalName(playlistName)
+      setMessage({msg: 'Playlist details updated', needsUpdate: true})
+      return
+    }
+    setError(false)
     changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
-    setMessage('Playlist details updated')
+    setOriginalDesc(playlistDesc)
+    setOriginalName(playlistName)
+    setMessage({msg: 'Playlist details updated', needsUpdate: true})
   }
 
   const addTrack = (uri) => {
@@ -106,7 +120,7 @@ export default function EditPlaylist() {
       }
       console.error(result)
     })
-    setMessage('Track added to playlist')
+    setMessage({msg: 'Track added to playlist', needsUpdate: true})
   }
 
   useEffect(() => {
@@ -273,6 +287,7 @@ export default function EditPlaylist() {
             <span className="change-details">
               <h3>Name:</h3>
               <input
+                style={error === true ? {border: '1px solid red'} : {}}
                 id="name"
                 type="text" 
                 className="edit-input" 
@@ -283,6 +298,7 @@ export default function EditPlaylist() {
             <span className="change-details">
               <h3>Description:</h3>
               <input 
+                style={error === true ? {border: '1px solid red'} : {}}
                 id="description"
                 type="text" 
                 className="edit-input" 

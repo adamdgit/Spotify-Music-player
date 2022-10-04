@@ -86,8 +86,8 @@ export default function WebPlayback(props) {
     shufflePlaylist(props.token, !shuffle)
     setShuffle(!shuffle)
 
-    if (shuffle === false) setMessage('Shuffle enabled')
-    else setMessage('Shuffle disabled')
+    if (shuffle === false) setMessage({msg: 'Shuffle enabled', needsUpdate: true})
+    else setMessage({msg: 'Shuffle Disabled', needsUpdate: true})
   }
 
   const repeatSongs = () => {
@@ -96,17 +96,17 @@ export default function WebPlayback(props) {
       case 0:
         setRepeatMode(repeatMode + 1)
         repeatTrack(props.token, 'context')
-        setMessage('Repeat context on')
+        setMessage({msg: 'Repeat context on', needsUpdate: true})
         break
       case 1:
         setRepeatMode(repeatMode + 1)
         repeatTrack(props.token, 'track')
-        setMessage('Repeat track on')
+        setMessage({msg: 'Repeat track on', needsUpdate: true})
         break
       case 2:
         setRepeatMode(0)
         repeatTrack(props.token, 'off')
-        setMessage('Repeat disabled')
+        setMessage({msg: 'Repeat disabled', needsUpdate: true})
         break
       default: 
        setRepeatMode(0)

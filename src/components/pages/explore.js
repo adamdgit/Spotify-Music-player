@@ -36,7 +36,7 @@ export default function Explore() {
         }
         console.error(result)
       })
-      setMessage(`Song added to playlist: ${playlistName}`)
+      setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
       document.querySelector('.show-p').classList.remove('show-p')
   }
 

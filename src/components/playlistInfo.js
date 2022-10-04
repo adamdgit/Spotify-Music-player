@@ -53,7 +53,7 @@ function PlaylistInfo({ playerIsHidden }) {
         if (result.length > 0) return setSongs(result)
         else console.error(result) 
       })
-    setMessage('Song removed from playlist')
+    setMessage({msg: 'Song removed from playlist', needsUpdate: true})
   }
 
   const changeOrder = (startIndex, newIndex) => {
@@ -75,7 +75,7 @@ function PlaylistInfo({ playerIsHidden }) {
       })
 
     document.querySelector('.show-p').classList.remove('show-p')
-    setMessage('Song added to playlist')
+    setMessage({msg: 'Song added to playlist', needsUpdate: true})
   }
 
   // gets users playlists, for add-to-playlist button

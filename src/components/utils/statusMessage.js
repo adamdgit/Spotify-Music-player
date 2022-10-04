@@ -9,10 +9,14 @@ export default function StatusMessage() {
   // when global message state changs, show message for 1.5secs
   useEffect(() => {
 
-    setShowMsg(true)
-    setTimeout(() => {
-      setShowMsg(false)
-    }, 1500)
+    console.log(message)
+
+    if (message.needsUpdate === true) {
+      setShowMsg(true)
+      setTimeout(() => {
+        setShowMsg(false)
+      }, 1500)
+    }
 
   },[message])
 
@@ -21,7 +25,7 @@ export default function StatusMessage() {
       showMsg === true ? "playlist-update-message show" 
       : "playlist-update-message"}
     >
-      <h3>{message}</h3>
+      <h3>{message.msg}</h3>
       <span className="triangle"></span>
     </div>
   )
