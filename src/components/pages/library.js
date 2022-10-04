@@ -25,6 +25,7 @@ export default function Library() {
   const navigate = useNavigate()
 
   const playContext = (context) => {
+    console.log(context)
     // clear playlist songs to allow new songs to be populated
     setSongs([])
     // save selected playlist data to global context
@@ -96,9 +97,12 @@ export default function Library() {
           playlists? playlists.map((result, i) => {
             if (result === null || result === undefined) return <></>
             return (
-              <div key={i} className={'result-large'} 
-              style={result.owner.id === userID ? {border: '1px solid white', boxShadow: 'inset 4px 4px 10px black'} : {} }>
-                <img src={result.images.length !== 0 ? result.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
+              <div key={i} className={result.owner.id === userID ? 'result-large user' : 'result-large'}>
+                <img 
+                  src={result.images.length !== 0 ? result.images[0].url : ''} 
+                  alt={result.name + 'playlist art'} 
+                  onClick={() => playContext(result)}
+                />
                 <h2>{result.name}</h2>
                 <p>{result.description}</p>
                 {
@@ -106,16 +110,13 @@ export default function Library() {
                   ? <button 
                       className="play" 
                       onClick={() => unfollow(result.id, result.name)}
-                      style={{width: '80px', justifySelf: 'flex-end'}}>
+                      style={{width: '80px', justifySelf: 'flex-start'}}>
                         UnFollow
                     </button>
                   : <NavLink to={`/editPlaylist/${result.id}`} className="edit-link">
                       <button className="play">Edit</button>
                     </NavLink>
                 }
-                <button className="play" onClick={() => playContext(result)}>
-                  <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
-                </button>
               </div>
             )
           })
@@ -131,17 +132,18 @@ export default function Library() {
             if (result === null || result === undefined) return <></>
             return (
               <div key={i} className={'result-large'}>
-                <img src={result.album.images.length !== 0 ? result.album.images[0].url : ''} alt={result.name + 'playlist art'} width={'200px'} height={'200px'} />
+                <img 
+                  src={result.album.images.length !== 0 ? result.album.images[0].url : ''} 
+                  alt={result.name + 'playlist art'} 
+                  onClick={() => playContext(result.album)}
+                />
                 <h2>{result.album.name}</h2>
                 <p>{sanitizeArtistNames(result.album.artists)}</p>
                 <button 
-                      className="play" 
-                      onClick={() => remove(result.album.id, result.album.name)}
-                      style={{width: '80px', justifySelf: 'flex-end'}}>
-                        Remove
-                    </button>
-                <button className="play" onClick={() => playContext(result.album)}>
-                  <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+                  className="play" 
+                  onClick={() => remove(result.album.id, result.album.name)}
+                  style={{width: '80px', justifySelf: 'flex-start'}}>
+                  Remove
                 </button>
               </div>
             )
