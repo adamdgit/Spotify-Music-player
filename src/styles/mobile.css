@@ -33,62 +33,24 @@
   }
 
   .user-playlists-wrap {
-    grid-template-columns: unset;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
   }
 
   .result-large {
-    display: grid;
-    grid-template-rows: unset;
-    grid-template-columns: 100px 1fr 1fr 60px 60px;
-    align-items: center;
-    justify-items: flex-start;
-    padding: 1rem;
+    justify-items: center;
+    text-align: center;
+    font-size: .8rem;
+    grid-template-columns: unset;
+    grid-template-rows: auto auto auto 50px;
+    gap: .8rem;
+    padding: 1.5rem .8rem;
   }
 
   .result-large img {
-    width: 100px; height: 100px;
-  }
-
-  .result-large > * {
-    grid-column: unset;
-    grid-row: unset;
-  }
-
-  .my-playlists-result {
-    grid-template-columns:unset;
-    grid-template-rows:1fr auto auto;
-    justify-items: center;
-    text-align: center;
-    font-size: .9rem;
-    gap: 1rem;
-  }
-  
-  .my-playlists-result h2 {
-    grid-row: 1;
-    grid-column: span 2;
-  }
-
-  .my-playlists-result img {
-    grid-row: 2;
-    grid-column: span 2;
-    width: 200px;
-    height: 200px;
-  }
-
-  .my-playlists-result a {
-    grid-row: 3;
-    grid-column: 1;
-    justify-self: end;
-  }
-
-  .my-playlists-result button {
-    justify-self: start;
-    grid-row: 3;
-    grid-column: 2;
-  }
-
-  .my-playlists-result p {
-    display: none;
+    width: 100%;
+    max-width: 300px;
+    height: 100%;
   }
 
   .artist-top-songs, .search-results-wrap {
