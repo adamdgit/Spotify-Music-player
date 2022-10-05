@@ -1,8 +1,9 @@
 import axios from "axios"
 
 export async function getUserPlaylists(token) {
-  let playlists
-  let errorMsg
+
+  let playlists = []
+  let errorMsg = false
   
   await axios.get(`https://api.spotify.com/v1/me/playlists`, {
     headers: {
@@ -14,6 +15,8 @@ export async function getUserPlaylists(token) {
     playlists = res.data.items
   }).catch(error => errorMsg = error)
 
-  if(errorMsg) return errorMsg
-  return playlists
+  return {
+    errorMsg,
+    playlists
+  }
 }

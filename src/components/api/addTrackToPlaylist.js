@@ -1,9 +1,10 @@
 import axios from "axios"
 
-let songs = []
-let errorMsg
-
 export async function addTrackToPlaylist(resultURI, playlistID, token) {
+
+  let tracks = []
+  let errorMsg = false
+
   await axios({ 
     method: 'post', 
     url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
@@ -21,9 +22,11 @@ export async function addTrackToPlaylist(resultURI, playlistID, token) {
       'Content-Type': 'application/json',
     }
   }).then((res) => {
-    songs = res.data.items
+    tracks = res.data.items
   }).catch(error => errorMsg = error)
 
-  if(errorMsg) return errorMsg
-  return songs
+  return {
+    errorMsg,
+    tracks
+  }
 }

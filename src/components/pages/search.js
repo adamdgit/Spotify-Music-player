@@ -60,8 +60,8 @@ export default function SearchSongs() {
   },[query, token])
 
   return (
-    <div className="page-wrap" style={{backgroundColor: 'var(--bg-blue)'}}>
-      <div className="main-content" style={{backgroundColor: 'var(--primary-blue)'}}>
+    <div className="page-wrap">
+      <div className="main-content">
 
         <h1>Search:</h1>
         <div className="search-bar">

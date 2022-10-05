@@ -25,7 +25,6 @@ export default function Library() {
   const navigate = useNavigate()
 
   const playContext = (context) => {
-    console.log(context)
     // clear playlist songs to allow new songs to be populated
     setSongs([])
     // save selected playlist data to global context
@@ -37,15 +36,17 @@ export default function Library() {
   const createNewPlaylist = () => {
     createPlaylist(token, userID)
     .then(result => {
-      if (result.id) navigate(`/editPlaylist/${result.id}`)
-      else console.error(result)
+      console.log(result)
+      if (result.errorMsg === false) navigate(`/editPlaylist/${result.playlistData.id}`)
+      else console.error(result.errorMsg)
     })
   }
 
   const remove = (id, name) => {
     removeAlbum(token, id)
     .then(result => {
-      console.log(result)
+      if (result === false) return
+      else console.error(result)
     })
     setMessage({msg: `${name} removed`, needsUpdate: true})
   }
@@ -53,7 +54,8 @@ export default function Library() {
   const unfollow = (id, name) => {
     unfollowPlaylist(token, id)
     .then(result => {
-      console.log(result)
+      if (result === false) return
+      else console.error(result)
     })
     setMessage({msg: `${name} unFollowed`, needsUpdate: true})
   }
@@ -63,22 +65,18 @@ export default function Library() {
     if (!userID) return
     getUserPlaylists(token)
     .then(result => {
-      if (result?.length === 0) return setPlaylists([])
-      // sort by user owned first
-      if (result?.length > 0) return setPlaylists(result?.sort((a, b) => {
+      if (result.errorMsg === false) return setPlaylists(result.playlists.sort((a, b) => {
         if(a.owner.id === userID && b.owner.id === userID) return 0
         if(a.owner.id === userID && b.owner.id !== userID) return -1
         return 1
       }))
-      else console.error(result) 
+      else console.error(result.errorMsg)
     })
 
     getSavedAlbums(token)
     .then(result => {
-      if (result?.length === 0) return setAlbums([])
-      // sort by user owned first
-      if (result?.length > 0) return setAlbums(result)
-      else console.error(result) 
+      if (result.errorMsg === false) return setAlbums(result.albums)
+      else console.error(result.errorMsg)
     })
 
   },[token, userID])

@@ -1,9 +1,10 @@
 import axios from "axios"
 
-let songs = []
-let errorMsg
-
 export async function removeTrackFromPlaylist(trackURI, token, playlistID) {
+
+  let tracks = []
+  let errorMsg = false
+
   await axios({ 
     method: 'delete', 
     url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`, 
@@ -22,9 +23,11 @@ export async function removeTrackFromPlaylist(trackURI, token, playlistID) {
       'Content-Type': 'application/json',
     }
   }).then((res) => {
-    songs = res.data.items
+    tracks = res.data.items
   }).catch(error => errorMsg = error)
-  // return error as object if any occur else return new playlist data
-  if(errorMsg) return errorMsg
-  return songs
+
+  return {
+    errorMsg,
+    tracks
+  }
 }

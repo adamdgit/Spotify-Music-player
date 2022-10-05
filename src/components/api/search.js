@@ -1,9 +1,10 @@
 import axios from "axios"
 
-let errorMsg
-let result
-
 export async function searchSongs(token, query) {
+
+  let errorMsg = false
+  let searchResult = []
+
   await axios.get('https://api.spotify.com/v1/search', {
     headers: {
       Accept: 'application/json',
@@ -16,9 +17,11 @@ export async function searchSongs(token, query) {
       limit: 10
     }
   }).then((res) => {
-    result = res.data
+    searchResult = res.data
   }).catch(error => console.error(error))
 
-  if(errorMsg) return errorMsg
-  return result
+  return {
+    errorMsg,
+    searchResult
+  }
 }

@@ -1,9 +1,10 @@
 import axios from "axios"
 
-let errorMsg
-let data
-
 export async function createPlaylist(token, userID){
+
+  let errorMsg = false
+  let playlistData = []
+
   await axios({ 
     method: 'post', 
     url: `https://api.spotify.com/v1/users/${userID}/playlists`, 
@@ -14,9 +15,11 @@ export async function createPlaylist(token, userID){
       "public" : false
     }
   }).then((res) => {
-    data = res.data
+    playlistData = res.data
   }).catch(error => errorMsg = error)
-  // return error as object if any occur else return new playlist data
-  if(errorMsg) return errorMsg
-  return data
+
+  return {
+    errorMsg,
+    playlistData
+  }
 }

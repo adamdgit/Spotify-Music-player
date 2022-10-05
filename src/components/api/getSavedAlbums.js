@@ -1,8 +1,9 @@
 import axios from "axios"
 
 export async function getSavedAlbums(token) {
-  let albums
-  let errorMsg
+
+  let albums = []
+  let errorMsg = false
   
   await axios.get(`https://api.spotify.com/v1/me/albums`, {
     headers: {
@@ -14,6 +15,8 @@ export async function getSavedAlbums(token) {
     albums = res.data.items
   }).catch(error => errorMsg = error)
 
-  if(errorMsg) return errorMsg
-  return albums
+  return {
+    errorMsg,
+    albums
+  }
 }

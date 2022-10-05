@@ -1,14 +1,15 @@
 import axios from "axios"
 
-let songs = []
-let errorMsg
-
 export async function changePlaylistOrder(dragElIndex, dragElNewIndex, token, playlistID) {
   // when moving element down the list we must add 1 to its index
   // eg: move element from position 0 to 4 we insert before 5 not 4
   if(dragElIndex < dragElNewIndex) {
     dragElNewIndex = dragElNewIndex+1
   }
+
+  let tracks = []
+  let errorMsg = false
+
   // send playlist track index changes to API
   await axios({ 
     method: 'put', 
@@ -29,9 +30,12 @@ export async function changePlaylistOrder(dragElIndex, dragElNewIndex, token, pl
       'Content-Type': 'application/json',
     }
   }).then((res) => {
-    songs = res.data.items
+    tracks = res.data.items
   }).catch(error => errorMsg = error)
   // return error as object if any occur else return new playlist data
-  if(errorMsg) return errorMsg
-  return songs
+
+  return {
+    errorMsg,
+    tracks
+  }
 }

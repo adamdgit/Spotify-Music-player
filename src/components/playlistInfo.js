@@ -47,11 +47,11 @@ function PlaylistInfo({ playerIsHidden }) {
     // empty songs array before re-populating with new data
     setSongs([])
     setDraggables([])
+
     removeTrackFromPlaylist(trackURI, token, contextID)
       .then(result => { 
-        if (result.length === 0) return setSongs([])
-        if (result.length > 0) return setSongs(result)
-        else console.error(result) 
+        if (result.errorMsg === false) return setSongs(result.tracks)
+        else console.error(result.errorMsg)
       })
     setMessage({msg: 'Song removed from playlist', needsUpdate: true})
   }
@@ -60,18 +60,19 @@ function PlaylistInfo({ playerIsHidden }) {
     // empty songs array before re-populating with new data
     setSongs([])
     setDraggables([])
+
     changePlaylistOrder(startIndex, newIndex, token, contextID)
       .then(result => { 
-        if (result.length === 0) return setSongs([])
-        if (result.length > 0) return setSongs(result)
-        else console.error(result) 
+        if (result.errorMsg === false) return setSongs(result.tracks)
+        else console.error(result.errorMsg)
       })
   }
 
   const addToPlaylist = (resultURI, playlistid) => {
     addTrackToPlaylist(resultURI, playlistid, token)
       .then(result => { 
-        if (!result.length > 0) console.error(result) 
+        if (result.errorMsg === false) return
+        else console.error(result.errorMsg)
       })
 
     document.querySelector('.show-p').classList.remove('show-p')
@@ -82,17 +83,11 @@ function PlaylistInfo({ playerIsHidden }) {
   useEffect(() => {
     getUserPlaylists(token)
       .then(result => {
-        if (result?.length === 0) return setPlaylists([])
-        if (result?.length > 0) return (
-          // only show user owned playlists as you can't add songs to a playlist not owned by you
-          setPlaylists(
-            result?.filter(a => {
-              if(a.owner.id === userID) return a
-              return null
-            })
-          )
-        )
-        else console.error(result) 
+        if (result.errorMsg === false) return setPlaylists(result.playlists.filter(a => {
+          if(a.owner.id === userID) return a
+          return null
+        }))
+        else console.error(result.errorMsg)
       })
   },[userID])
 

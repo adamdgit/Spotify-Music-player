@@ -9,8 +9,6 @@ export default function StatusMessage() {
   // when global message state changs, show message for 1.5secs
   useEffect(() => {
 
-    console.log(message)
-
     if (message.needsUpdate === true) {
       setShowMsg(true)
       setTimeout(() => {
