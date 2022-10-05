@@ -19,16 +19,13 @@ export default function SearchResult({...props}) {
   const addToPlaylist = async (resultURI, playlistid, playlistName) => {
     addTrackToPlaylist(resultURI, playlistid, token)
     .then(result => {
-      if(result.length > 0) {
-        // Only update currently playing song data if
-        // playlist IDs match, as we need to sync the newly
-        // added song to the current playlist
+      if(result.errorMsg === false) {
         if (contextID === playlistid) {
-          return setSongs(result)
+          return setSongs(result.tracks)
         }
         return
       }
-      console.error(result)
+      else console.error(result.errorMsg)
     })
     setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
     document.querySelector('.show-p').classList.remove('show-p')
@@ -36,10 +33,10 @@ export default function SearchResult({...props}) {
 
   const playSong = async (song)  => {
     playTrack(token, song)
-    .then(result => {
-      if (!result) return
-      console.error(result)
-    })
+      .then(result => {
+        if (!result) return
+        console.error(result)
+      })
     // save new URIS data to global context (playlist or track)
     setContextURI(song.uri)
     // remove playlist ID as track is playing not playlist
@@ -48,17 +45,19 @@ export default function SearchResult({...props}) {
 
   const follow = async (id, name) => {
     followPlaylist(token, id)
-    .then(result => {
-      console.log(result)
-    })
+      .then(result => {
+        if (!result) return
+        console.error(result)
+      })
     setMessage({msg: `${name} Followed`, needsUpdate: true})
   }
 
   const album = async (id, name) => {
     saveAlbum(token, id)
-    .then(result => {
-      console.log(result)
-    })
+      .then(result => {
+        if (!result) return
+        console.error(result)
+      })
     setMessage({msg: `${name} Saved`, needsUpdate: true})
   }
 

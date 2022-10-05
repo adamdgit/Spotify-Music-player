@@ -1,14 +1,14 @@
 import axios from "axios"
 
-let error
-
 export async function nextTrack(token) {
+
+  let errorMsg = false
   // transfer playback to web player SDK
   await axios({ 
     method: 'post', 
     url: `https://api.spotify.com/v1/me/player/next`, 
     headers: { 'Authorization': 'Bearer ' + token }, 
-  }).catch(err => error = err)
+  }).catch(err => errorMsg = err)
 
-  if(error) return error
+  return errorMsg
 }

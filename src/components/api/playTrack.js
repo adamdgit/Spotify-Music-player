@@ -1,8 +1,8 @@
 import axios from "axios"
 
-let error
-
 export async function playTrack(token, song) {
+
+  let errorMsg = false
   // transfer playback to web player SDK
   await axios({ 
     method: 'put', 
@@ -12,7 +12,7 @@ export async function playTrack(token, song) {
       "uris": [song.uri],
       "offset": { "position": 0 }
     }
-  }).catch(err => error = err)
+  }).catch(err => errorMsg = err)
 
-  if(error) return error
+  return errorMsg
 }

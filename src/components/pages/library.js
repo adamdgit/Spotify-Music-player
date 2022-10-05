@@ -31,6 +31,10 @@ export default function Library() {
     setContextURI(context.uri)
     setContextID(context.id)
     changePlaylistSong(0, token, context.uri)
+      .then(result => {
+        if (result.errorMsg === false) return
+        else console.error(result.errorMsg)
+      })
   }
 
   const createNewPlaylist = () => {

@@ -85,6 +85,10 @@ export default function EditPlaylist() {
     if (playlistName === '' && playlistDesc !== '') {
       setError(false)
       changePlaylistDetails(token, id, playlistDesc, originalName, isPublic)
+        .then(result => {
+          if (result.errorMsg === false) return
+          else console.error(result.errorMsg)
+        })
       setOriginalDesc(playlistDesc)
       setMessage({msg: 'Playlist details updated', needsUpdate: true})
       return
@@ -92,12 +96,20 @@ export default function EditPlaylist() {
     if (playlistName !== '' && playlistDesc === '') {
       setError(false)
       changePlaylistDetails(token, id, originalDesc, playlistName, isPublic)
+        .then(result => {
+          if (result.errorMsg === false) return
+          else console.error(result.errorMsg)
+        })
       setOriginalName(playlistName)
       setMessage({msg: 'Playlist details updated', needsUpdate: true})
       return
     }
     setError(false)
     changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
+      .then(result => {
+        if (result.errorMsg === false) return
+        else console.error(result.errorMsg)
+      })
     setOriginalDesc(playlistDesc)
     setOriginalName(playlistName)
     setMessage({msg: 'Playlist details updated', needsUpdate: true})

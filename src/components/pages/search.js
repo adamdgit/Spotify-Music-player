@@ -20,19 +20,15 @@ export default function SearchSongs() {
   useEffect(() => {
 
     if(!userID) return
+
     getUserPlaylists(token)
-    .then(result => {
-      if(result.length > 0) return (
-        // only show user owned playlists as you can't add songs to a playlist not owned by you
-        setPlaylists(
-          result?.filter(a => {
-            if(a.owner.id === userID) return a
-            return null
-          })
-        )
-      )
-      console.error(result)
-    })
+      .then(result => {
+        if (result.errorMsg === false) return setPlaylists(result.playlists.filter(a => {
+          if(a.owner.id === userID) return a
+          return null
+        }))
+        else console.error(result.errorMsg)
+      })
     
   },[token, userID])
 
@@ -43,12 +39,13 @@ export default function SearchSongs() {
       const search = async () => {
         searchSongs(token, query)
           .then(result => {
-            if(result.tracks.items.length !== 0) {
-              setTracksResults(result.tracks.items)
-              setAlbumsResults(result.albums.items)
-              setPlaylistResults(result.playlists.items)
+            console.log(result)
+            if(result.errorMsg === false) {
+              setTracksResults(result.searchResult.tracks.items)
+              setAlbumsResults(result.searchResult.albums.items)
+              setPlaylistResults(result.searchResult.playlists.items)
             }
-            return console.error(result)
+            else console.error(result.errorMsg)
           })
       }
       search()

@@ -55,17 +55,13 @@ export default function Explore() {
   useEffect(() => {
 
     getUserPlaylists(token)
-    .then(result => { 
-      if (result?.length === 0) return setUserPlaylists([])
-      // only show user owned playlists as you can't add songs to a playlist not owned by you
-      else if (result?.length > 0) return setUserPlaylists(
-        result?.filter(a => {
+      .then(result => {
+        if (result.errorMsg === false) return setUserPlaylists(result.playlists.filter(a => {
           if(a.owner.id === userID) return a
           return null
-        })
-        )
-      else console.error(result) 
-    })
+        }))
+        else console.error(result.errorMsg)
+      })
 
   },[token, userID])
 
@@ -84,7 +80,7 @@ export default function Explore() {
     }
     test()
 
-  },[token])
+  },[token, userID])
 
   useEffect(() => {
 

@@ -1,8 +1,9 @@
 import axios from "axios"
 
-let errorMsg
-
 export async function saveAlbum(token, albumID){
+
+  let errorMsg = false
+
   await axios({ 
     method: 'put', 
     url: `https://api.spotify.com/v1/me/albums`, 
@@ -14,5 +15,5 @@ export async function saveAlbum(token, albumID){
     }
   }).catch(error => errorMsg = error)
   
-  if(errorMsg) return errorMsg
+  return errorMsg
 }

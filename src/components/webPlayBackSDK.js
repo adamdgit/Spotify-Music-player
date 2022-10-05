@@ -84,6 +84,10 @@ export default function WebPlayback(props) {
   const shuffleSongs = () => {
     // toggle shuffle between true/false
     shufflePlaylist(props.token, !shuffle)
+      .then(result => {
+        if (!result) return
+        console.error(result)
+      })
     setShuffle(!shuffle)
 
     if (shuffle === false) setMessage({msg: 'Shuffle enabled', needsUpdate: true})
@@ -96,21 +100,38 @@ export default function WebPlayback(props) {
       case 0:
         setRepeatMode(repeatMode + 1)
         repeatTrack(props.token, 'context')
+          .then(result => {
+            if (!result) return
+            console.error(result)
+          })
         setMessage({msg: 'Repeat context on', needsUpdate: true})
         break
       case 1:
         setRepeatMode(repeatMode + 1)
         repeatTrack(props.token, 'track')
+          .then(result => {
+            if (!result) return
+            console.error(result)
+          })
         setMessage({msg: 'Repeat track on', needsUpdate: true})
         break
       case 2:
         setRepeatMode(0)
         repeatTrack(props.token, 'off')
+          .then(result => {
+            console.log('off')
+            if (!result) return
+            console.error(result)
+          })
         setMessage({msg: 'Repeat disabled', needsUpdate: true})
         break
       default: 
        setRepeatMode(0)
        repeatTrack(props.token, 'off')
+        .then(result => {
+          if (!result) return
+          console.error(result)
+        })
     }
   }
 
