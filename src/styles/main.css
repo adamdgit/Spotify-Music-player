@@ -5,6 +5,7 @@
   height: calc(100vh - 200px);
   overflow-y: auto;
   overflow-x: hidden;
+  background: linear-gradient(0deg, rgb(8 10 12) 0%, var(--primary-blue) 100%);
 }
 
 .main-content {
@@ -26,11 +27,13 @@
 }
 
 .result-large {
+  position: relative;
   display: grid;
   gap: 1rem;
-  background-color: var(--bg-blue);
-  border: 1px solid var(--secondary-blue);
+  background-color: var(--secondary-blue);
+  box-shadow: 5px 5px 10px black;
   padding: 1.5rem;
+  transition: background 200ms ease-in-out;
 }
 
 .user {
@@ -38,7 +41,7 @@
 }
 
 .result-large:hover {
-  border: 1px solid var(--blue);
+  background-color: var(--bg-blue);
 }
 
 .result-large img:hover {
@@ -91,6 +94,8 @@
   width:100%;
   min-width: 140px;
 }
+
+.edit-link { width: fit-content; }
 
 /*-----Search results-----*/
 
