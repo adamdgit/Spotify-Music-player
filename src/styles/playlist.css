@@ -106,7 +106,9 @@
 }
 
 .draggable img, .edit-draggable img {
+  pointer-events: none;
   width: var(--img-width);
+  height: var(--img-width);
 }
 
 .draggable img:hover {
