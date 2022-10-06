@@ -17,6 +17,7 @@ export default function VolumeControl({ ...props }) {
   useEffect(() => {
 
     volumeTrack.addEventListener('pointerdown', changeVolume)
+    document.addEventListener('pointerup', cleanup)
     function changeVolume(e) {
       const rect = e.target.getBoundingClientRect()
       let calcPercent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width
@@ -27,20 +28,18 @@ export default function VolumeControl({ ...props }) {
     }
 
     function seek(e) {
-      console.log(e)
       const rect = volumeTrack.getBoundingClientRect()
       let calcPercent = Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width
       setPercent(calcPercent) 
       setPrevVolume(calcPercent)
       props.player.setVolume(calcPercent)
-      document.addEventListener('pointerup', cleanup)
     }
 
     // cleanup listeners when user has set the volume
     function cleanup(e) {
       e.preventDefault()
       document.removeEventListener('pointermove', seek)
-      document.removeEventListener('pointerup', cleanup)
+      //document.removeEventListener('pointerup', cleanup)
     }
     
     // clean up event listeners on re-render
