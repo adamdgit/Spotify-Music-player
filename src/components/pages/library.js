@@ -32,7 +32,7 @@ export default function Library() {
     setContextID(context.id)
     changePlaylistSong(0, token, context.uri)
       .then(result => {
-        if (result.errorMsg === false) return
+        if (!result) return
         else console.error(result.errorMsg)
       })
   }
@@ -105,9 +105,10 @@ export default function Library() {
                   alt={result.name + 'playlist art'} 
                   onClick={() => playContext(result)}
                 />
-                <h2>{result.name}</h2>
-                <p>{result.description}</p>
-                {
+                <span className="result-info">
+                  <h2>{result.name}</h2>
+                  <p>{result.description}</p>
+                  {
                   result.owner.id !== userID 
                   ? <button 
                       className="play" 
@@ -118,7 +119,8 @@ export default function Library() {
                   : <NavLink to={`/editPlaylist/${result.id}`} className="edit-link">
                       <button className="play">Edit</button>
                     </NavLink>
-                }
+                  }
+                </span>
               </div>
             )
           })
@@ -139,14 +141,16 @@ export default function Library() {
                   alt={result.name + 'playlist art'} 
                   onClick={() => playContext(result.album)}
                 />
-                <h2>{result.album.name}</h2>
-                <p>{sanitizeArtistNames(result.album.artists)}</p>
-                <button 
-                  className="play" 
-                  onClick={() => remove(result.album.id, result.album.name)}
-                  style={{width: '80px', justifySelf: 'flex-start'}}>
-                  Remove
-                </button>
+                <span className="result-info">
+                  <h2>{result.album.name}</h2>
+                  <p>{sanitizeArtistNames(result.album.artists)}</p>
+                  <button 
+                    className="play" 
+                    onClick={() => remove(result.album.id, result.album.name)}
+                    style={{width: '80px', justifySelf: 'flex-start'}}>
+                    Remove
+                  </button>
+                </span>
               </div>
             )
           })
