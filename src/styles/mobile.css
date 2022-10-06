@@ -33,19 +33,19 @@
   }
 
   .user-playlists-wrap {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, auto);
     gap: .5rem;
   }
 
-  .result-large {
-    justify-items: center;
-    text-align: center;
-    font-size: .8rem;
-    grid-template-columns: unset;
-    grid-template-rows: auto auto auto 50px;
-    gap: .8rem;
-    padding: 1.5rem .8rem;
+  .result-info { 
+    gap: .5rem; 
+    padding: .7rem;
+    max-width: 300px; 
   }
+
+  .result-large { font-size: .8rem; }
+
+  .result-large:hover { scale: unset; }
 
   .result-large img {
     width: 100%;
@@ -222,6 +222,7 @@
   .user-input-wrap .save-changes {
     justify-self: center;
     width: 150px;
+    height: 50px;
   }
 
   @media only screen and (max-width: 500px){ 
@@ -242,7 +243,7 @@
 
     .add-to-playlist, .play {
       justify-self: center;
-      width: 40px;
+      height: 30px;
     }
     
     .volume-control .timeline {
@@ -259,5 +260,4 @@
       grid-template-columns: 10px 64px auto 20px 35px;
     }
   }
-
 }
