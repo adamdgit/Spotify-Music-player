@@ -241,18 +241,11 @@
       padding: .7rem;
     }
 
-    .add-to-playlist, .play {
-      justify-self: center;
-      height: 30px;
-    }
+    .result-small .play { width: 45px; }
     
-    .volume-control .timeline {
-      width: 70px;
-    }
+    .volume-control .timeline {  width: 70px; }
 
-    .user-input-wrap .edit-input{
-      min-width: 150px;
-    }
+    .user-input-wrap .edit-input{ min-width: 150px; }
 
     .edit-draggable {
       padding: .5rem;
