@@ -21,7 +21,7 @@
 .user-playlists-wrap {
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
-  gap: 1rem;
+  gap: 2rem;
   justify-content: center;
   margin: 2rem 0;
 }
@@ -29,11 +29,10 @@
 .result-large {
   position: relative;
   display: grid;
-  gap: 1rem;
-  background-color: var(--secondary-blue);
+  background-color: var(--primary-blue);
   box-shadow: 5px 5px 10px black;
-  padding: 1.5rem;
-  transition: background 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
+  border: 1px solid #111;
 }
 
 .user {
@@ -41,7 +40,13 @@
 }
 
 .result-large:hover {
-  background-color: var(--bg-blue);
+  border: 1px solid white;
+}
+
+.result-info {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .result-large img:hover {
@@ -151,7 +156,7 @@
 .result-small {
   font-size: .9rem;
   display: grid;
-  grid-template-columns: 70px auto 60px 60px;
+  grid-template-columns: 70px auto max-content 60px;
   gap: 1rem;
   padding: 1rem;
   align-items: center;
