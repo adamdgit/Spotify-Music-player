@@ -144,6 +144,7 @@
 
 .edit-draggable {
   grid-template-columns: 18px 80px auto 40px max-content max-content;
+  justify-self: center;
   padding-right: 20px;
   cursor: unset;
 }
