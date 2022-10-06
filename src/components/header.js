@@ -20,9 +20,13 @@ function Header() {
   // if playlist is not hidden, and user clicks nav link, hide playlist
   useEffect(() => {
 
-    nav1.current.addEventListener('pointerdown', hidePlaylist)
-    nav2.current.addEventListener('pointerdown', hidePlaylist)
-    nav3.current.addEventListener('pointerdown', hidePlaylist)
+    const navitem1 = nav1.current
+    const navitem2 = nav2.current
+    const navitem3 = nav3.current
+
+    navitem1.addEventListener('pointerdown', hidePlaylist)
+    navitem2.addEventListener('pointerdown', hidePlaylist)
+    navitem3.addEventListener('pointerdown', hidePlaylist)
 
     function hidePlaylist() {
       let playlist = document.querySelector('.playlist-wrap')
@@ -34,9 +38,10 @@ function Header() {
 
     // cleanup event listeners
     return () => {
-      nav1.current.removeEventListener('pointerdown', hidePlaylist)
-      nav2.current.removeEventListener('pointerdown', hidePlaylist)
-      nav3.current.removeEventListener('pointerdown', hidePlaylist)
+      console.log('cleanup listeners')
+      navitem1.removeEventListener('pointerdown', hidePlaylist)
+      navitem2.removeEventListener('pointerdown', hidePlaylist)
+      navitem3.removeEventListener('pointerdown', hidePlaylist)
     }
 
   }, [])
