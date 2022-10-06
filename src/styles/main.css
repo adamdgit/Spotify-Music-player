@@ -168,6 +168,13 @@
   border-bottom: 1px solid var(--blue);
 }
 
+.result-small h3 {
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
 .add-to-playlist {
   position: relative;
   background-color: var(--bg-blue);
