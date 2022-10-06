@@ -13,7 +13,7 @@ import { getNearestNode } from "./utils/getNearestNode"
 import { getUserPlaylists } from "./api/getUserPlaylists"
 import Tooltip from "./Tooltip";
 
-function PlaylistInfo({ playerIsHidden }) {
+function PlaylistInfo() {
 
   // global context
   const { token } = useContext(GlobalContext)
@@ -23,6 +23,7 @@ function PlaylistInfo({ playerIsHidden }) {
   const { currentTrackID } = useContext(GlobalContext)
   const { contextID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
+  const { playerIsHidden } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
   // component state
@@ -236,7 +237,7 @@ function PlaylistInfo({ playerIsHidden }) {
             alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} 
             />
           <span>
-            <h1 className="playlist-title" style={{fontSize: '3rem'}}>{playlistName}</h1>
+            <h1 className="playlist-title" style={{fontSize: '2.5rem'}}>{playlistName}</h1>
             <h2 className="playlist-desc">{playlistDesc}</h2>
           </span>
         </div>
