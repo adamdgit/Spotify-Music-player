@@ -9,6 +9,7 @@ import Loading from "./Loading";
 import Timeline from "./Timeline";
 import VolumeControl from "./VolumeControl";
 import Tooltip from "./Tooltip";
+import PlaybackDevices from "./PlaybackDevices";
 
 export default function WebPlayback(props) {
 
@@ -20,6 +21,7 @@ export default function WebPlayback(props) {
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
 
+  const [currentDeviceID, setCurrentDeviceID] = useState('')
   const [player, setPlayer] = useState(undefined)
   const [is_paused, setPaused] = useState(true)
   const [shuffle, setShuffle] = useState(false)
@@ -50,6 +52,7 @@ export default function WebPlayback(props) {
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         transferPlayback(props.token, device_id)
+        setCurrentDeviceID(device_id)
       })
 
       player.addListener('not_ready', ({ device_id }) => {
@@ -59,8 +62,9 @@ export default function WebPlayback(props) {
       player.connect()
 
       player.addListener('player_state_changed', ( state => {
-        if(!state) return
+        if (!state) return
         console.log(state)
+
         if (runOnce === false) {
           setPlayerCBType('player_ready')
           runOnce = true
@@ -239,9 +243,8 @@ export default function WebPlayback(props) {
           </button>
         </div>
   
-        <VolumeControl 
-          player={player}
-        />
+        <VolumeControl player={player} />
+        <PlaybackDevices currentDeviceID={currentDeviceID} />
   
       </div>
       : <Loading loadingMsg={'Loading spotify player...'} />
