@@ -91,7 +91,8 @@
 .shuffle-btn, .loop-btn, 
 .next-btn, .previous-btn,
 .play-btn, .volume-btn,
-.show-hide-playlist-btn {
+.show-hide-playlist-btn,
+.devices-btn {
   position: relative;
   background-color: #111;
   color: #eee;
@@ -100,7 +101,7 @@
 .shuffle-btn:hover, .loop-btn:hover, 
 .next-btn:hover, .previous-btn:hover,
 .play-btn:hover, .volume-btn:hover,
-.show-hide-playlist-btn svg:hover {
+.show-hide-playlist-btn, .devices-btn svg:hover {
   color:var(--blue);
 }
 
@@ -129,22 +130,6 @@
   width: 100px;
 }
 
-.volume-slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 5px;
-  border-radius: 10px;
-  background-color: white;
-}
-
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  background-color: var(--blue);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
 .show-hide-playlist-btn {
   position: absolute;
   right: 15px;
@@ -169,6 +154,47 @@
   left: 20px;
   display: flex;
   gap: 1rem;
+}
+
+.devices-wrap {
+  position: relative;
+  display: flex;
+  justify-self: flex-end;
+  margin-right: 110px;
+}
+
+.device-list {
+  display: none;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--secondary-blue);
+  padding: 1rem 1rem 2rem 1rem;
+  gap: 1.5rem;
+  position: absolute;
+  bottom: 55px;
+  right: 50%;
+  transform: translateX(50%);
+  list-style: none;
+  z-index: 99;
+  width: 250px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px black;
+}
+
+.device-list .triangle {
+  border-top: 8px solid var(--secondary-blue);
+}
+
+.device-list li {
+  cursor: pointer;
+  padding: 1rem;
+  border: 2px solid #eee;
+  border-radius: 5px;
+}
+
+.device-list li:hover {
+  color: var(--blue);
+  border-color: var(--blue);
 }
 
 /*--------Playlist Message---------*/
