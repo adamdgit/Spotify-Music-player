@@ -232,20 +232,6 @@
 
 .selected { border: 1px solid var(--blue); }
 
-.play-song-btn:hover ~ .play-song-tooltip {
-  display: block;
-  position: absolute;
-  padding: 5px 10px;
-  background-color: var(--primary-blue);
-  color: var(--blue);
-  border: 1px solid var(--secondary-blue);
-  border-radius: 4px;
-  left: -7px;
-  top: 35px;
-}
-
-.play-song-tooltip { display: none; }
-
 .edit-playlist-wrap {
   display: flex;
   align-items: center;
@@ -263,8 +249,22 @@
   gap: 2rem;
 }
 
-.play-song-btn:hover .tooltip {
-  display: flex;
+.play-song-btn .tooltip {
+  left: 0;
   top: 30px;
+}
+
+.play-song-btn:hover .tooltip {
+  opacity: 1;
   left: 10px;
+}
+
+.container .remove-track-btn .tooltip {
+  left: -45px;
+  top: -10px;
+}
+
+.container .remove-track-btn:hover .tooltip {
+  opacity: 1;
+  left: -75px;
 }
