@@ -160,7 +160,7 @@
   position: relative;
   display: flex;
   justify-self: flex-end;
-  margin-right: 110px;
+  margin-right: 115px;
 }
 
 .device-list {
@@ -169,7 +169,7 @@
   text-align: center;
   background-color: var(--secondary-blue);
   padding: 1rem 1rem 2rem 1rem;
-  gap: 1.5rem;
+  gap: 1rem;
   position: absolute;
   bottom: 55px;
   right: 50%;
@@ -188,13 +188,13 @@
 .device-list li {
   cursor: pointer;
   padding: 1rem;
-  border: 2px solid #eee;
+  background: var(--primary-blue);
   border-radius: 5px;
 }
 
 .device-list li:hover {
   color: var(--blue);
-  border-color: var(--blue);
+  background: black;
 }
 
 /*--------Playlist Message---------*/
