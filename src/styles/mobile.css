@@ -253,4 +253,9 @@
       grid-template-columns: 10px 64px auto 20px 35px;
     }
   }
+  
+  .tooltip {
+    display: none;
+  }
+
 }
