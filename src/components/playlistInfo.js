@@ -6,12 +6,12 @@ import { changePlaylistSong } from "./api/changePlaylistSong";
 import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
 import { changePlaylistOrder } from "./api/changePlaylistOrder"
 import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
-import { showHideAddToPlaylistBtn } from "./utils/showHideAddToPlaylistBtn"
 import { convertTime } from "./utils/convertTime"
 import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
 import { getNearestNode } from "./utils/getNearestNode"
 import { getUserPlaylists } from "./api/getUserPlaylists"
 import Tooltip from "./Tooltip";
+import AddToPlaylistBtn from "./AddToPlaylistBtn";
 
 function PlaylistInfo() {
 
@@ -285,20 +285,11 @@ function PlaylistInfo() {
                       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="15px" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
                     </button>
                     :
-                    <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylistBtn(e.target)}>
-                      <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512"><path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
-                      <span className="choose-playlist">
-                        <h3>Add to playlist:</h3>
-                        <ul>
-                          {
-                            playlists? playlists.map((playlist, index) => {
-                              return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(song.track.uri, playlist.id)}>{playlist.name}</li>
-                            })
-                            : <li>No playlists found</li>
-                          }
-                        </ul>
-                      </span>
-                    </button>
+                    <AddToPlaylistBtn 
+                      track={song}
+                      userPlaylists={playlists}
+                      addToPlaylist={addToPlaylist}
+                    />
                   }
                 </span>
               )
@@ -326,20 +317,11 @@ function PlaylistInfo() {
                     <p>{sanitizeArtistNames(song.artists)}</p>
                   </span>
                   <p className="song-length">{convertTime(song.duration_ms)}</p>
-                  <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylistBtn(e.target)}>
-                    <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512"><path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
-                    <span className="choose-playlist">
-                      <h3>Add to playlist:</h3>
-                      <ul>
-                        {
-                          playlists? playlists.map((playlist, index) => {
-                            return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(song.uri, playlist.id)}>{playlist.name}</li>
-                          })
-                          : <li>No playlists found</li>
-                        }
-                      </ul>
-                    </span>
-                  </button>
+                  <AddToPlaylistBtn 
+                    track={song}
+                    userPlaylists={playlists}
+                    addToPlaylist={addToPlaylist}
+                  />
                 </span>
               )
             }) : contextURI === "" ? <h1>No playlist available</h1> : <></>
