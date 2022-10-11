@@ -1,11 +1,11 @@
 import { useContext } from "react"
 import { GlobalContext } from "./login"
 import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
-import { showHideAddToPlaylistBtn } from "./utils/showHideAddToPlaylistBtn"
 import { playTrack } from "./api/playTrack"
 import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
 import { followPlaylist } from "./api/followPlaylist"
 import { saveAlbum } from "./api/saveAlbum"
+import AddToPlaylistBtn from "./AddToPlaylistBtn"
 
 export default function SearchResult({...props}) {
 
@@ -28,7 +28,6 @@ export default function SearchResult({...props}) {
       else console.error(result.errorMsg)
     })
     setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
-    document.querySelector('.show-p').classList.remove('show-p')
   }
 
   const playSong = async (song)  => {
@@ -88,20 +87,11 @@ export default function SearchResult({...props}) {
           <h3>{result.name}</h3>
           <p>{sanitizeArtistNames(result.artists)}</p>
           </span>
-          <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylistBtn(e.target)}>
-            <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512">{/* Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}<path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
-            <span className={"choose-playlist"}>
-              <h3>Add to playlist:</h3>
-              <ul>
-                {
-                  props.playlists? props.playlists.map((playlist, index) => {
-                    return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(result.uri, playlist.id, playlist.name)}>{playlist.name}</li>
-                  })
-                  : <li>No playlists found</li>
-                }
-              </ul>
-            </span>
-          </button>
+          <AddToPlaylistBtn 
+            track={result}
+            userPlaylists={props.playlists}
+            addToPlaylist={addToPlaylist}
+          />
           <button className="play" onClick={() => playSong(result)}>
             <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
           </button>
