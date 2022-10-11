@@ -2,6 +2,7 @@ import axios from "axios"
 
 export async function transferPlayback(token, device_id) {
 
+  let data = []
   let errorMsg = false
   // transfer playback to web player SDK
   await axios({ 
@@ -11,7 +12,8 @@ export async function transferPlayback(token, device_id) {
     data: {
       'device_ids' : [device_id]
     }
-  }).catch(err => errorMsg = err)
+  }).then(result => data = result)
+  .catch(err => errorMsg = err)
 
-  return errorMsg
+  return { errorMsg, data }
 }
