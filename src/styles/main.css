@@ -100,8 +100,6 @@
   min-width: 140px;
 }
 
-.edit-link { width: fit-content; }
-
 /*-----Search results-----*/
 
 .search-bar {
@@ -189,7 +187,7 @@
 }
 
 .choose-playlist {
-  display: none;
+  opacity: 0;
   color:white;
   background:var(--primary-blue);
   max-height: 350px;
@@ -201,6 +199,8 @@
   box-shadow: 1px 1px 10px black;
   padding: 10px 20px;
   overflow-y: auto;
+  transition: all 200ms ease-in-out;
+  pointer-events: none;
 }
 
 .choose-playlist h3 {
@@ -221,6 +221,10 @@
 .choose-playlist ul li:hover {
   color: var(--blue);
   border-color: var(--blue);
+}
+
+.close-playlist-btn {
+  display: none;
 }
 
 .show-p {
