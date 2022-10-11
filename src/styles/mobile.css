@@ -10,7 +10,7 @@
   }
 
   .page-wrap {
-    top: 125px;
+    top: 110px;
     height: calc(100vh - 240px);
   }
 
@@ -28,6 +28,35 @@
     text-align: center;
   }
 
+  .add-to-playlist {
+    position: unset;
+    font-size: 1rem;
+  }
+
+  .choose-playlist {
+    transform: translateY(-100vh);
+    top: 110px;
+    left: 0;
+    bottom: 145px;
+    max-height: unset;
+    position: fixed;
+  }
+
+  .choose-playlist h3 { padding: 2rem; }
+
+  .choose-playlist ul li { 
+    width: 100%; 
+    padding: 1.5rem;
+  }
+
+  .close-playlist-btn {
+    display: block;
+    background: unset;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
   .user-playlists-header {
     justify-content: center;
   }
@@ -43,7 +72,11 @@
     max-width: 300px; 
   }
 
-  .result-large { font-size: .8rem; }
+  .result-large { 
+    font-size: .8rem; 
+    justify-items: center;
+    text-align: center;
+  }
 
   .result-large:hover { scale: unset; }
 
@@ -124,7 +157,7 @@
 
   .header-wrap {
     grid-template-columns: unset;
-    gap: 1rem;
+    gap: .7rem;
   }
 
   .nav-bar {
@@ -135,6 +168,7 @@
 
   .nav-bar .nav-item {
     font-size: .9rem;
+    height: unset;
   }
 
   .controls { 
@@ -246,6 +280,10 @@
   }
 
   @media only screen and (max-width: 500px){ 
+    .main-content {
+      padding: 2rem .5rem;
+    }
+
     .search-result {
       grid-template-columns: unset;
       grid-template-rows: repeat(4, auto);
