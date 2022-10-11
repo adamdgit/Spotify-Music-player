@@ -20,6 +20,7 @@ export default function Library() {
   const { setMessage } = useContext(GlobalContext)
   const { setSongs } = useContext(GlobalContext)
   // users playlists results
+  const [isLoading, setLoading] = useState(false)
   const [playlists, setPlaylists] = useState([])
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
@@ -64,24 +65,32 @@ export default function Library() {
     setMessage({msg: `${name} unFollowed`, needsUpdate: true})
   }
 
-  useEffect(() => {
-
-    if (!userID) return
-    getUserPlaylists(token)
-    .then(result => {
-      if (result.errorMsg === false) return setPlaylists(result.playlists.sort((a, b) => {
+  const getLibraryData = async () => {
+    try {
+      setLoading(true)
+      const { errorMsg, playlists } = await getUserPlaylists(token)
+      if (errorMsg === false) setPlaylists(playlists.sort((a, b) => {
         if(a.owner.id === userID && b.owner.id === userID) return 0
         if(a.owner.id === userID && b.owner.id !== userID) return -1
         return 1
       }))
-      else console.error(result.errorMsg)
-    })
+      else throw errorMsg
+    }
+    catch(err) { console.error(err) }
 
-    getSavedAlbums(token)
-    .then(result => {
-      if (result.errorMsg === false) return setAlbums(result.albums)
-      else console.error(result.errorMsg)
-    })
+    try {
+      const { errorMsg, albums } = await getSavedAlbums(token)
+      if (errorMsg === false) return setAlbums(albums)
+      else throw errorMsg
+    }
+    catch(err) { console.error(err) }
+    finally { setLoading(false) }
+  }
+
+  useEffect(() => {
+
+    if (!userID) return
+    getLibraryData()
 
   },[token, userID])
 
@@ -95,7 +104,7 @@ export default function Library() {
           </button>
         </div>
         <div className="user-playlists-wrap">
-          {
+        {
           playlists? playlists.map((result, i) => {
             if (result === null || result === undefined) return <></>
             return (
@@ -124,14 +133,14 @@ export default function Library() {
               </div>
             )
           })
-          : playlists?.length === 0 ? <h1>No data found</h1>
-          : <Loading loadingMsg={'Fetching your playlists...'}/>
-          }
+          : playlists?.length === 0 ? <h1>No playlists found</h1> : <></> 
+        }
+        {isLoading === true ? <Loading loadingMsg={'Fetching library items...'}/> : <></>}
         </div>
 
         <h1>Saved Albums:</h1>
         <div className="user-playlists-wrap">
-          {
+        {
           albums? albums.map((result, i) => {
             if (result === null || result === undefined) return <></>
             return (
@@ -154,9 +163,8 @@ export default function Library() {
               </div>
             )
           })
-          : albums?.length === 0 ? <h1>No data found</h1>
-          : <Loading loadingMsg={'Fetching your playlists...'}/>
-          }
+          : albums?.length === 0 ? <h1>No data found</h1> : <></>
+        }
         </div>
 
       </div>
