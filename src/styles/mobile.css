@@ -96,11 +96,12 @@
   }
 
   .playlist-wrap {
-    top: 125px;
+    top: 110px;
     grid-template-columns: unset;
     overflow-y: auto;
     height: calc(100vh - 260px);
     width: unset;
+    scrollbar-width: none;
   }
 
   .playlist {
