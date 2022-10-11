@@ -2,11 +2,11 @@ import { useState, useContext, useEffect } from "react";
 import { GlobalContext } from "../login";
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { getUserPlaylists } from "../api/getUserPlaylists"
-import { showHideAddToPlaylistBtn } from "../utils/showHideAddToPlaylistBtn";
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist";
 import { playTrack } from "../api/playTrack";
 import axios from "axios";
 import Loading from "../Loading";
+import AddToPlaylistBtn from "../AddToPlaylistBtn";
 
 export default function Explore() {
 
@@ -139,20 +139,11 @@ export default function Explore() {
                               <h3>{track.name}</h3>
                               <p>{sanitizeArtistNames(track.artists)}</p>
                             </span>
-                            <button className="add-to-playlist" onClick={(e) => showHideAddToPlaylistBtn(e.target)}>
-                              <svg style={{pointerEvents:"none"}} xmlns="http://www.w3.org/2000/svg" fill="currentcolor" width="20px" viewBox="0 0 512 512"><path d="M0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84.02L256 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 .0003 232.4 .0003 190.9L0 190.9z"/></svg>
-                              <span className="choose-playlist">
-                                <h3>Add to playlist:</h3>
-                                <ul>
-                                  {
-                                    userPlaylists? userPlaylists.map((playlist, index) => {
-                                      return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(track.uri, playlist.id, playlist.name)}>{playlist.name}</li>
-                                    })
-                                    : <li>No playlists found</li>
-                                  }
-                                </ul>
-                              </span>
-                            </button>
+                            <AddToPlaylistBtn 
+                              track={track}
+                              userPlaylists={userPlaylists} 
+                              addToPlaylist={addToPlaylist} 
+                            />
                             <button className="play" onClick={() => playSong(track)}>
                               <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
                             </button>
