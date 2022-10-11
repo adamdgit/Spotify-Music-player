@@ -244,7 +244,7 @@ export default function WebPlayback(props) {
         </div>
   
         <VolumeControl player={player} />
-        <PlaybackDevices currentDeviceID={currentDeviceID} />
+        <PlaybackDevices />
   
       </div>
       : <Loading loadingMsg={'Loading spotify player...'} />
