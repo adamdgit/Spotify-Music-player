@@ -33,7 +33,7 @@
   }
 
   .user-playlists-wrap {
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, 50%);
     gap: .5rem;
   }
 
@@ -175,13 +175,33 @@
   }
 
   .volume-control {
-    grid-row: 3;
-    grid-column: 4;
+    display: none;
   }
 
   .timeline-seek {
     grid-row: 1;
     grid-column: span 4;
+  }
+
+  .devices-wrap {
+    margin-right: unset;
+  }
+
+  .device-list {
+    position: fixed;
+    left: 0;
+    right: unset;
+    bottom: 150px;
+    top: 0;
+    width: 100%;
+    justify-content: flex-start;
+    padding: 2rem;
+    grid-template-rows: 50px repeat(auto-fill, minmax(50px, 75px));
+    transform: unset;
+  }
+
+  .device-list li {
+    height: fit-content;
   }
 
   .search-songs-wrap {
@@ -232,6 +252,15 @@
       justify-items: center;
       text-align: center;
       font-size: .9rem;
+    }
+
+    .user-playlists-wrap {
+      gap: unset;
+    }
+
+    .result-large {
+      border: unset;
+      box-shadow: unset;
     }
 
     .result-small {
