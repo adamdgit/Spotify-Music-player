@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { GlobalContext } from "../login";
-import { getUserPlaylists } from "../api/getUserPlaylists"
-import { searchSongs } from "../api/search";
+import { getUserPlaylists } from "../../api/getUserPlaylists"
+import { searchSongs } from "../../api/search";
 import SearchResult from "../SearchResult";
 
 export default function SearchSongs() {

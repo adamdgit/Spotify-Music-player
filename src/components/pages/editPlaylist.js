@@ -2,12 +2,12 @@ import { useContext, useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import { GlobalContext } from "../login";
 import axios from "axios";
-import { searchSongs } from "../api/search";
-import { changePlaylistDetails } from "../api/changePlaylistDetails"
+import { searchSongs } from "../../api/search";
+import { changePlaylistDetails } from "../../api/changePlaylistDetails"
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames"
-import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
-import { changePlaylistOrder } from "../api/changePlaylistOrder"
-import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
+import { addTrackToPlaylist } from "../../api/addTrackToPlaylist"
+import { changePlaylistOrder } from "../../api/changePlaylistOrder"
+import { removeTrackFromPlaylist } from "../../api/removeTrackFromPlaylist"
 import { getNearestNode } from "../utils/getNearestNode";
 import EditPlaylistItem from "../EditPlaylistItem";
 import Loading from "../Loading";

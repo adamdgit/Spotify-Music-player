@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from "react";
 import { GlobalContext } from "../login";
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
-import { getUserPlaylists } from "../api/getUserPlaylists"
-import { addTrackToPlaylist } from "../api/addTrackToPlaylist";
-import { playTrack } from "../api/playTrack";
+import { getUserPlaylists } from "../../api/getUserPlaylists"
+import { addTrackToPlaylist } from "../../api/addTrackToPlaylist";
+import { playTrack } from "../../api/playTrack";
 import axios from "axios";
 import Loading from "../Loading";
 import AddToPlaylistBtn from "../AddToPlaylistBtn";
