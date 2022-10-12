@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from "react";
-import { transferPlayback } from "./api/transferPlayback";
+import { transferPlayback } from "../api/transferPlayback";
 import { GlobalContext } from "./login";
-import { shufflePlaylist } from "./api/shufflePlaylist"
-import { repeatTrack } from "./api/repeatTrack";
-import { nextTrack } from "./api/nextTrack"
-import { previousTrack } from "./api/previousTrack,"
+import { shufflePlaylist } from "../api/shufflePlaylist"
+import { repeatTrack } from "../api/repeatTrack";
+import { nextTrack } from "../api/nextTrack"
+import { previousTrack } from "../api/previousTrack,"
 import Loading from "./Loading";
 import Timeline from "./Timeline";
 import VolumeControl from "./VolumeControl";

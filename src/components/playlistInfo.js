@@ -2,14 +2,14 @@ import axios from "axios";
 import CurrentSong from "./currentSong";
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import { GlobalContext } from "./login";
-import { changePlaylistSong } from "./api/changePlaylistSong";
-import { removeTrackFromPlaylist } from "./api/removeTrackFromPlaylist"
-import { changePlaylistOrder } from "./api/changePlaylistOrder"
-import { addTrackToPlaylist } from "./api/addTrackToPlaylist"
+import { changePlaylistSong } from "../api/changePlaylistSong";
+import { removeTrackFromPlaylist } from "../api/removeTrackFromPlaylist"
+import { changePlaylistOrder } from "../api/changePlaylistOrder"
+import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { convertTime } from "./utils/convertTime"
 import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
 import { getNearestNode } from "./utils/getNearestNode"
-import { getUserPlaylists } from "./api/getUserPlaylists"
+import { getUserPlaylists } from "../api/getUserPlaylists"
 import Tooltip from "./Tooltip";
 import AddToPlaylistBtn from "./AddToPlaylistBtn";
 
