@@ -123,6 +123,17 @@ function PlaylistInfo() {
 
       document.addEventListener('pointermove', mouseMove)
       function mouseMove(e) {
+        // scroll up or down if draggable element touches top or bottom of scroll area
+        let playlistEl = document.querySelector('.playlist')
+        if (document.querySelector('.container').offsetTop < playlistEl.scrollTop) {
+          if (e.clientY < 150) {
+            document.querySelector('.playlist').scrollTo({top: (playlistEl.scrollTop - 200), left: 0, behavior: 'smooth'})
+          }
+        }
+        if (e.clientY > playlistEl.offsetHeight + 100) { // +100 fpr header height
+          document.querySelector('.playlist').scrollTo({top: (playlistEl.scrollTop + 200), left: 0, behavior: 'smooth'})
+        }
+        // update draggable position
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
         let nearestNode = getNearestNode(e.clientY, 'draggable')
