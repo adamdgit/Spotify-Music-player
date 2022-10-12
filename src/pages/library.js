@@ -1,14 +1,14 @@
 import { useEffect, useContext, useState } from "react"
 import { GlobalContext } from "../login";
 import { NavLink, useNavigate } from "react-router-dom"
-import { createPlaylist } from "../../api/createPlaylist"
-import { changePlaylistSong } from "../../api/changePlaylistSong";
-import { getUserPlaylists } from "../../api/getUserPlaylists"
-import { unfollowPlaylist } from "../../api/unfollowPlaylist"
-import { getSavedAlbums } from "../../api/getSavedAlbums"
+import { createPlaylist } from "../api/createPlaylist"
+import { changePlaylistSong } from "../api/changePlaylistSong";
+import { getUserPlaylists } from "../api/getUserPlaylists"
+import { unfollowPlaylist } from "../api/unfollowPlaylist"
+import { getSavedAlbums } from "../api/getSavedAlbums"
 import Loading from "../Loading";
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
-import { removeAlbum } from "../../api/removeAlbum"
+import { removeAlbum } from "../api/removeAlbum"
 
 export default function Library() {
 
