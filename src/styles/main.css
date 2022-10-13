@@ -31,16 +31,18 @@
   display: grid;
   background-color: var(--primary-blue);
   box-shadow: 5px 5px 10px black;
-  transition: all 200ms ease-in-out;
-  border: 1px solid #111;
+  transition: all 200ms ease;
+  border: 1px solid;
+  border-image-source: linear-gradient(0deg, #888 0%, transparent 80%);
+  border-image-slice: 1;
 }
 
 .user {
-  border: 1px solid #777;
+  border-image-source: linear-gradient(0deg, white 0%, transparent 80%);
 }
 
 .result-large:hover {
-  border: 1px solid white;
+  border-image-source: linear-gradient(0deg, var(--blue) 0%, transparent 80%);
 }
 
 .result-info {
