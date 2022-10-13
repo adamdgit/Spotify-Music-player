@@ -120,37 +120,37 @@ export default function Explore() {
                 <div key={value.artistID+index} className="artist">
                   <h2>{value.artistName}</h2>
                   <span className="artist-top-songs">
-                    {
-                      value.aritstTopTracks[0].map(track => {
-                        return (
-                          <div key={track.id} className="result-small">
-                            <img src={
-                            track.album.images.length === 0 ?
-                            'no image found' :
-                            track.album.images.length === 3 ?
-                            track.album.images[2].url :
-                            track.album.images[0].url
-                            } alt={
-                            track.album.images.length === 0 ?
-                            'no image found' :
-                            `${track.name} album art`
-                            } />
-                            <span>
-                              <h3>{track.name}</h3>
-                              <p>{sanitizeArtistNames(track.artists)}</p>
-                            </span>
-                            <AddToPlaylistBtn 
-                              track={track}
-                              userPlaylists={userPlaylists} 
-                              addToPlaylist={addToPlaylist} 
-                            />
-                            <button className="play" onClick={() => playSong(track)}>
-                              <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
-                            </button>
-                          </div>
-                        )
-                      })
-                    }
+                  {
+                    value.aritstTopTracks[0].map(track => {
+                      return (
+                        <div key={track.id} className="result-small">
+                          <img src={
+                          track.album.images.length === 0 ?
+                          'no image found' :
+                          track.album.images.length === 3 ?
+                          track.album.images[2].url :
+                          track.album.images[0].url
+                          } alt={
+                          track.album.images.length === 0 ?
+                          'no image found' :
+                          `${track.name} album art`
+                          } />
+                          <span>
+                            <h3>{track.name}</h3>
+                            <p>{sanitizeArtistNames(track.artists)}</p>
+                          </span>
+                          <AddToPlaylistBtn 
+                            track={track}
+                            userPlaylists={userPlaylists} 
+                            addToPlaylist={addToPlaylist} 
+                          />
+                          <button className="play" onClick={() => playSong(track)}>
+                            <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+                          </button>
+                        </div>
+                      )
+                    })
+                  }
                   </span>
                 </div>
               )
