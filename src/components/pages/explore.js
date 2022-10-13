@@ -40,14 +40,14 @@ export default function Explore() {
       document.querySelector('.show-p').classList.remove('show-p')
   }
 
-  const playSong = (song) => {
-    playTrack(token, song)
+  const playSong = (uri) => {
+    playTrack(token, uri)
     .then(result => {
       if (!result) return
       console.error(result)
     })
     // save new URIS data to global context (playlist or track)
-    setContextURI(song.uri)
+    setContextURI(uri)
     // remove playlist ID as track is playing not playlist
     setContextID('')
   }
@@ -144,7 +144,7 @@ export default function Explore() {
                             userPlaylists={userPlaylists} 
                             addToPlaylist={addToPlaylist} 
                           />
-                          <button className="play" onClick={() => playSong(track)}>
+                          <button className="play" onClick={() => playSong(track.uri)}>
                             <svg viewBox="0 0 16 16" height="20px" width="20px" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
                           </button>
                         </div>
