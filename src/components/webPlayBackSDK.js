@@ -21,7 +21,6 @@ export default function WebPlayback(props) {
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
 
-  const [currentDeviceID, setCurrentDeviceID] = useState('')
   const [player, setPlayer] = useState(undefined)
   const [is_paused, setPaused] = useState(true)
   const [shuffle, setShuffle] = useState(false)
@@ -52,7 +51,6 @@ export default function WebPlayback(props) {
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         transferPlayback(props.token, device_id)
-        setCurrentDeviceID(device_id)
       })
 
       player.addListener('not_ready', ({ device_id }) => {
@@ -181,20 +179,14 @@ export default function WebPlayback(props) {
             <Tooltip tip={'Shuffle'}/>
             <svg viewBox="0 0 24 24" height="24px" width="24px" fill="currentcolor"><path d="M16.808 4.655l2.069 1.978h-.527c-1.656 0-3.312.68-4.458 1.814L12.797 9.75l1.179 1.246 1.317-1.527c.764-.794 1.91-1.247 3.057-1.247h.55l-2.07 2.014 1.178 1.179 4.005-3.993-4.026-3.945-1.178 1.179zm1.974 10.998l-1.974-1.888 1.18-1.179 4.024 3.945-4.004 3.993-1.178-1.179 1.954-1.901h-.434c-1.656 0-3.312-.625-4.458-1.667L8.242 9.8C7.35 9.071 6.204 8.55 4.93 8.55H2l.006-1.794 2.965.003c1.784 0 3.312.521 4.459 1.563l5.904 6.185c.765.73 1.911 1.146 3.058 1.146h.39zm-9.02-2.092l-1.52 1.394c-.892.793-2.038 1.36-3.312 1.36H2v1.588h2.93c1.783 0 3.312-.567 4.459-1.701l1.537-1.396-1.164-1.245z"></path></svg>
           </button>
-          <button className="previous-btn" onClick={() => { 
-            previousTrack(props.token)
-            setPlayerCBType('track_update')
-          }} >
+          <button className="previous-btn" onClick={() => { previousTrack(props.token) }}>
             <Tooltip tip={'Previous'}/>
             <svg role="img" fill="currentcolor" 
               height="24px" width="24px" viewBox="0 0 16 16">
               <path d="M3.3 1a.7.7 0 01.7.7v5.15l9.95-5.744a.7.7 0 011.05.606v12.575a.7.7 0 01-1.05.607L4 9.149V14.3a.7.7 0 01-.7.7H1.7a.7.7 0 01-.7-.7V1.7a.7.7 0 01.7-.7h1.6z"></path>
             </svg>
           </button>
-          <button className="play-btn" onClick={() => { 
-            player.togglePlay()
-            setPlayerCBType('track_play_pause')
-          }} >
+          <button className="play-btn" onClick={() => { player.togglePlay() }}>
             <Tooltip tip={is_paused === true ? 'Play' : 'Pause'}/>
             { 
             is_paused ? 
@@ -211,10 +203,7 @@ export default function WebPlayback(props) {
             </svg>
             }
           </button>
-          <button className="next-btn" onClick={() => { 
-            nextTrack(props.token)
-            setPlayerCBType('track_update')
-          }}>
+          <button className="next-btn" onClick={() => { nextTrack(props.token) }}>
             <Tooltip tip={'Next'}/>
             <svg role="img" fill="currentcolor" 
               height="24px" width="24px" viewBox="0 0 16 16">
@@ -222,7 +211,7 @@ export default function WebPlayback(props) {
             </svg>
           </button>
           <button className="loop-btn" 
-            onClick={() => {repeatSongs()}}
+            onClick={() => { repeatSongs() }}
             style={repeatMode === 0 ? {} : repeatMode === 1 ? {color: 'var(--blue)'} : {color: 'var(--blue)'}}
           >
             <Tooltip tip={repeatMode === 0 ? 'Toggle repeat Context' : repeatMode === 1 ? 'Toggle repeat Track' : 'Toggle repeat Off'}/>
