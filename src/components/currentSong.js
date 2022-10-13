@@ -1,7 +1,7 @@
 import Loading from "./Loading"
 
 export default function CurrentSong({ currentSong }) {
- 
+
     /* 
       useEffect(() => {
         if(currentSong) {
@@ -30,8 +30,10 @@ export default function CurrentSong({ currentSong }) {
           <img className="album-large"
             src={
             currentSong.album.images.length === 0 ?
-            'no image found' :
-            currentSong.album.images[0].url
+            'no image found'
+            : currentSong.album.images.length > 1 ?
+            currentSong.album.images[2].url
+            : currentSong.album.images[0].url
             } alt={
             currentSong.album.images.length === 0 ?
             'no image found' :
