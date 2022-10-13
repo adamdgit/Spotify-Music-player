@@ -19,7 +19,7 @@ function PlaylistInfo() {
   const { token } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
   const { contextURI } = useContext(GlobalContext)
-  const { playerCBType, setPlayerCBType } = useContext(GlobalContext)
+  const { playerCBType } = useContext(GlobalContext)
   const { currentTrackID } = useContext(GlobalContext)
   const { contextID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
@@ -190,51 +190,54 @@ function PlaylistInfo() {
         })
       }
       getCurrentTrack()
-      // get playlist data
-      if(contextURI?.includes('playlist')) {
-        const getPlaylistData = async () => {
-          await axios.get(`https://api.spotify.com/v1/playlists/${contextID}?limit=50`, {
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            }
-          }).then((result) => {
-            if (result.data) {
-              setPlaylistArt(result.data.images[0].url)
-              setPlaylistDesc(result.data.description)
-              setPlaylistName(result.data.name)
-              setSongs(result.data.tracks.items)
-              setPlaylistOwner(result.data.owner.id)
-            } else { console.error(result) }
-          })
-        }
-        getPlaylistData()
-      }
-      // get album data
-      if (contextURI?.includes('album')) {
-        const getAlbumData = async () => {
-          await axios.get(`https://api.spotify.com/v1/albums/${contextID}`, {
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            }
-          }).then((result) => {
-            if (result.data) {
-              setPlaylistArt(result.data.images[0].url)
-              setPlaylistDesc(result.data.label)
-              setPlaylistName(result.data.name)
-              setSongs(result.data.tracks.items)
-              setPlaylistOwner('n/a')
-            } else { console.error(result) }
-          })
-        }
-        getAlbumData()
-      }
     }
-
   },[currentTrackID])
+
+  // when context changes check for playlist or album and get data
+  useEffect(() => {
+    // get playlist data
+    if(contextURI?.includes('playlist')) {
+      const getPlaylistData = async () => {
+        await axios.get(`https://api.spotify.com/v1/playlists/${contextID}?limit=100`, {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }).then((result) => {
+          if (result.data) {
+            setPlaylistArt(result.data.images[0].url)
+            setPlaylistDesc(result.data.description)
+            setPlaylistName(result.data.name)
+            setSongs(result.data.tracks.items)
+            setPlaylistOwner(result.data.owner.id)
+          } else { console.error(result) }
+        })
+      }
+      getPlaylistData()
+    }
+    // get album data
+    if (contextURI?.includes('album')) {
+      const getAlbumData = async () => {
+        await axios.get(`https://api.spotify.com/v1/albums/${contextID}`, {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }).then((result) => {
+          if (result.data) {
+            setPlaylistArt(result.data.images[0].url)
+            setPlaylistDesc(result.data.label)
+            setPlaylistName(result.data.name)
+            setSongs(result.data.tracks.items)
+            setPlaylistOwner('n/a')
+          } else { console.error(result) }
+        })
+      }
+      getAlbumData()
+    }
+  }, [contextURI])
 
   return (
     <div style={!contextID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
@@ -267,10 +270,7 @@ function PlaylistInfo() {
               return (
                 <span key={index} data-index={index} className={currentTrackID === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={playlistOwner === userID ? setDraggableElement : setNull}>
                   <span>{index+1}</span>
-                  <button onClick={() => {
-                    changePlaylistSong(index, token, contextURI)
-                    setPlayerCBType('track_update')
-                  }} className="play-song-btn" >
+                  <button onClick={() => { changePlaylistSong(index, token, contextURI) }} className="play-song-btn">
                   <Tooltip tip={'Play'} />
                     <img src={
                       song.track.album.images.length === 0 ?
@@ -313,10 +313,7 @@ function PlaylistInfo() {
               return (
                 <span key={index} data-index={index} className={currentTrackID === song.id ? "draggable selected" : "draggable"}>
                   <span>{index+1}</span>
-                  <button onClick={() => {
-                    changePlaylistSong(index, token, contextURI)
-                    setPlayerCBType('track_update')
-                  }} className="play-song-btn" >
+                  <button onClick={() => { changePlaylistSong(index, token, contextURI) }} className="play-song-btn">
                   <Tooltip tip={'Play'} />
                   <img 
                     src={playlistArt? playlistArt : 'no image found'} 
