@@ -101,7 +101,7 @@
 .shuffle-btn:hover, .loop-btn:hover, 
 .next-btn:hover, .previous-btn:hover,
 .play-btn:hover, .volume-btn:hover,
-.show-hide-playlist-btn, .devices-btn svg:hover {
+.show-hide-playlist-btn:hover, .devices-btn svg:hover {
   color:var(--blue);
 }
 
