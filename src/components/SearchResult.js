@@ -2,6 +2,7 @@ import { useContext } from "react"
 import { GlobalContext } from "./login"
 import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
 import { playTrack } from "../api/playTrack"
+import { playContext } from "../api/playContext"
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { followPlaylist } from "../api/followPlaylist"
 import { saveAlbum } from "../api/saveAlbum"
@@ -30,16 +31,33 @@ export default function SearchResult({...props}) {
     setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
   }
 
-  const playSong = async (song)  => {
-    playTrack(token, song)
+  const playItem = async (uri, id)  => {
+
+    // tracks have different endpoint
+    if (id === 'track') {
+      setSongs([])
+      // remove contextID for tracks only
+      setContextID('')
+      // save new URIS data to global context (playlist or track)
+      setContextURI(uri)
+      playTrack(token, uri)
       .then(result => {
         if (!result) return
         console.error(result)
       })
-    // save new URIS data to global context (playlist or track)
-    setContextURI(song.uri)
-    // remove playlist ID as track is playing not playlist
-    setContextID('')
+    } else {
+      setSongs([])
+      // remove contextID for tracks only
+      setContextID(id)
+      // save new URIS data to global context (playlist or track)
+      setContextURI(uri)
+      playContext(token, uri)
+      .then(result => {
+        if (!result) return
+        console.error(result)
+      })
+    }
+
   }
 
   const follow = async (id, name) => {
@@ -92,7 +110,7 @@ export default function SearchResult({...props}) {
             userPlaylists={props.playlists}
             addToPlaylist={addToPlaylist}
           />
-          <button className="play" onClick={() => playSong(result)}>
+          <button className="play" onClick={() => playItem(result.uri, 'track')}>
             <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
           </button>
         </div>
@@ -121,7 +139,7 @@ export default function SearchResult({...props}) {
           <button className="play" onClick={() => album(result.id, result.name)}>
             Save
           </button>
-          <button className="play">
+          <button className="play" onClick={() => playItem(result.uri, result.id)}>
             <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
           </button>
         </div>
@@ -150,7 +168,7 @@ export default function SearchResult({...props}) {
           <button className="play" onClick={() => follow(result.id, result.name)}>
             Follow
           </button>
-          <button className="play">
+          <button className="play" onClick={() => playItem(result.uri, result.id)}>
             <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
           </button>
         </div>
