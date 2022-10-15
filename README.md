@@ -18,12 +18,20 @@ https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 
 ## What can the app do?
 
-Listen to your Spotify playlists or search songs to listen to.
-
-Modify playlist info such as: name, description, add songs, remove songs and change song order.
+Modify playlist data: name, description, add songs, remove songs and change song order.
 
 Create new playlists
 
-Explore Spotify featured playlists
+Follow/unfollow playlists
 
-Search for new songs
+Add/remove albums
+
+Explore Top artists populated by Spotify
+
+Search and play tracks, albums and playlists
+
+## What can't it do?
+
+- No API endpoints for deleting playlists
+- No searching or playing podcasts
+- *repeat context API currently broken on Spotify's end
