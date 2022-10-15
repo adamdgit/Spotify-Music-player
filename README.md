@@ -30,3 +30,4 @@ https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 - No API endpoints for deleting playlists
 - No searching or playing podcasts
 - *repeat context API currently broken on Spotify's end
+- *no toggle for smart shuffle, only normal shuffle
