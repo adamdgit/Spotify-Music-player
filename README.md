@@ -18,17 +18,12 @@ https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 
 ## What can the app do?
 
-Modify playlist data: name, description, add songs, remove songs and change song order.
-
-Create new playlists
-
-Follow/unfollow playlists
-
-Add/remove albums
-
-Explore Top artists populated by Spotify
-
-Search and play tracks, albums and playlists
+- Modify playlist data: name, description, add songs, remove songs and change song order.
+- Create new playlists
+- Follow/unfollow playlists
+- Add/remove albums
+- Explore Top artists populated by Spotify
+- Search and play tracks, albums and playlists
 
 ## What can't it do?
 
