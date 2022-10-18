@@ -12,6 +12,11 @@
   .page-wrap {
     top: 110px;
     height: calc(100vh - 240px);
+    scrollbar-width: none;
+  }
+
+  .page-wrap::-webkit-scrollbar {
+    display: none;
   }
 
   .main-content { padding: 2rem 1rem; }
@@ -102,6 +107,10 @@
     height: calc(100vh - 260px);
     width: unset;
     scrollbar-width: none;
+  }
+
+  .playlist-wrap::-webkit-scrollbar {
+    display: none;
   }
 
   .playlist {
@@ -201,8 +210,8 @@
     width: 60px;
   }
 
-  .current-track { font-size: .8rem; }
-  .current-artist { font-size: .6rem; }
+  .current-track { font-size: .85rem; }
+  .current-artist { font-size: .7rem; }
 
   .player-btns {
     grid-row: 2;
@@ -291,10 +300,6 @@
       justify-items: center;
       text-align: center;
       font-size: .9rem;
-    }
-
-    .user-playlists-wrap {
-      gap: unset;
     }
 
     .result-large {
