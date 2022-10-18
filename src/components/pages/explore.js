@@ -24,20 +24,16 @@ export default function Explore() {
 
   const addToPlaylist = (resultURI, playlistid, playlistName) => {
     addTrackToPlaylist(resultURI, playlistid, token)
-      .then(result => {
-        if(result.length > 0) {
-          // Only update currently playing song data if
-          // playlist IDs match, as we need to sync the newly
-          // added song to the current playlist
-          if (contextID === playlistid) {
-            return setSongs(result)
-          }
-          return
+    .then(result => { 
+      if (result.errorMsg === false) {
+        if (contextID === playlistid) {
+          return setSongs(result.tracks)
         }
-        console.error(result)
-      })
-      setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
-      document.querySelector('.show-p').classList.remove('show-p')
+        return
+      }
+      else console.error(result.errorMsg)
+    })
+    setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
   }
 
   const playSong = (uri) => {
