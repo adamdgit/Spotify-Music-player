@@ -69,15 +69,13 @@ function PlaylistInfo() {
       })
   }
 
-  const addToPlaylist = (resultURI, playlistid) => {
+  const addToPlaylist = (resultURI, playlistid, playlistName) => {
     addTrackToPlaylist(resultURI, playlistid, token)
       .then(result => { 
         if (result.errorMsg === false) return
         else console.error(result.errorMsg)
       })
-
-    document.querySelector('.show-p').classList.remove('show-p')
-    setMessage({msg: 'Song added to playlist', needsUpdate: true})
+      setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
   }
 
   // gets users playlists, for add-to-playlist button
@@ -126,17 +124,20 @@ function PlaylistInfo() {
         let playlistEl = document.querySelector('.playlist')
         if (document.querySelector('.container').offsetTop < playlistEl.scrollTop) {
           if (e.clientY < 150) {
-            document.querySelector('.playlist').scrollTo({top: (playlistEl.scrollTop - 200), left: 0, behavior: 'smooth'})
+            playlistEl.scrollTo({top: (playlistEl.scrollTop - 200), left: 0, behavior: 'smooth'})
           }
         }
         if (e.clientY > playlistEl.offsetHeight + 100) { // +100 fpr header height
-          document.querySelector('.playlist').scrollTo({top: (playlistEl.scrollTop + 200), left: 0, behavior: 'smooth'})
+          playlistEl.scrollTo({top: (playlistEl.scrollTop + 200), left: 0, behavior: 'smooth'})
         }
         // update draggable position
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
         let nearestNode = getNearestNode(e.clientY, 'draggable')
-        container.current.insertBefore(element, nearestNode)
+        // prevents constant rendering of element, only inserts when element is different
+        if (nearestNode !== element && nearestNode !== element.nextSibling) {
+          container.current.insertBefore(element, nearestNode)
+        }
       }
 
       document.addEventListener('pointerup', placeEl)
@@ -267,7 +268,11 @@ function PlaylistInfo() {
             contextURI?.includes('playlist') ? songs.map((song, index) => {
               if (song === null || song === undefined) return null
               return (
-                <span key={index} data-index={index} className={currentTrackID === song.track.id ? "draggable selected" : "draggable"} draggable="true" ref={playlistOwner === userID ? setDraggableElement : setNull}>
+                <span key={index} data-index={index} 
+                  style={playlistOwner === userID ? {cursor: 'move'} : {}}
+                  className={currentTrackID === song.track.id ? "draggable selected" : "draggable"} 
+                  draggable={playlistOwner === userID ? 'true' : 'false'} 
+                  ref={playlistOwner === userID ? setDraggableElement : setNull}>
                   <span>{index+1}</span>
                   <button onClick={() => { changePlaylistSong(index, token, contextURI) }} className="play-song-btn">
                   <Tooltip tip={'Play'} />
@@ -296,7 +301,7 @@ function PlaylistInfo() {
                     </button>
                     :
                     <AddToPlaylistBtn 
-                      track={song}
+                      track={song.track}
                       userPlaylists={playlists}
                       addToPlaylist={addToPlaylist}
                     />
