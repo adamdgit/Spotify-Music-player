@@ -220,6 +220,16 @@ export default function EditPlaylist() {
       document.addEventListener('touchmove', mouseMove)
       function mouseMove(e) {
         let nearestNode = null
+        // scroll up or down if draggable element touches top or bottom of scroll area
+        let pageWrapEl = document.querySelector('.page-wrap')
+        if (document.querySelector('.edit-songlist').offsetTop < pageWrapEl.scrollTop) {
+          if (e.clientY < 150) {
+            pageWrapEl.scrollTo({top: (pageWrapEl.scrollTop - 200), left: 0, behavior: 'smooth'})
+          }
+        }
+        if (e.clientY > pageWrapEl.offsetHeight + 100) { // +100 fpr header height
+          pageWrapEl.scrollTo({top: (pageWrapEl.scrollTop + 200), left: 0, behavior: 'smooth'})
+        }
         if (e.type === 'touchmove') {
           clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
           clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
