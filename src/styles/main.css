@@ -29,20 +29,18 @@
 .result-large {
   position: relative;
   display: grid;
-  background-color: var(--primary-blue);
+  background-color: var(--secondary-blue);
   box-shadow: 5px 5px 10px black;
-  transition: all 200ms ease;
-  border: 1px solid;
-  border-image-source: linear-gradient(0deg, #888 0%, transparent 80%);
-  border-image-slice: 1;
+  transition: background 200ms ease;
+  border-radius: 0 0 6px 6px;
 }
 
 .user {
-  border-image-source: linear-gradient(0deg, white 0%, transparent 80%);
+  border: 8px solid var(--secondary-blue);
 }
 
 .result-large:hover {
-  border-image-source: linear-gradient(0deg, var(--blue) 0%, transparent 80%);
+  background-color: var(--primary-blue);
 }
 
 .result-info {
@@ -188,10 +186,16 @@
   box-shadow: inset 2px 2px 5px black;
 }
 
+.choose-playlist.showModal {
+  pointer-events: all;
+  opacity: 1;
+  transform: translateY(0px);
+}
+
 .choose-playlist {
   opacity: 0;
   color:white;
-  background:var(--primary-blue);
+  background: #111;
   max-height: 350px;
   border-radius: 10px;
   position: absolute;
@@ -201,7 +205,7 @@
   box-shadow: 1px 1px 10px black;
   padding: 10px 20px;
   overflow-y: auto;
-  transition: opacity, transform 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
   pointer-events: none;
 }
 
@@ -215,6 +219,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   border: 1px solid var(--secondary-blue);
+  background: var(--primary-blue);
   border-radius: 5px;
   padding: 15px 20px;
   margin: 10px 0;
