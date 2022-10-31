@@ -27,18 +27,17 @@ function PlaylistInfo() {
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
   // component state
-  const [currentSong, setCurrentSong] = useState()
+  const [currentItem, setCurrentItem] = useState()
   const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
-  const [playlists, setPlaylists] = useState([])
+  const [playlists, setPlaylists] = useState([]) // filtered to show user owned
   const [playlistArt, setPlaylistArt] = useState('')
   const [draggables, setDraggables] = useState([])
   const container = useRef()
   // Update draggables array after elements are created using useCallback
   const setDraggableElement = useCallback(node => {
     if(node != null) {
-      // create array of draggable elements to add event listeners to
       setDraggables(current => [...current, node])
     }
   },[])
@@ -185,7 +184,7 @@ function PlaylistInfo() {
             'Content-Type': 'application/json',
           }
         }).then(result => { 
-          if (result.data) return setCurrentSong(result.data)
+          if (result.data) return setCurrentItem(result.data)
           else console.error(result) 
         })
       }
@@ -242,7 +241,7 @@ function PlaylistInfo() {
   return (
     <div style={!contextID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
       
-      <CurrentSong currentSong={currentSong} />
+      <CurrentSong currentItem={currentItem} />
 
       <div className={!contextID ? "hidden" : "playlist"}>
         <div className="playlist-info-wrap">
