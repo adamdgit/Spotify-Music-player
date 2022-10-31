@@ -101,10 +101,10 @@
   }
 
   .playlist-wrap {
-    top: 110px;
+    top: 100px;
     grid-template-columns: unset;
     overflow-y: auto;
-    height: calc(100vh - 260px);
+    height: calc(100vh - 240px);
     width: unset;
     scrollbar-width: none;
   }
@@ -197,7 +197,6 @@
 
   .playback-wrap { 
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 32px auto; 
   }
 
   .current-info {
@@ -235,7 +234,7 @@
     position: fixed;
     left: 0;
     right: unset;
-    bottom: 150px;
+    bottom: 140px;
     top: 0;
     width: 100%;
     justify-content: flex-start;
