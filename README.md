@@ -24,10 +24,11 @@ https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 - Add/remove albums
 - Explore Top artists populated by Spotify
 - Search and play tracks, albums and playlists
+- Can play any content already loaded from your account. But can't search for podcasts & shows
 
 ## What can't it do?
 
 - No API endpoints for deleting playlists
-- No searching or playing podcasts
+- No searching for podcasts
 - *repeat context API currently broken on Spotify's end
 - *no toggle for smart shuffle, only normal shuffle
