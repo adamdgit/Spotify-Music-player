@@ -10,7 +10,7 @@
   }
 
   .page-wrap {
-    top: 110px;
+    top: 100px;
     height: calc(100vh - 240px);
     scrollbar-width: none;
   }
@@ -40,9 +40,9 @@
 
   .choose-playlist {
     transform: translateY(-100vh);
-    top: 110px;
+    top: 100px;
     left: 0;
-    bottom: 145px;
+    bottom: 135px;
     max-height: unset;
     position: fixed;
   }
@@ -97,7 +97,7 @@
   }
 
   .show-hide-playlist-btn {
-    bottom: 149px;
+    bottom: 139px;
   }
 
   .playlist-wrap {
@@ -182,8 +182,8 @@
   }
 
   .controls { 
-    height: 150px;
-    padding: .8rem; 
+    height: 140px;
+    padding: .6rem; 
   }
 
   .shuffle-btn svg, .loop-btn svg, 
@@ -258,7 +258,7 @@
   }
 
   .user-info {
-    margin-top: 1rem;
+    margin-top: .5rem;
   }
 
   .logout {
