@@ -143,6 +143,7 @@ export default function EditPlaylist() {
         }
       }).then((res) => {
         if (res.data) {
+          console.log(res.data)
           setPlaylistData(res.data)
           setTracks(res.data.tracks.items)
           setOriginalName(res.data.name)
@@ -284,6 +285,7 @@ export default function EditPlaylist() {
           <span style={{display:'grid', gap: '1rem'}}>
             <h1 style={{fontSize: '3.5rem'}}>{!playlistName ? originalName : playlistName}</h1>
             <h3 style={{fontSize: '2rem'}}>{!playlistDesc ? originalDesc : playlistDesc}</h3>
+            <p>{playlistData?.public === false ? 'Private playlist' : 'Public playlist'}</p>
           </span>
         </div>
      {playlistData ?
