@@ -62,7 +62,6 @@ export default function WebPlayback(props) {
       player.addListener('player_state_changed', ( state => {
         if (!state) return
         console.log(state)
-
         if (runOnce === false) {
           setPlayerCBType('player_ready')
           runOnce = true
