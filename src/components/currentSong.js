@@ -1,19 +1,19 @@
 import Loading from "./Loading"
 
-export default function CurrentSong({ currentSong }) {
+export default function currentItem({ currentItem }) {
 
     /* 
       useEffect(() => {
-        if(currentSong) {
+        if(currentItem) {
           async function getLyrics(artist, title) {
             await axios.get(`http://localhost:3001/lyrics?artist=${artist}&title=${title}`, {
             }).then((res) => {
               setLyrics(res.data.lyrics)
             }).catch(error => console.error(error))
           }
-          getLyrics(currentSong.artists[0].name, currentSong.name)
+          getLyrics(currentItem.artists[0].name, currentItem.name)
         }
-      },[currentSong])
+      },[currentItem])
 
       useEffect(() => {
         let newlyrics = lyrics.replaceAll('\n', '<br/>')
@@ -24,46 +24,46 @@ export default function CurrentSong({ currentSong }) {
   return (
     <div className="song-wrap">
     {
-      currentSong ?
-        <span className="song-info">
-          <h2>Playing: {currentSong.name}</h2>
-          <img className="album-large"
-            src={
-            currentSong.album.images.length === 0 ?
-            'no image found'
-            : currentSong.album.images.length > 1 ?
-            currentSong.album.images[2].url
-            : currentSong.album.images[0].url
-            } alt={
-            currentSong.album.images.length === 0 ?
-            'no image found' :
-            `${currentSong.name} album art`
-            }/>
-          <ul>
-            <li><h3>Artists:</h3>
-            <p>
-              {currentSong.artists.length > 1 
-              ? currentSong.artists.map(artist => {
-              return `${artist.name}, `
-              })
-              : currentSong.artists[0].name
-              }
-            </p>
-            </li>
-            <li>
-              <h3>Album: </h3>
-              <p>{currentSong.album.name}</p>
-            </li>
-            <li>
-              <h3>Released: </h3>
-              <p>{currentSong.album.release_date}</p>
-            </li>
-          </ul>
-        </span>
-      : currentSong?.length === 0 ?
-        <span className="song-info">
-          No song data found.
-        </span>
+      currentItem ?
+      <span className="song-info">
+        <h2>Playing: {currentItem.name}</h2>
+        <img className="album-large"
+          src={
+          currentItem.album.images.length === 0 ?
+          'no image found'
+          : currentItem.album.images.length > 1 ?
+          currentItem.album.images[2].url
+          : currentItem.album.images[0].url
+          } alt={
+          currentItem.album.images.length === 0 ?
+          'no image found' :
+          `${currentItem.name} album art`
+          }/>
+        <ul>
+          <li><h3>Artists:</h3>
+          <p>
+            {currentItem.artists.length > 1 
+            ? currentItem.artists.map(artist => {
+            return `${artist.name}, `
+            })
+            : currentItem.artists[0].name
+            }
+          </p>
+          </li>
+          <li>
+            <h3>Album: </h3>
+            <p>{currentItem.album.name}</p>
+          </li>
+          <li>
+            <h3>Released: </h3>
+            <p>{currentItem.album.release_date}</p>
+          </li>
+        </ul>
+      </span>
+      : currentItem?.length === 0 ?
+      <span className="song-info">
+        No song data found.
+      </span>
       : <Loading loadingMsg={'Loading spotify data...'} />
     }
 
