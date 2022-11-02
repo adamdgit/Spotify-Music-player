@@ -201,9 +201,9 @@ export default function EditPlaylist() {
       document.getElementById('root').appendChild(clone)
       clone.classList.add('clone')
       if (e.type === 'touchstart') {
-        clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
+        clone.style.setProperty('--x', '-50%')
         clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
-        clone.style.left = `-${e.changedTouches[0].pageX}px`
+        clone.style.left = `50%`
       } else {
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
@@ -218,29 +218,42 @@ export default function EditPlaylist() {
       e.preventDefault()
 
       document.addEventListener('mousemove', mouseMove)
-      document.addEventListener('touchmove', mouseMove)
+      document.addEventListener('touchmove', touchMove)
       function mouseMove(e) {
-        console.log(e.changedTouches)
         let nearestNode = null
         // scroll up or down if draggable element touches top or bottom of scroll area
         let pageWrapEl = document.querySelector('.page-wrap')
         if (document.querySelector('.edit-songlist').offsetTop < pageWrapEl.scrollTop) {
-          if (e.clientY < 150 || e.changedTouches[0].clientY < 150) {
+          if (e.clientY < 150) {
             pageWrapEl.scroll({top: (pageWrapEl.scrollTop - 200), left: 0, behavior: 'smooth'})
           }
         }
-        if (e.clientY > pageWrapEl.offsetHeight + 100 || e.changedTouches[0].clientY > pageWrapEl.offsetHeight + 100) { // +100 fpr header height
+        if (e.clientY > pageWrapEl.offsetHeight + 100) { // +100 fpr header height
           pageWrapEl.scroll({top: (pageWrapEl.scrollTop + 200), left: 0, behavior: 'smooth'})
         }
-        if (e.type === 'touchmove') {
-          clone.style.setProperty('--x', e.changedTouches[0].clientX + 'px')
-          clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
-          nearestNode = getNearestNode(e.changedTouches[0].clientY, 'edit-draggable')
-        } else {
-          clone.style.setProperty('--x', e.clientX + 'px')
-          clone.style.setProperty('--y', e.clientY + 'px')
-          nearestNode = getNearestNode(e.clientY, 'edit-draggable')
+        clone.style.setProperty('--x', e.clientX + 'px')
+        clone.style.setProperty('--y', e.clientY + 'px')
+        nearestNode = getNearestNode(e.clientY, 'edit-draggable')
+        // prevents constant rendering of element, only inserts when element is different
+        if (nearestNode !== element && nearestNode !== element.nextSibling) {
+          container.current.insertBefore(element, nearestNode)
         }
+      }
+
+      function touchMove(e) {
+        let nearestNode = null
+        // scroll up or down if draggable element touches top or bottom of scroll area
+        let pageWrapEl = document.querySelector('.page-wrap')
+        if (document.querySelector('.edit-songlist').offsetTop < pageWrapEl.scrollTop) {
+          if (e.changedTouches[0].clientY < 150) {
+            pageWrapEl.scroll({top: (pageWrapEl.scrollTop - 200), left: 0, behavior: 'smooth'})
+          }
+        }
+        if (e.changedTouches[0].clientY > pageWrapEl.offsetHeight + 100) { // +100 fpr header height
+          pageWrapEl.scroll({top: (pageWrapEl.scrollTop + 200), left: 0, behavior: 'smooth'})
+        }
+        clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
+        nearestNode = getNearestNode(e.changedTouches[0].clientY, 'edit-draggable')
         // prevents constant rendering of element, only inserts when element is different
         if (nearestNode !== element && nearestNode !== element.nextSibling) {
           container.current.insertBefore(element, nearestNode)
@@ -255,7 +268,7 @@ export default function EditPlaylist() {
         document.querySelector('.clone')?.remove()
         document.removeEventListener('mousemove', mouseMove)
         document.removeEventListener('mouseup', placeEl)
-        document.removeEventListener('touchmove', mouseMove)
+        document.removeEventListener('touchmove', touchMove)
         document.removeEventListener('touchend', placeEl)
         let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
