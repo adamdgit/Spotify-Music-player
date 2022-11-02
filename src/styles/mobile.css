@@ -11,7 +11,7 @@
 
   .page-wrap {
     top: 100px;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 215px);
     scrollbar-width: none;
   }
 
@@ -42,7 +42,7 @@
     transform: translateY(-100vh);
     top: 100px;
     left: 0;
-    bottom: 135px;
+    bottom: 115px;
     max-height: unset;
     position: fixed;
   }
@@ -97,14 +97,14 @@
   }
 
   .show-hide-playlist-btn {
-    bottom: 139px;
+    bottom: 119px;
   }
 
   .playlist-wrap {
     top: 100px;
     grid-template-columns: unset;
     overflow-y: auto;
-    height: calc(100vh - 240px);
+    height: calc(100vh - 215px);
     width: unset;
     scrollbar-width: none;
   }
@@ -182,7 +182,7 @@
   }
 
   .controls { 
-    height: 140px;
+    height: 120px;
     padding: .6rem; 
   }
 
@@ -197,28 +197,16 @@
 
   .playback-wrap { 
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
   }
 
   .current-info {
-    grid-column: span 3;
-    grid-row: 3;
+    display: none;
   }
-
-  .current-info img {
-    height: 60px;
-    width: 60px;
-  }
-
-  .current-track { font-size: .85rem; }
-  .current-artist { font-size: .7rem; }
 
   .player-btns {
     grid-row: 2;
     grid-column: span 4;
-  }
-
-  .volume-control {
-    display: none;
   }
 
   .timeline-seek {
@@ -227,6 +215,7 @@
   }
 
   .devices-wrap {
+    grid-column: 4;
     margin-right: unset;
   }
 
@@ -234,7 +223,7 @@
     position: fixed;
     left: 0;
     right: unset;
-    bottom: 140px;
+    bottom: 118px;
     top: 0;
     width: 100%;
     justify-content: flex-start;
@@ -314,8 +303,6 @@
     }
 
     .result-small .play { width: 45px; }
-    
-    .volume-control .timeline {  width: 70px; }
 
     .user-input-wrap .edit-input{ min-width: 150px; }
 
