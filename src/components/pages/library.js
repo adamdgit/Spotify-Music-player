@@ -49,23 +49,30 @@ export default function Library() {
   const remove = (id, name) => {
     removeAlbum(token, id)
     .then(result => {
-      if (result === false) return
+      // remove result when unfollowing album if no errors returned
+      if (result === false) return setAlbums(albums.filter((a) => {
+        if (a.album.id === id) return false
+        return true
+      }))
       else console.error(result)
     })
     setMessage({msg: `${name} removed`, needsUpdate: true})
   }
 
-  // todo: after unfollow or removing saved albums, update the library items
   const unfollow = (id, name) => {
     unfollowPlaylist(token, id)
     .then(result => {
-      if (result === false) return
+      // remove result when unfollowing playlist if no errors returned
+      if (result === false) return setPlaylists(playlists.filter((a) => {
+        if (a.id === id) return false
+        return true
+      }))
       else console.error(result)
     })
     setMessage({msg: `${name} unFollowed`, needsUpdate: true})
   }
 
-  const getLibraryData = async () => {
+  const getLibraryData = () => {
     setLoading(true)
     getUserPlaylists(token)
     .then(result => {
