@@ -121,7 +121,7 @@ export default function Library() {
                   </span>
                   : 
                   <img 
-                    src={result.images[0].url} 
+                    src={result.images[1].url} 
                     alt={result.name + 'playlist art'} 
                     onClick={() => playContext(result)}
                   />
@@ -158,7 +158,7 @@ export default function Library() {
             return (
               <div key={i} className={'result-large'}>
                 <img 
-                  src={result.album.images.length !== 0 ? result.album.images[0].url : ''} 
+                  src={result.album.images.length !== 0 ? result.album.images[1].url : ''} 
                   alt={result.name + 'playlist art'} 
                   onClick={() => playContext(result.album)}
                 />
