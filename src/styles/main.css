@@ -162,15 +162,18 @@
   background-color: var(--secondary-blue);
 }
 
-.result-small:hover {
-  border-bottom: 1px solid var(--blue);
+.result-small .info {
+  min-width: 100px;
 }
 
-.result-small h3 {
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  display: -webkit-box;
+.result-small .info > * {
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-small:hover {
+  border-bottom: 1px solid var(--blue);
 }
 
 .add-to-playlist {
@@ -181,7 +184,6 @@
   width: 40px;
   height: 40px;
   color: white;
-  font-size: .9rem;
   justify-self: center;
   box-shadow: inset 2px 2px 5px black;
 }
@@ -194,16 +196,16 @@
 
 .choose-playlist {
   opacity: 0;
-  color:white;
+  color: white;
   background: #111;
   max-height: 350px;
   border-radius: 10px;
   position: absolute;
   z-index: 888;
   right: 0px;
-  top:35px;
+  top: 35px;
   box-shadow: 1px 1px 10px black;
-  padding: 10px 20px;
+  padding: 1rem 2rem;
   overflow-y: auto;
   transition: all 200ms ease-in-out;
   pointer-events: none;
