@@ -89,7 +89,6 @@ export default function Explore() {
         }
       }).then((res) => {
         setArtists(res.data.items)
-        console.log(res.data.items)
       }).catch(error => console.error(error))
     }
     getTopArtists()
@@ -117,7 +116,7 @@ export default function Explore() {
                 'no image found' :
                 `${track.name} album art`
                 } />
-                <span>
+                <span className="info">
                   <h3>{track.name}</h3>
                   <p>{sanitizeArtistNames(track.artists)}</p>
                 </span>

@@ -101,9 +101,9 @@ export default function SearchResult({...props}) {
             'no image found' :
             `${result.name} album art`
             } width="64px" height="64px" />
-          <span>
-          <h3>{result.name}</h3>
-          <p>{sanitizeArtistNames(result.artists)}</p>
+          <span className="info">
+            <h3>{result.name}</h3>
+            <p>{sanitizeArtistNames(result.artists)}</p>
           </span>
           <AddToPlaylistBtn 
             track={result}
@@ -132,9 +132,9 @@ export default function SearchResult({...props}) {
             'no image found' :
             `${result.name} album art`
             } width="64px" height="64px" />
-          <span>
-          <h3>{result.name}</h3>
-          <p>{sanitizeArtistNames(result.artists)}</p>
+          <span className="info">
+            <h3>{result.name}</h3>
+            <p>{sanitizeArtistNames(result.artists)}</p>
           </span>
           <button className="play" onClick={() => album(result.id, result.name)}>
             Save
@@ -161,9 +161,9 @@ export default function SearchResult({...props}) {
             'no image found' :
             `${result.name} album art`
             } width="64px" height="64px" />
-          <span>
-          <h3>{result.name}</h3>
-          <p>{result.owner.display_name}</p>
+          <span className="info">
+            <h3>{result.name}</h3>
+            <p>{result.owner.display_name}</p>
           </span>
           <button className="play" onClick={() => follow(result.id, result.name)}>
             Follow
