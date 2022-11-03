@@ -56,6 +56,7 @@ export default function Library() {
     setMessage({msg: `${name} removed`, needsUpdate: true})
   }
 
+  // todo: after unfollow or removing saved albums, update the library items
   const unfollow = (id, name) => {
     unfollowPlaylist(token, id)
     .then(result => {
