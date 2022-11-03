@@ -41,7 +41,6 @@ export default function Library() {
   const createNewPlaylist = () => {
     createPlaylist(token, userID)
     .then(result => {
-      console.log(result)
       if (result.errorMsg === false) navigate(`/editPlaylist/${result.playlistData.id}`)
       else console.error(result.errorMsg)
     })
@@ -67,25 +66,23 @@ export default function Library() {
   }
 
   const getLibraryData = async () => {
-    try {
-      setLoading(true)
-      const { errorMsg, playlists } = await getUserPlaylists(token)
-      if (errorMsg === false) setPlaylists(playlists.sort((a, b) => {
-        if(a.owner.id === userID && b.owner.id === userID) return 0
-        if(a.owner.id === userID && b.owner.id !== userID) return -1
-        return 1
-      }))
-      else throw errorMsg
-    }
-    catch(err) { console.error(err) }
-
-    try {
-      const { errorMsg, albums } = await getSavedAlbums(token)
-      if (errorMsg === false) return setAlbums(albums)
-      else throw errorMsg
-    }
-    catch(err) { console.error(err) }
-    finally { setLoading(false) }
+    setLoading(true)
+    getUserPlaylists(token)
+    .then(result => {
+      if (result.errorMsg === false)
+        setPlaylists(result.playlists.sort((a, b) => {
+          if(a.owner.id === userID && b.owner.id === userID) return 0
+          if(a.owner.id === userID && b.owner.id !== userID) return -1
+          return 1
+        }))
+      else console.error(result.errorMsg)
+    })
+    getSavedAlbums(token)
+    .then(result => {
+      setLoading(false)
+      if (result.errorMsg === false) setAlbums(result.albums)
+      else console.error(result.errorMsg)
+    })
   }
 
   useEffect(() => {
