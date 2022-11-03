@@ -106,15 +106,15 @@ export default function Explore() {
               return (
                 <div key={track.id} className="result-small">
                 <img src={
-                track.album.images.length === 0 ?
-                'no image found' :
-                track.album.images.length === 3 ?
-                track.album.images[2].url :
-                track.album.images[0].url
-                } alt={
-                track.album.images.length === 0 ?
-                'no image found' :
-                `${track.name} album art`
+                  track.album.images.length === 0 ?
+                  'no image found' :
+                  track.album.images.length === 3 ?
+                  track.album.images[2].url :
+                  track.album.images[0].url
+                  } alt={
+                  track.album.images.length === 0 ?
+                  'no image found' :
+                  `${track.name} album art`
                 } />
                 <span className="info">
                   <h3>{track.name}</h3>
