@@ -100,6 +100,21 @@
     bottom: 119px;
   }
 
+  .artist-wrap {
+    grid-template-columns: repeat(auto-fill, 150px);
+  }
+
+  .result-artist {
+    width: 150px;
+    padding: 1rem;
+    font-size: .8rem;
+  }
+
+  .result-artist img {
+    width: 100px;
+    height: 100px;
+  }
+
   .playlist-wrap {
     top: 100px;
     grid-template-columns: unset;

@@ -242,3 +242,35 @@
   color: var(--blue);
   border:1px solid var(--blue)
 }
+
+.artist-wrap {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 250px);
+  gap: 1rem;
+  justify-content: center;
+}
+
+.result-artist {
+  display: grid;
+  gap: 1rem;
+  padding: 2rem;
+  background-color: var(--secondary-blue);
+  width: 250px;
+  justify-items: center;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border 200ms ease;
+  border: 1px solid var(--secondary-blue);
+}
+
+.result-artist:hover {
+  border: 1px solid var(--blue);
+}
+
+.result-artist img {
+  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+}
