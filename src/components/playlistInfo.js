@@ -250,8 +250,8 @@ function PlaylistInfo() {
             alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} 
             />
           <span>
-            <h1 className="playlist-title" style={{fontSize: '2.5rem'}}>{playlistName}</h1>
-            <h2 className="playlist-desc">{playlistDesc}</h2>
+            <h1 style={{fontSize: '2.5rem'}}>{playlistName}</h1>
+            <h2>{playlistDesc}</h2>
           </span>
         </div>
 
