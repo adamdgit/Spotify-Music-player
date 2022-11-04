@@ -49,6 +49,7 @@ export default function Explore() {
   }
 
   const getArtistSongs = (id) => {
+
     const getTopTracks = async (id) => {
       await axios.get(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=AU`, {
         headers: {
@@ -57,12 +58,16 @@ export default function Explore() {
           'Content-Type': 'application/json',
         }
       }).then((res) => {
-        console.log(res.data)
         setTopSongs(res.data.tracks)
-        document.querySelector('.page-wrap').scroll({top: 0, left: 0, behavior: 'smooth'})
       }).catch(error => console.error(error))
     }
-    getTopTracks(id)
+
+    document.querySelector('.page-wrap').scroll({top: 0, left: 0, behavior: 'smooth'})
+    const timer = setTimeout(() => {
+      getTopTracks(id)
+      clearTimeout(timer)
+    }, 400)
+
   }
 
   useEffect(() => {
