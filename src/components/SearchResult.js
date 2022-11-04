@@ -81,7 +81,7 @@ export default function SearchResult({...props}) {
   return (
     <>
     {
-      props.array.length !== 0 ? <h2>{props.heading}</h2> : <></>
+      props.array.length !== 0 ? <h2 style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>{props.svg}{props.heading}</h2> : <></>
     }
     <div className={props.array.length === 0 ? 'search-results-wrap' : 'search-results-wrap show-search'}>
     { 
@@ -163,7 +163,7 @@ export default function SearchResult({...props}) {
             } width="64px" height="64px" />
           <span className="info">
             <h3>{result.name}</h3>
-            <p>{result.owner.display_name}</p>
+            <p>{result.description}</p>
           </span>
           <button className="play" onClick={() => follow(result.id, result.name)}>
             Follow
