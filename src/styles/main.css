@@ -36,12 +36,12 @@
   border-radius: 0 0 6px 6px;
 }
 
-.user {
-  border: 8px solid var(--secondary-blue);
+.user img {
+  border: 3px solid var(--secondary-blue);
 }
 
-.result-large:hover {
-  background-color: var(--primary-blue);
+.result-large img:hover {
+  border: 3px solid var(--blue);
 }
 
 .result-info {
@@ -62,7 +62,7 @@
 
 .result-large p { 
   justify-self: normal;
-  max-height: 90px;
+  max-height: 3.4rem;
   overflow: hidden;
   text-overflow: ellipsis;
 }
