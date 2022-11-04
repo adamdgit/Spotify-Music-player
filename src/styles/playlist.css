@@ -32,7 +32,6 @@
 }
 
 .playlist {
-  display: grid;
   background-color: var(--primary-blue);
   overflow-y: auto;
   border-top: 3px solid var(--secondary-blue);
