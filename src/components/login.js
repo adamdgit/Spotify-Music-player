@@ -4,7 +4,7 @@ import axios from "axios";
 import Header from "./header";
 import Controls from './controls';
 import Explore from './pages/explore';
-import Playlists from "./pages/library";
+import Library from "./pages/library";
 import EditPlaylist from "./pages/editPlaylist";
 import Search from "./pages/search";
 
@@ -88,7 +88,7 @@ function Login() {
       <>
         <Header />
         <Routes>
-          <Route path="/" element={<Playlists />} />
+          <Route path="/" element={<Library />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/search" element={<Search />} />
           <Route path="/editPlaylist/:id" element={<EditPlaylist />} />
