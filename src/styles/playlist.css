@@ -56,6 +56,11 @@
   width: inherit;
 }
 
+.playlist-info-wrap span > * {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .playlist-art {
   min-width: 150px;
   max-width: 220px;
