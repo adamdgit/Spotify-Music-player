@@ -6,6 +6,7 @@
   height: 100vh;
   width: 100%;
   transition: transform 400ms ease-in-out;
+  background-color: var(--primary-blue);
 }
 
 .hidden {
@@ -37,23 +38,24 @@
   border-top: 3px solid var(--secondary-blue);
   padding: 2rem;
   height: calc(100vh - 215px);
+  display: grid;
 }
 
 .playlist-info-wrap {
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content auto;
   align-items: center;
   justify-self: center;
   gap: 2rem;
   padding: 2rem 0;
   width: 100%;
   max-width: 1000px;
-  overflow-x: hidden;
-  height: max-content;
 }
 
 .playlist-info-wrap span {
   overflow: hidden;
   width: inherit;
+  max-height: 350px;
 }
 
 .playlist-info-wrap span > * {
