@@ -41,7 +41,7 @@ export default function Library() {
   const createNewPlaylist = () => {
     createPlaylist(token, userID)
     .then(result => {
-      if (result.errorMsg === false) navigate(`/editPlaylist/${result.playlistData.id}`)
+      if (result.errorMsg === false) navigate(`/spotify/editPlaylist/${result.playlistData.id}`)
       else console.error(result.errorMsg)
     })
   }
@@ -140,13 +140,12 @@ export default function Library() {
                   {
                   result.owner.id !== userID 
                   ? <button 
-                      className="play" 
-                      onClick={() => unfollow(result.id, result.name)}
-                      style={{width: '80px', justifySelf: 'flex-start'}}>
+                      className="unfollow" 
+                      onClick={() => unfollow(result.id, result.name)}>
                         UnFollow
                     </button>
-                  : <NavLink to={`/editPlaylist/${result.id}`} className="edit-link">
-                      <button className="play">Edit</button>
+                  : <NavLink to={`/spotify/editPlaylist/${result.id}`} className="edit-link">
+                      Edit
                     </NavLink>
                   }
                 </span>
@@ -182,9 +181,8 @@ export default function Library() {
                   <h2>{result.album.name}</h2>
                   <p>{sanitizeArtistNames(result.album.artists)}</p>
                   <button 
-                    className="play" 
-                    onClick={() => remove(result.album.id, result.album.name)}
-                    style={{width: '80px', justifySelf: 'flex-start'}}>
+                    className="remove" 
+                    onClick={() => remove(result.album.id, result.album.name)}>
                     Remove
                   </button>
                 </span>
