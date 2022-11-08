@@ -1,8 +1,8 @@
 @media only screen and (max-width: 899px){ 
 
-  .login-wrap {
-    padding: 0 30px;
-  }
+  h1 { font-size: 1.6rem; }
+
+  .login-wrap { padding: 0 30px; }
 
   .login {
     width: auto;
@@ -10,14 +10,13 @@
   }
 
   .page-wrap {
-    top: 100px;
-    height: calc(100vh - 215px);
+    top: 105px;
+    height: calc(100vh - 230px); 
     scrollbar-width: none;
+    padding-bottom: 20px;
   }
 
-  .page-wrap::-webkit-scrollbar {
-    display: none;
-  }
+  .page-wrap::-webkit-scrollbar { display: none; }
 
   .main-content { padding: 2rem 1rem; }
 
@@ -27,8 +26,7 @@
   .header-bar { padding: 0 .8rem; }
 
   .playlist-info-wrap {
-    display: grid;
-    gap: unset;
+    grid-template-columns: unset;
     justify-items: center;
     text-align: center;
   }
@@ -62,9 +60,7 @@
     top: 20px;
   }
 
-  .user-playlists-header {
-    justify-content: center;
-  }
+  .user-playlists-header { justify-content: center; }
 
   .user-playlists-wrap {
     grid-template-columns: repeat(2, 50%);
@@ -75,6 +71,10 @@
     gap: .5rem; 
     padding: .7rem;
     max-width: 300px; 
+  }
+
+  .result-info button, .result-info a {
+    justify-self: center;
   }
 
   .result-large { 
@@ -96,13 +96,9 @@
     gap: 1rem;
   }
 
-  .show-hide-playlist-btn {
-    bottom: 119px;
-  }
+  .show-hide-playlist-btn { bottom: 129px; }
 
-  .artist-wrap {
-    grid-template-columns: repeat(auto-fill, 150px);
-  }
+  .artist-wrap { grid-template-columns: repeat(auto-fill, 150px); }
 
   .result-artist {
     width: 150px;
@@ -119,14 +115,13 @@
     top: 100px;
     grid-template-columns: unset;
     overflow-y: auto;
-    height: calc(100vh - 215px);
+    height: calc(100vh - 225px);
     width: unset;
     scrollbar-width: none;
+    padding-bottom: 45px; /* Fix for vh issue with mobile */
   }
 
-  .playlist-wrap::-webkit-scrollbar {
-    display: none;
-  }
+  .playlist-wrap::-webkit-scrollbar { display: none; }
 
   .playlist {
     justify-content: unset;
@@ -136,9 +131,7 @@
     padding: 10px;
   }
 
-  .lyrics-wrap {
-    display: none;
-  }
+  .lyrics-wrap { display: none; }
 
   .song-wrap {
     overflow-y: unset;
@@ -147,13 +140,9 @@
     padding-bottom: unset;
   }
 
-  .song-info {
-    padding-bottom: 60px;
-  }
+  .song-info { padding-bottom: 60px; }
 
-  .song-category {
-    min-width: 250px;
-  }
+  .song-category { min-width: 250px; }
 
   .draggable {
     grid-template-columns: 16px 60px auto 30px min-content;
@@ -162,18 +151,14 @@
     gap: .5rem;
   }
 
-  .draggable .draggable-trackname {
-    min-width: 160px;
-  }         
+  .draggable .draggable-trackname { min-width: 160px; }         
 
   .draggable img {
     width: var(--img-width-mobile);
     height: var(--img-width-mobile);
   }
 
-  .play-song-btn {
-    height: var(--img-width-mobile);
-  }
+  .play-song-btn { height: var(--img-width-mobile); }
 
   .play-song-btn:hover ~ .play-song-tooltip {
     left: 30px;
@@ -197,8 +182,8 @@
   }
 
   .controls { 
-    height: 120px;
-    padding: .6rem; 
+    height: 130px;
+    padding: 10px; 
   }
 
   .shuffle-btn svg, .loop-btn svg, 
@@ -215,9 +200,32 @@
     grid-template-rows: 1fr 1fr 1fr;
   }
 
-  .current-info {
-    display: none;
+  .volume-control {
+    gap: .5rem;
   }
+
+  .current-info {
+    gap: .5rem;
+    padding-right: 15px;
+    grid-column: 1 / span 3;
+    height: 50px;
+    align-items: center;
+  }
+
+  .current-info img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .current-track {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: .9rem;
+    font-weight: normal;
+  }
+
+  .current-artist { display: none; }
 
   .player-btns {
     grid-row: 2;
@@ -229,48 +237,20 @@
     grid-column: span 4;
   }
 
-  .devices-wrap {
-    grid-column: 4;
-    margin-right: unset;
-  }
-
-  .device-list {
-    position: fixed;
-    left: 0;
-    right: unset;
-    bottom: 118px;
-    top: 0;
-    width: 100%;
-    justify-content: flex-start;
-    padding: 2rem;
-    grid-template-rows: 50px repeat(auto-fill, minmax(50px, 75px));
-    transform: unset;
-  }
-
-  .device-list li {
-    height: fit-content;
-  }
+  .devices-wrap { display: none; }
 
   .search-songs-wrap {
     justify-content: center;
     justify-items: center;
   }
 
-  .search-bar {
-    height: fit-content;
-  }
+  .search-bar { height: fit-content; }
 
-  .user-info {
-    margin-top: .5rem;
-  }
+  .user-info { margin-top: .5rem; }
 
-  .logout {
-    margin-bottom: unset;
-  }
+  .logout { margin-bottom: unset; }
 
-  .playlist-update-message {
-    bottom: 145px;
-  }
+  .playlist-update-message { bottom: 145px; }
 
   .create-playlist {
     grid-template-columns: unset;
@@ -278,13 +258,9 @@
     justify-items: center;
   }
 
-  .playlist-info {
-    text-align: center;
-  }
+  .playlist-info { text-align: center; }
 
-  .user-input-wrap {
-    height: fit-content;
-  }
+  .user-input-wrap { height: fit-content; }
 
   .user-input-wrap .save-changes {
     justify-self: center;
@@ -328,8 +304,5 @@
     }
   }
   
-  .tooltip {
-    display: none;
-  }
-
+  .tooltip { display: none; }
 }
