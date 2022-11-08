@@ -64,10 +64,12 @@
   justify-self: normal;
   max-height: 3.4rem;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.play {
+.play, .edit-link, .unfollow, .remove {
   background-color: var(--bg-blue);
   border: 1px solid var(--secondary-blue);
   border-radius: 4px;
@@ -79,9 +81,22 @@
   box-shadow: inset 2px 2px 5px black;
 }
 
-.play:hover {
+.play:hover, .edit-link:hover, .unfollow:hover, .remove:hover {
   border: 1px solid var(--blue);
   color: var(--blue);
+}
+
+.unfollow, .remove {
+  width: 80px;
+  justify-self: flex-start;
+}
+
+.edit-link {
+  text-decoration:none;
+  display: grid;
+  align-items: center;
+  text-align: center;
+  justify-self: flex-start;
 }
 
 .result-large .add-to-playlist {
