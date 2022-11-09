@@ -103,7 +103,7 @@ export default function Explore() {
   return (
     <div className="page-wrap">
       <div className="main-content">
-        <h1>Your top artists: {selectedArtist}</h1>
+        <h1 style={{marginBottom: '2rem'}}>Your top artists: {selectedArtist}</h1>
         <div className="artist-top-songs">
         {
           topSongs.length !== 0 ? 
