@@ -2,25 +2,6 @@ import Loading from "./Loading"
 
 export default function currentItem({ currentItem }) {
 
-    /* 
-      useEffect(() => {
-        if(currentItem) {
-          async function getLyrics(artist, title) {
-            await axios.get(`http://localhost:3001/lyrics?artist=${artist}&title=${title}`, {
-            }).then((res) => {
-              setLyrics(res.data.lyrics)
-            }).catch(error => console.error(error))
-          }
-          getLyrics(currentItem.artists[0].name, currentItem.name)
-        }
-      },[currentItem])
-
-      useEffect(() => {
-        let newlyrics = lyrics.replaceAll('\n', '<br/>')
-        document.querySelector('.lyrics').innerHTML = newlyrics
-      },[lyrics]) 
-    */
-
   return (
     <div className="song-wrap">
     {
