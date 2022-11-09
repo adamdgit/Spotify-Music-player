@@ -28,13 +28,16 @@ export default function Library() {
   const playContext = (context) => {
     // clear playlist songs to allow new songs to be populated
     setSongs([])
-    // save selected playlist data to global context
-    setContextURI(context.uri)
-    setContextID(context.id)
+    setContextID('')
+    setContextURI('')
     changePlaylistSong(0, token, context.uri)
       .then(result => {
-        if (!result) return
-        else console.error(result.errorMsg)
+        if (result === false) {
+          // save selected playlist data to global context
+          setContextURI(context.uri)
+          setContextID(context.id)
+        }
+        else console.error(result)
       })
   }
 
@@ -144,9 +147,17 @@ export default function Library() {
                       onClick={() => unfollow(result.id, result.name)}>
                         UnFollow
                     </button>
-                  : <NavLink to={`/spotify/editPlaylist/${result.id}`} className="edit-link">
+                  : 
+                  <span className="result-btns">
+                    <NavLink to={`/spotify/editPlaylist/${result.id}`} className="edit-link">
                       Edit
                     </NavLink>
+                    <button 
+                      className="unfollow" 
+                      onClick={() => unfollow(result.id, result.name)}>
+                        Delete
+                    </button>
+                  </span>
                   }
                 </span>
               </div>
