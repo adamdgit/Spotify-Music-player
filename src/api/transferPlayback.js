@@ -8,7 +8,11 @@ export async function transferPlayback(token, device_id) {
   await axios({ 
     method: 'put', 
     url: `https://api.spotify.com/v1/me/player`, 
-    headers: { 'Authorization': 'Bearer ' + token }, 
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
     data: {
       'device_ids' : [device_id]
     }

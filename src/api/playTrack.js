@@ -7,7 +7,11 @@ export async function playTrack(token, uri) {
   await axios({ 
     method: 'put', 
     url: `https://api.spotify.com/v1/me/player/play`, 
-    headers: { 'Authorization': 'Bearer ' + token }, 
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
     data: {
       "uris": [uri],
       "offset": { "position": 0 }

@@ -8,7 +8,11 @@ export async function repeatTrack(token, type){
   await axios({ 
     method: 'put', 
     url: `https://api.spotify.com/v1/me/player/repeat?state=${type}`, 
-    headers: { 'Authorization': 'Bearer ' + token }
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }
   }).catch(error => errorMsg = error)
   
   return errorMsg
