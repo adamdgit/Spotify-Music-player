@@ -20,8 +20,8 @@
 
 .user-playlists-wrap {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 235px);
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 1rem;
   justify-content: center;
   margin: 2rem 0;
 }
@@ -29,25 +29,20 @@
 .result-large {
   position: relative;
   display: grid;
-  grid-template-rows: max-content auto;
+  grid-template-columns: 200px auto;
   background-color: var(--secondary-blue);
-  box-shadow: 5px 5px 10px black;
-  transition: background 200ms ease;
-  border-radius: 0 0 6px 6px;
+  box-shadow: 5px 5px 16px black;
+  border-radius: 0 6px 6px 0;
 }
 
-.user img {
-  border: 3px solid var(--secondary-blue);
-}
-
-.result-large img:hover {
-  border: 3px solid var(--blue);
-}
+.result-large img { padding: 10px; }
+.result-large img:hover { padding: 0; }
 
 .result-info {
   display: grid;
   grid-template-rows: max-content 1fr auto;
   gap: 1rem;
+  align-items: center;
   padding: 1rem;
 }
 
@@ -61,12 +56,15 @@
  }
 
 .result-large p { 
-  justify-self: normal;
-  max-height: 3.4rem;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+}
+
+.result-btns {
+  display: flex;
+  gap: 1rem;
 }
 
 .play, .edit-link, .unfollow, .remove {
@@ -112,7 +110,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  padding: 2rem 0;
   width:100%;
   min-width: 140px;
 }
