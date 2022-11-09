@@ -71,6 +71,7 @@
     gap: .5rem; 
     padding: .7rem;
     max-width: 300px; 
+    justify-items: center;
   }
 
   .result-info button, .result-info a {
@@ -81,6 +82,9 @@
     font-size: .8rem; 
     justify-items: center;
     text-align: center;
+    grid-template-columns: unset;
+    grid-template-rows: auto minmax(150px, auto);
+    border-radius: 0;
   }
 
   .result-large:hover { scale: unset; }
@@ -183,7 +187,7 @@
 
   .controls { 
     height: 130px;
-    padding: 10px; 
+    padding: 7px; 
   }
 
   .shuffle-btn svg, .loop-btn svg, 
@@ -197,7 +201,7 @@
 
   .playback-wrap { 
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 30px auto 45px;
   }
 
   .volume-control {
@@ -208,13 +212,12 @@
     gap: .5rem;
     padding-right: 15px;
     grid-column: 1 / span 3;
-    height: 50px;
     align-items: center;
   }
 
   .current-info img {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 
   .current-track {
@@ -279,11 +282,6 @@
       justify-items: center;
       text-align: center;
       font-size: .9rem;
-    }
-
-    .result-large {
-      border: unset;
-      box-shadow: unset;
     }
 
     .result-small {
