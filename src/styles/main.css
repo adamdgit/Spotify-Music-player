@@ -31,7 +31,7 @@
   display: grid;
   grid-template-columns: 200px auto;
   background-color: var(--secondary-blue);
-  box-shadow: 5px 5px 16px black;
+  box-shadow: 3px 3px 8px black;
   border-radius: 0 6px 6px 0;
 }
 
