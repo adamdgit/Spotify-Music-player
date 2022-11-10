@@ -19,6 +19,7 @@ export default function Library() {
   const { userID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
   const { setSongs } = useContext(GlobalContext)
+  const { setPlayerIsHidden } = useContext(GlobalContext)
   // users playlists results
   const [isLoading, setLoading] = useState(false)
   const [playlists, setPlaylists] = useState([])
@@ -30,6 +31,7 @@ export default function Library() {
     setSongs([])
     setContextID('')
     setContextURI('')
+    setPlayerIsHidden(false) // show playlist info when playing new context
     changePlaylistSong(0, token, context.uri)
       .then(result => {
         if (result === false) {
