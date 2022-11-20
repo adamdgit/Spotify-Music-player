@@ -64,7 +64,7 @@
 
   .user-playlists-wrap {
     grid-template-columns: repeat(2, 50%);
-    gap: .5rem;
+    gap: 5px;
   }
 
   .result-info { 
@@ -157,7 +157,7 @@
 
   .draggable .draggable-trackname { min-width: 160px; }         
 
-  .draggable img {
+  .draggable img, .edit-draggable img {
     width: var(--img-width-mobile);
     height: var(--img-width-mobile);
   }
@@ -298,7 +298,7 @@
     .edit-draggable {
       padding: .5rem;
       gap: .5rem;
-      grid-template-columns: 10px 64px auto 20px 35px;
+      grid-template-columns: 16px 60px auto 20px 35px;
     }
   }
   
