@@ -41,6 +41,9 @@ export default function EditPlaylist() {
       setDraggables(current => [...current, node])
     }
   },[])
+  // auto scroll offset when re-ordering playlist items
+  let offset = 0
+  let timer = null
 
   const changeOrder = (dragElIndex, dragElNewIndex) => {
     setTracks([])
@@ -127,6 +130,64 @@ export default function EditPlaylist() {
       else console.error(result.errorMsg)
     })
     setMessage({msg: 'Track added to playlist', needsUpdate: true})
+  }
+
+  function debounce(cb, delay = 30) {
+    let timeout
+    return (...args) => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        cb(...args)
+      }, delay)
+    }
+  }
+
+  const scrollDebounceTop = debounce(() => {
+    offset += 50;
+    document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
+  })
+
+  const scrollDebounceBottom = debounce(() => {
+    offset -= 50;
+    document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
+  })
+
+  const cursorTouchingEdge = (e) => {
+    clearTimeout(timer);
+    if (e.clientY < 150) {
+      timer = setTimeout(() => {
+        console.log('scrolling up')
+        scrollDebounceTop()
+        cursorTouchingEdge(e)
+      }, 50)
+    } else if (e.clientY > document.querySelector('.page-wrap').offsetHeight + 100) {
+      timer = setTimeout(() => {
+        console.log('scrolling down')
+        scrollDebounceBottom()
+        cursorTouchingEdge(e)
+      }, 50)
+    } else {
+      clearTimeout(timer);
+    }
+  }
+  // uses changed touches for touch based devices
+  const cursorTouchingEdgeMobile = (e) => {
+    clearTimeout(timer);
+    if (e.changedTouches[0].clientY < 150) {
+      timer = setTimeout(() => {
+        console.log('scrolling up')
+        scrollDebounceTop()
+        cursorTouchingEdgeMobile(e)
+      }, 50)
+    } else if (e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight + 100) {
+      timer = setTimeout(() => {
+        console.log('scrolling down')
+        scrollDebounceBottom()
+        cursorTouchingEdgeMobile(e)
+      }, 50)
+    } else {
+      clearTimeout(timer);
+    }
   }
 
   useEffect(() => {
@@ -222,14 +283,10 @@ export default function EditPlaylist() {
       function mouseMove(e) {
         let nearestNode = null
         // scroll up or down if draggable element touches top or bottom of scroll area
-        let pageWrapEl = document.querySelector('.page-wrap')
-        if (document.querySelector('.edit-songlist').offsetTop < pageWrapEl.scrollTop) {
-          if (e.clientY < 150) {
-            pageWrapEl.scroll({top: (pageWrapEl.scrollTop - 200), left: 0, behavior: 'smooth'})
-          }
-        }
-        if (e.clientY > pageWrapEl.offsetHeight + 100) { // +100 fpr header height
-          pageWrapEl.scroll({top: (pageWrapEl.scrollTop + 200), left: 0, behavior: 'smooth'})
+        if (e.clientY < 150 || e.clientY > document.querySelector('.page-wrap').offsetHeight + 100 ) {
+          cursorTouchingEdge(e)
+        } else {
+          clearTimeout(timer);
         }
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
@@ -243,14 +300,10 @@ export default function EditPlaylist() {
       function touchMove(e) {
         let nearestNode = null
         // scroll up or down if draggable element touches top or bottom of scroll area
-        let pageWrapEl = document.querySelector('.page-wrap')
-        if (document.querySelector('.edit-songlist').offsetTop < pageWrapEl.scrollTop) {
-          if (e.changedTouches[0].clientY < 150) {
-            pageWrapEl.scroll({top: (pageWrapEl.scrollTop - 200), left: 0, behavior: 'smooth'})
-          }
-        }
-        if (e.changedTouches[0].clientY > pageWrapEl.offsetHeight + 100) { // +100 fpr header height
-          pageWrapEl.scroll({top: (pageWrapEl.scrollTop + 200), left: 0, behavior: 'smooth'})
+        if (e.changedTouches[0].clientY < 150 || e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight + 100 ) {
+          cursorTouchingEdgeMobile(e)
+        } else {
+          clearTimeout(timer);
         }
         clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
         nearestNode = getNearestNode(e.changedTouches[0].clientY, 'edit-draggable')
@@ -264,6 +317,8 @@ export default function EditPlaylist() {
       document.addEventListener('touchend', placeEl)
       function placeEl() {
         // remove listeners, place element, remove clone
+        offset = 0;
+        document.querySelector('.edit-songlist').style.transform = `translateY(0px)`
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
         document.removeEventListener('mousemove', mouseMove)
