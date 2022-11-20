@@ -42,7 +42,6 @@
   display: grid;
   grid-template-rows: max-content 1fr auto;
   gap: 1rem;
-  align-items: center;
   padding: 1rem;
 }
 
@@ -59,6 +58,13 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.result-large h2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
 
