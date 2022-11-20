@@ -94,6 +94,10 @@
 .edit-songlist {
   position: relative;
   display: grid;
+  transition: transform 400ms cubic-bezier(.17,.67,.07,.94);
+  background: var(--primary-blue);
+  max-width: 1220px;
+  margin: 0 auto;
 }
 
 .edit-heading {
