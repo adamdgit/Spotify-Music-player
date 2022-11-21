@@ -135,6 +135,12 @@
     padding: 10px;
   }
 
+  .playlist-info-wrap span {
+    display: grid;
+    gap: 1rem;
+    font-size: .8rem;
+  }
+
   .lyrics-wrap { display: none; }
 
   .song-wrap {
