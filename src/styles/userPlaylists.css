@@ -59,26 +59,6 @@
   max-width: var(--max-page-width);
 }
 
-.results-wrap {
-  display: grid;
-  gap: 1rem;
-}
-
-.add-song-result {
-  display: grid;
-  grid-template-columns: 100px auto 70px ;
-  background-color: var(--secondary-blue);
-  box-shadow: 0 5px 12px #111;
-  padding: 1rem;
-  gap: 1rem;
-  align-items: center;
-}
-
-.add-song-result img {
-  width: 80px;
-  height: 80px;
-}
-
 .playlist-info {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -92,11 +72,10 @@
 }
 
 .edit-songlist {
-  position: relative;
   display: grid;
   transition: transform 400ms cubic-bezier(.17,.67,.07,.94);
   background: var(--primary-blue);
-  max-width: 1220px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
