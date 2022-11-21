@@ -21,22 +21,6 @@ export default function SearchSongs() {
   const [searchPlaylists, setSearchPlaylists] = useState(false)
   const [searchAlbums, setSearchAlbums] = useState(false)
 
-  const search = async () => {
-    if (searchTracks === false) setTracksResults([])
-    if (searchAlbums === false) setAlbumsResults([])
-    if (searchPlaylists === false) setPlaylistResults([])
-    searchSongs(token, query)
-      .then(result => {
-        console.log(result)
-        if(result.errorMsg === false) {
-          if (searchTracks === true) setTracksResults(result.searchResult.tracks.items)
-          if (searchAlbums === true) setAlbumsResults(result.searchResult.albums.items)
-          if (searchPlaylists === true) setPlaylistResults(result.searchResult.playlists.items)
-        }
-        else console.error(result.errorMsg)
-      })
-  }
-
   const handleCheckboxChange = (e) => {
     console.log(e.target.value)
     // whenever value is checked, refresh search
@@ -58,7 +42,22 @@ export default function SearchSongs() {
   }
 
   useEffect(() => {
+    if(query === '') return
     const delaySearch = setTimeout(() => {
+      const search = async () => {
+        if (searchTracks === false) setTracksResults([])
+        if (searchAlbums === false) setAlbumsResults([])
+        if (searchPlaylists === false) setPlaylistResults([])
+        searchSongs(token, query)
+          .then(result => {
+            if(result.errorMsg === false) {
+              if (searchTracks === true) setTracksResults(result.searchResult.tracks.items)
+              if (searchAlbums === true) setAlbumsResults(result.searchResult.albums.items)
+              if (searchPlaylists === true) setPlaylistResults(result.searchResult.playlists.items)
+            }
+            else console.error(result.errorMsg)
+          })
+      }
       search()
       clearTimeout(delaySearch)
     }, 300)
@@ -83,6 +82,20 @@ export default function SearchSongs() {
     if(query === '') return
     // set delay for search requests
     const delaySearch = setTimeout(() => {
+      const search = async () => {
+        if (searchTracks === false) setTracksResults([])
+        if (searchAlbums === false) setAlbumsResults([])
+        if (searchPlaylists === false) setPlaylistResults([])
+        searchSongs(token, query)
+          .then(result => {
+            if(result.errorMsg === false) {
+              if (searchTracks === true) setTracksResults(result.searchResult.tracks.items)
+              if (searchAlbums === true) setAlbumsResults(result.searchResult.albums.items)
+              if (searchPlaylists === true) setPlaylistResults(result.searchResult.playlists.items)
+            }
+            else console.error(result.errorMsg)
+          })
+      }
       search()
     }, 300)
     // remove timeout function
@@ -97,17 +110,17 @@ export default function SearchSongs() {
 
         <h1>Search:</h1><br />
         <div className="search-checkbox">
-          <span>
+          <span style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
             <label htmlFor="tracks">Tracks: </label>
-            <input type="checkbox" name="tracks" value="Tracks" 
+            <input type="checkbox" name="tracks" value="Tracks"
             onChange={(e) => handleCheckboxChange(e)} />
           </span>
-          <span>
+          <span style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
             <label htmlFor="playlists">Playlists: </label>
             <input type="checkbox" name="playlists" value="Playlists" 
             onChange={(e) => handleCheckboxChange(e)} />
           </span>
-          <span>
+          <span style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
             <label htmlFor="Albums">Albums: </label>
             <input type="checkbox" name="albums" value="Albums" 
             onChange={(e) => handleCheckboxChange(e)} />
