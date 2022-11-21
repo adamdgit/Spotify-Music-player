@@ -154,13 +154,13 @@ export default function EditPlaylist() {
 
   const cursorTouchingEdge = (e) => {
     clearTimeout(timer);
-    if (e.clientY < 150) {
+    if (e.clientY < 200) {
       timer = setTimeout(() => {
         console.log('scrolling up')
         scrollDebounceTop()
         cursorTouchingEdge(e)
       }, 50)
-    } else if (e.clientY > document.querySelector('.page-wrap').offsetHeight + 100) {
+    } else if (e.clientY > document.querySelector('.page-wrap').offsetHeight - 100) {
       timer = setTimeout(() => {
         console.log('scrolling down')
         scrollDebounceBottom()
@@ -190,6 +190,20 @@ export default function EditPlaylist() {
     }
   }
 
+  const playItem = async (uri)  => {
+    // // tracks have different endpoint
+    // setSongs([])
+    // // remove contextID for tracks only
+    // setContextID('')
+    // // save new URIS data to global context (playlist or track)
+    // setContextURI(uri)
+    // playTrack(token, uri)
+    // .then(result => {
+    //   if (!result) return
+    //   console.error(result)
+    // })
+  }
+
   useEffect(() => {
 
     if(!id) return
@@ -204,7 +218,6 @@ export default function EditPlaylist() {
         }
       }).then((res) => {
         if (res.data) {
-          console.log(res.data)
           setPlaylistData(res.data)
           setTracks(res.data.tracks.items)
           setOriginalName(res.data.name)
@@ -283,7 +296,7 @@ export default function EditPlaylist() {
       function mouseMove(e) {
         let nearestNode = null
         // scroll up or down if draggable element touches top or bottom of scroll area
-        if (e.clientY < 150 || e.clientY > document.querySelector('.page-wrap').offsetHeight + 100 ) {
+        if (e.clientY < 200 || e.clientY > document.querySelector('.page-wrap').offsetHeight - 100 ) {
           cursorTouchingEdge(e)
         } else {
           clearTimeout(timer);
@@ -300,7 +313,7 @@ export default function EditPlaylist() {
       function touchMove(e) {
         let nearestNode = null
         // scroll up or down if draggable element touches top or bottom of scroll area
-        if (e.changedTouches[0].clientY < 150 || e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight + 100 ) {
+        if (e.changedTouches[0].clientY < 200 || e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight - 100 ) {
           cursorTouchingEdgeMobile(e)
         } else {
           clearTimeout(timer);
@@ -487,10 +500,10 @@ export default function EditPlaylist() {
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
-        <div className="results-wrap">
+        <div className="search-results-wrap show-search">
           { results.length !== 0 ? results.tracks.items.map((track, index) => {
           return (
-            <div className="add-song-result" key={index}>
+            <div className="result-small" key={index}>
               <img src={
                 track.album.images.length === 0 ?
                 'no image found' :
@@ -507,6 +520,9 @@ export default function EditPlaylist() {
                 <p>{sanitizeArtistNames(track.artists)}</p>
               </span>
               <button className="play" onClick={() => addTrack(track.uri)} >Add</button>
+              <button className="play" onClick={() => playItem(track.uri)}>
+                <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>
+              </button>
             </div>)
           })
           : <></>
