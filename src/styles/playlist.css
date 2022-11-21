@@ -26,9 +26,9 @@
   height: 50px;
   text-transform: uppercase;
   border-bottom: 1px solid var(--secondary-blue);
-  background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bg-blue) 75%);
-  padding: 1.2rem 10px;
-  margin: 0 0 20px 0;
+  background: linear-gradient(180deg, var(--primary-blue), var(--bg-blue));
+  padding: 1.2rem .7rem;
+  margin-bottom: 1rem;
   font-size: .6rem;
 }
 
@@ -93,6 +93,7 @@
 }
 
 .draggable:hover, .edit-draggable:hover {
+  cursor: pointer;
   background-color: var(--bg-blue);
 }
 
@@ -111,13 +112,8 @@
 }
 
 .draggable img, .edit-draggable img {
-  pointer-events: none;
   width: var(--img-width);
   height: var(--img-width);
-}
-
-.draggable img:hover {
-  cursor: pointer;
 }
 
 .song-length {
@@ -130,6 +126,18 @@
   width: 100%;
 }
 
+.draggable .tooltip {
+  left: -5px;
+  top: 30px;
+  font-size: .9rem;
+}
+
+.draggable:hover .tooltip {
+  opacity: 1;
+  left: 8px;
+}
+
+
 .remove-track-btn {
   position: relative;
   color: white;
@@ -139,10 +147,6 @@
 
 .remove-track-btn:hover {
   color: rgb(216, 0, 0);
-}
-
-.play-song-btn {
-  height: var(--img-width);
 }
 
 /*--edit-draggables--*/
@@ -252,24 +256,4 @@
 .edit-playlist-details {
   display: grid;
   gap: 2rem;
-}
-
-.play-song-btn .tooltip {
-  left: 0;
-  top: 30px;
-}
-
-.play-song-btn:hover .tooltip {
-  opacity: 1;
-  left: 10px;
-}
-
-.container .remove-track-btn .tooltip {
-  left: -45px;
-  top: -10px;
-}
-
-.container .remove-track-btn:hover .tooltip {
-  opacity: 1;
-  left: -75px;
 }
