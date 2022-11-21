@@ -16,6 +16,53 @@ export default function SearchSongs() {
   const [tracksResults, setTracksResults] = useState([])
   const [playlistResults, setPlaylistResults] = useState([])
   const [albumResults, setAlbumsResults] = useState([])
+  // checkbox state for ssearch
+  const [searchTracks, setSearchTracks] = useState(false)
+  const [searchPlaylists, setSearchPlaylists] = useState(false)
+  const [searchAlbums, setSearchAlbums] = useState(false)
+
+  const search = async () => {
+    if (searchTracks === false) setTracksResults([])
+    if (searchAlbums === false) setAlbumsResults([])
+    if (searchPlaylists === false) setPlaylistResults([])
+    searchSongs(token, query)
+      .then(result => {
+        console.log(result)
+        if(result.errorMsg === false) {
+          if (searchTracks === true) setTracksResults(result.searchResult.tracks.items)
+          if (searchAlbums === true) setAlbumsResults(result.searchResult.albums.items)
+          if (searchPlaylists === true) setPlaylistResults(result.searchResult.playlists.items)
+        }
+        else console.error(result.errorMsg)
+      })
+  }
+
+  const handleCheckboxChange = (e) => {
+    console.log(e.target.value)
+    // whenever value is checked, refresh search
+    if (e.target.checked === true && e.target.value === 'Tracks') {
+      setSearchTracks(true)
+    } else if (e.target.checked === false && e.target.value === 'Tracks') {
+      setSearchTracks(false)
+    }
+    if (e.target.checked === true && e.target.value === 'Playlists') {
+      setSearchPlaylists(true)
+    } else if (e.target.checked === false && e.target.value === 'Playlists') {
+      setSearchPlaylists(false)
+    }
+    if (e.target.checked === true && e.target.value === 'Albums') {
+      setSearchAlbums(true)
+    } else if (e.target.checked === false && e.target.value === 'Albums') {
+      setSearchAlbums(false)
+    }
+  }
+
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      search()
+      clearTimeout(delaySearch)
+    }, 300)
+  }, [searchTracks, searchAlbums, searchPlaylists])
 
   useEffect(() => {
 
@@ -36,18 +83,6 @@ export default function SearchSongs() {
     if(query === '') return
     // set delay for search requests
     const delaySearch = setTimeout(() => {
-      const search = async () => {
-        searchSongs(token, query)
-          .then(result => {
-            console.log(result)
-            if(result.errorMsg === false) {
-              setTracksResults(result.searchResult.tracks.items)
-              setAlbumsResults(result.searchResult.albums.items)
-              setPlaylistResults(result.searchResult.playlists.items)
-            }
-            else console.error(result.errorMsg)
-          })
-      }
       search()
     }, 300)
     // remove timeout function
@@ -61,7 +96,23 @@ export default function SearchSongs() {
       <div className="main-content">
 
         <h1>Search:</h1><br />
-        <h2>Returns tracks, albums and playlists</h2>
+        <div className="search-checkbox">
+          <span>
+            <label htmlFor="tracks">Tracks: </label>
+            <input type="checkbox" name="tracks" value="Tracks" 
+            onChange={(e) => handleCheckboxChange(e)} />
+          </span>
+          <span>
+            <label htmlFor="playlists">Playlists: </label>
+            <input type="checkbox" name="playlists" value="Playlists" 
+            onChange={(e) => handleCheckboxChange(e)} />
+          </span>
+          <span>
+            <label htmlFor="Albums">Albums: </label>
+            <input type="checkbox" name="albums" value="Albums" 
+            onChange={(e) => handleCheckboxChange(e)} />
+          </span>
+        </div>
         <div className="search-bar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="search-btn" fill="currentcolor" width="20px"><path d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z"/></svg>
           <input 
