@@ -13,7 +13,7 @@ export default function currentItem({ currentItem }) {
           currentItem.album.images.length === 0 ?
           'no image found'
           : currentItem.album.images.length > 1 ?
-          currentItem.album.images[2].url
+          currentItem.album.images[1].url
           : currentItem.album.images[0].url
           } alt={
           currentItem.album.images.length === 0 ?
