@@ -69,7 +69,7 @@
 
   .result-info { 
     gap: .5rem; 
-    padding: .7rem;
+    padding: 5px 8px 8px 8px;
     max-width: 300px; 
     justify-items: center;
   }
@@ -84,7 +84,7 @@
     text-align: center;
     grid-template-columns: unset;
     grid-template-rows: auto minmax(150px, auto);
-    border-radius: 0;
+    box-shadow: unset;
   }
 
   .result-large:hover { scale: unset; }
