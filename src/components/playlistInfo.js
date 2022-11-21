@@ -154,24 +154,22 @@ function PlaylistInfo() {
             contextURI?.includes('playlist') ? songs.map((song, index) => {
               if (song === null || song === undefined) return null
               return (
-                <span key={index} data-index={index}
+                <span key={index} data-index={index} onClick={() => changePlaylistSong(index, token, contextURI)}
                   style={playlistOwner === userID ? {gridTemplateColumns: '18px 80px auto 40px'} : {}} 
                   className={currentTrackID === song.track.id ? "draggable selected" : "draggable"}> 
-                  <span>{index+1}</span>
-                  <button onClick={() => { changePlaylistSong(index, token, contextURI) }} className="play-song-btn">
                   <Tooltip tip={'Play'} />
-                  <img src={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    song.track.album.images.length === 3 ?
-                    song.track.album.images[2].url :
-                    song.track.album.images[0].url
-                    } alt={
-                    song.track.album.images.length === 0 ?
-                    'no image found' :
-                    `${song.track.name} album art`
-                    } />
-                  </button>
+                  <span>{index+1}</span>
+                    <img src={
+                      song.track.album.images.length === 0 ?
+                      'no image found' :
+                      song.track.album.images.length === 3 ?
+                      song.track.album.images[2].url :
+                      song.track.album.images[0].url}
+                      alt={
+                      song.track.album.images.length === 0 ?
+                      'no image found' :
+                      `${song.track.name} album art`}
+                    />
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
                     <p>{sanitizeArtistNames(song.track.artists)}</p>
