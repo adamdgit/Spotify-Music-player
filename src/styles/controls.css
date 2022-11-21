@@ -7,7 +7,7 @@
   left: 0;
   bottom: 0;
   background-color: #111;
-  border-top: 1px solid var(--secondary-blue);
+  border-top: 1px solid #666;
   z-index: 999;
   gap: 1rem;
   justify-content: center;
@@ -136,9 +136,9 @@
   bottom: 124px;
   padding: .3rem .5rem 0;
   border-radius: 10px 10px 0 0;
-  border-left: 1px solid var(--secondary-blue);
-  border-top: 1px solid var(--secondary-blue);
-  border-right: 1px solid var(--secondary-blue);
+  border-left: 1px solid #666;
+  border-top: 1px solid #666;
+  border-right: 1px solid #666;
 }
 
 .show-hide-playlist-btn svg {
