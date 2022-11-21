@@ -34,9 +34,6 @@
   box-shadow: inset 3px 3px 8px black;
 }
 
-.result-large img { padding: 10px; }
-.result-large img:hover { padding: 0; }
-
 .result-info {
   display: grid;
   grid-template-rows: max-content 1fr auto;
@@ -44,14 +41,17 @@
   padding: 1rem;
 }
 
-.result-large img:hover {
-  cursor: pointer;
-}
-
 .result-large img { 
   width: 100%;
   aspect-ratio: 1;
+  transform: scale(.85);
+  transition: transform 200ms ease-in-out;
  }
+
+ .result-large img:hover {
+  cursor: pointer;
+  transform: scale(1);
+}
 
 .result-large p { 
   overflow: hidden;
