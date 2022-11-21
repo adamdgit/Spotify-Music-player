@@ -31,8 +31,7 @@
   display: grid;
   grid-template-columns: 200px auto;
   background-color: var(--secondary-blue);
-  box-shadow: 3px 3px 8px black;
-  border-radius: 0 6px 6px 0;
+  box-shadow: inset 3px 3px 8px black;
 }
 
 .result-large img { padding: 10px; }
@@ -59,6 +58,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  height: fit-content;
 }
 
 .result-large h2 {
@@ -169,6 +169,11 @@
 
 .show-search {
   display: grid;
+}
+
+.search-checkbox {
+  display: flex;
+  gap: 1rem;
 }
 
 .result-small {
