@@ -1,6 +1,6 @@
 import axios from "axios";
 import CurrentSong from "./CurrentSong";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { GlobalContext } from "./login";
 import { changePlaylistSong } from "../api/changePlaylistSong";
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
@@ -103,7 +103,7 @@ function PlaylistInfo() {
     }
   }, [contextURI])
 
-  useEffect(() => {
+  useMemo(() => {
     setContextDuration(0)
     // get total playlist duration
     songs.forEach(song => {
