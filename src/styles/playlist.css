@@ -53,6 +53,8 @@
 }
 
 .playlist-info-wrap span {
+  display: grid;
+  gap: 1rem;
   overflow: hidden;
   width: inherit;
   max-height: 350px;
