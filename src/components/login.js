@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom"
 import axios from "axios";
 import Header from "./header";
-import Controls from './controls';
+import Controls from './Controls';
 import Artists from './pages/artists';
 import Library from "./pages/library";
 import EditPlaylist from "./pages/editPlaylist";
