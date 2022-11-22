@@ -1,6 +1,35 @@
+import { useEffect, useState, useContext } from "react"
+import axios from "axios"
 import Loading from "./Loading"
+import { GlobalContext } from "./login"
 
-export default function currentItem({ currentItem }) {
+export default function CurrentSong() {
+
+  const { token } = useContext(GlobalContext)
+  const { playerCBType } = useContext(GlobalContext)
+  const { currentTrackID } = useContext(GlobalContext)
+
+  const [currentItem, setCurrentItem] = useState()
+
+  // when player updates currentTrackID get new track info
+  useEffect(() => {
+    // only runs once player is ready otherwise value would be an empty string
+    if(playerCBType !== '') {
+      const getCurrentTrack = async () => {
+        await axios.get(`https://api.spotify.com/v1/tracks/${currentTrackID}`, {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }).then(result => { 
+          if (result.data) return setCurrentItem(result.data)
+          else console.error(result) 
+        })
+      }
+      getCurrentTrack()
+    }
+  },[currentTrackID])
 
   return (
     <div className="song-wrap">

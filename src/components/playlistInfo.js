@@ -1,5 +1,5 @@
 import axios from "axios";
-import CurrentSong from "./currentSong";
+import CurrentSong from "./CurrentSong";
 import { useState, useEffect, useRef, useContext } from "react";
 import { GlobalContext } from "./login";
 import { changePlaylistSong } from "../api/changePlaylistSong";
@@ -16,7 +16,6 @@ function PlaylistInfo() {
   const { token } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
   const { contextURI } = useContext(GlobalContext)
-  const { playerCBType } = useContext(GlobalContext)
   const { currentTrackID } = useContext(GlobalContext)
   const { contextID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
@@ -24,7 +23,6 @@ function PlaylistInfo() {
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
   // component state
-  const [currentItem, setCurrentItem] = useState()
   const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
@@ -57,26 +55,6 @@ function PlaylistInfo() {
     console.log('cleanup')
     setSongs([])
   },[contextURI, setSongs])
-
-  // when player updates currentTrackID get new track info
-  useEffect(() => {
-    // only runs once player is ready otherwise value would be an empty string
-    if(playerCBType !== '') {
-      const getCurrentTrack = async () => {
-        await axios.get(`https://api.spotify.com/v1/tracks/${currentTrackID}`, {
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          }
-        }).then(result => { 
-          if (result.data) return setCurrentItem(result.data)
-          else console.error(result) 
-        })
-      }
-      getCurrentTrack()
-    }
-  },[currentTrackID])
 
   // when context changes check for playlist or album and get data
   useEffect(() => {
@@ -128,7 +106,7 @@ function PlaylistInfo() {
   return (
     <div style={!contextID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
       
-      <CurrentSong currentItem={currentItem} />
+      <CurrentSong />
 
       <div className={!contextID ? "hidden" : "playlist"}>
         <div className="playlist-info-wrap">
