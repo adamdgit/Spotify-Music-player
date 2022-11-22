@@ -11,8 +11,8 @@ import Search from "./pages/search";
 export const GlobalContext = React.createContext()
 
 function Login() {
-
-  const CLIENT_ID = "1054d21743b44ad1b1bcbf1046e70025"
+  
+  const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
   const REDIRECT_URI = "http://localhost:3000/spotify"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
@@ -31,7 +31,6 @@ function Login() {
   const [playerIsHidden, setPlayerIsHidden] = useState(true)
 
   useEffect(() => {
-
     let hash = window.location.hash
     let token = window.localStorage.getItem('token')
 
