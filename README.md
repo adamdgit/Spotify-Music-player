@@ -38,5 +38,6 @@ https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 ## What can't it do?
 
 - No searching for podcasts/shows
+- No liking tracks or showing liked songs *might add in future
 - *repeat context API currently broken on Spotify's end
 - *no toggle for smart shuffle, only normal shuffle
