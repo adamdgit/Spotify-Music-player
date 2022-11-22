@@ -31,6 +31,7 @@ export default function CurrentSong() {
     }
   },[currentTrackID])
 
+
   return (
     <div className="song-wrap">
     {
