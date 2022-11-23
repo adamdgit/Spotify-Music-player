@@ -4,7 +4,10 @@ import Tooltip from "./Tooltip"
 export default function PlaylistItem({song, index, func, setDraggableElement}) {
 
   return (
-    <span key={index} data-index={index} className="edit-draggable" ref={setDraggableElement}>
+    <span key={index} data-index={index} 
+      style={{cursor: 'default'}}
+      className="edit-draggable" 
+      ref={setDraggableElement}>
       <span>{index+1}</span>
       <img src={
         song.track.album.images.length === 0 ?
