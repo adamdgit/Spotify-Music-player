@@ -2,7 +2,6 @@ import { useContext, useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import { GlobalContext } from "../login";
 import axios from "axios";
-import { changePlaylistDetails } from "../../api/changePlaylistDetails"
 import { changePlaylistOrder } from "../../api/changePlaylistOrder"
 import { removeTrackFromPlaylist } from "../../api/removeTrackFromPlaylist"
 import { getNearestNode } from "../utils/getNearestNode";
@@ -10,6 +9,7 @@ import EditPlaylistItem from "../EditPlaylistItem";
 import Loading from "../Loading";
 import EditSearchResults from "../EditSearchResults";
 import BlankSongResult from "../BlankSongResult";
+import EditPlaylistDetails from "../EditPlaylistDetails";
 
 export default function EditPlaylist() {
 
@@ -22,8 +22,6 @@ export default function EditPlaylist() {
 
   const [playlistName, setPlaylistName] = useState('')
   const [playlistDesc, setPlaylistDesc] = useState('')
-  const [isPublic, setIsPublic] = useState(false)
-  const [error, setError] = useState(false)
   const [originalName, setOriginalName] = useState('')
   const [originalDesc, setOriginalDesc] = useState('')
   const [playlistData, setPlaylistData] = useState()
@@ -76,45 +74,6 @@ export default function EditPlaylist() {
     setMessage({msg: 'Song removed from playlist', needsUpdate: true})
   }
 
-  const changeDetails = (e) => {
-    e.preventDefault()
-    // simple validation
-    if (playlistName === '' && playlistDesc === '') {
-      return setError(true)
-    }
-    if (playlistName === '' && playlistDesc !== '') {
-      setError(false)
-      changePlaylistDetails(token, id, playlistDesc, originalName, isPublic)
-        .then(result => {
-          if (result.errorMsg === false) return
-          else console.error(result.errorMsg)
-        })
-      setOriginalDesc(playlistDesc)
-      setMessage({msg: 'Playlist details updated', needsUpdate: true})
-      return
-    }
-    if (playlistName !== '' && playlistDesc === '') {
-      setError(false)
-      changePlaylistDetails(token, id, originalDesc, playlistName, isPublic)
-        .then(result => {
-          if (result.errorMsg === false) return
-          else console.error(result.errorMsg)
-        })
-      setOriginalName(playlistName)
-      setMessage({msg: 'Playlist details updated', needsUpdate: true})
-      return
-    }
-    setError(false)
-    changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
-      .then(result => {
-        if (result.errorMsg === false) return
-        else console.error(result.errorMsg)
-      })
-    setOriginalDesc(playlistDesc)
-    setOriginalName(playlistName)
-    setMessage({msg: 'Playlist details updated', needsUpdate: true})
-  }
-
   function debounce(cb, delay = 30) {
     let timeout
     return (...args) => {
@@ -143,7 +102,7 @@ export default function EditPlaylist() {
         scrollDebounceTop()
         cursorTouchingEdge(e)
       }, 50)
-    } else if (e.clientY > document.querySelector('.page-wrap').offsetHeight - 100) {
+    } else if (e.clientY > document.querySelector('.page-wrap').offsetHeight) {
       timer = setTimeout(() => {
         console.log('scrolling down')
         scrollDebounceBottom()
@@ -162,7 +121,7 @@ export default function EditPlaylist() {
         scrollDebounceTop()
         cursorTouchingEdgeMobile(e)
       }, 50)
-    } else if (e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight + 100) {
+    } else if (e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight) {
       timer = setTimeout(() => {
         console.log('scrolling down')
         scrollDebounceBottom()
@@ -245,14 +204,14 @@ export default function EditPlaylist() {
       document.addEventListener('touchmove', touchMove)
       function mouseMove(e) {
         // scroll up or down if draggable element touches top or bottom of scroll area
-        if (e.clientY < 200 || e.clientY > document.querySelector('.page-wrap').offsetHeight - 100 ) {
+        if (e.clientY < 150 || e.clientY > document.querySelector('.page-wrap').offsetHeight) {
           cursorTouchingEdge(e)
         } else {
           clearTimeout(timer);
         }
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
-        let nearestNode = getNearestNode(e.clientY, 'edit-draggable')
+        let nearestNode = getNearestNode(e.clientY)
         // prevents constant rendering of element, only inserts when element is different
         if (nearestNode !== element && nearestNode !== element.nextSibling) {
           container.current.insertBefore(element, nearestNode)
@@ -261,13 +220,13 @@ export default function EditPlaylist() {
 
       function touchMove(e) {
         // scroll up or down if draggable element touches top or bottom of scroll area
-        if (e.changedTouches[0].clientY < 200 || e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight - 100 ) {
+        if (e.changedTouches[0].clientY < 150 || e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight - 100 ) {
           cursorTouchingEdgeMobile(e)
         } else {
           clearTimeout(timer);
         }
         clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
-        let nearestNode = getNearestNode(e.changedTouches[0].clientY, 'edit-draggable')
+        let nearestNode = getNearestNode(e.changedTouches[0].clientY)
         // prevents constant rendering of element, only inserts when element is different
         if (nearestNode !== element && nearestNode !== element.nextSibling) {
           container.current.insertBefore(element, nearestNode)
@@ -277,8 +236,9 @@ export default function EditPlaylist() {
       document.addEventListener('mouseup', placeEl)
       document.addEventListener('touchend', placeEl)
       function placeEl() {
-        // remove listeners, place element, remove clone
-        offset = 0;
+        // remove listeners, place element, remove clone, reset timer function
+        offset = 0
+        clearTimeout(timer)
         document.querySelector('.edit-songlist').style.transform = `translateY(0px)`
         element.style.opacity = '1'
         document.querySelector('.clone')?.remove()
@@ -320,50 +280,17 @@ export default function EditPlaylist() {
         </div>
      {playlistData ?
      <>
-        <div className="create-playlist">
-          {
-            playlistData.images.length === 0 ? 
-            <span style={{display: 'grid', placeItems: 'center', 
-              height: '300px', width: '300px', border: '2px solid white'}}>
-              <svg role="img" fill="currentcolor" height="64" width="64" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3h15v15.167a3.5 3.5 0 11-3.5-3.5H19V5H8v13.167a3.5 3.5 0 11-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 101.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 101.5 1.5v-1.5z"></path></svg>
-            </span>
-            : 
-            <img 
-              src={ playlistData.images[0].url } 
-              alt={ `${playlistData.name} playlist art` }
-            /> 
-          }
-          <form className="user-input-wrap">
-            <span className="change-details">
-              <h3>Name:</h3>
-              <input
-                style={error === true ? {border: '1px solid red'} : {}}
-                id="name"
-                type="text" 
-                className="edit-input" 
-                onChange={(e) => setPlaylistName(e.target.value)}
-                placeholder="Change playlist name"
-              />
-            </span>
-            <span className="change-details">
-              <h3>Description:</h3>
-              <input 
-                style={error === true ? {border: '1px solid red'} : {}}
-                id="description"
-                type="text" 
-                className="edit-input" 
-                onChange={(e) => setPlaylistDesc(e.target.value)}
-                placeholder="Change playlist description"
-              />
-            </span>
-            <span className="change-details" style={{gridTemplateColumns: '130px 20px 1fr'}}>
-              <h3>Make Public?</h3>            
-              <input type="checkbox" onClick={(e) => setIsPublic(e.target.checked)}/>
-              <p>(Leave unchecked for private playlist)</p>
-            </span>
-            <button className="play save-changes" onClick={(e) => changeDetails(e)}>Save changes</button>
-          </form>
-        </div>
+        <EditPlaylistDetails 
+          playlistData={playlistData} 
+          setPlaylistName={setPlaylistName}
+          playlistName={playlistName}
+          setPlaylistDesc={setPlaylistDesc}
+          playlistDesc={playlistDesc}
+          setOriginalDesc={setOriginalDesc}
+          originalDesc={originalDesc}
+          setOriginalName={setOriginalName}
+          originalName={originalName}
+        />
 
         <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Edit tracks:</h2>
 
