@@ -11,6 +11,7 @@ export default function CurrentSong() {
   const { currentTrackID } = useContext(GlobalContext)
 
   const [currentItem, setCurrentItem] = useState()
+  const [lyrics, setLyrics] = useState('')
 
   // when player updates currentTrackID get new track info
   useEffect(() => {
@@ -35,19 +36,21 @@ export default function CurrentSong() {
   useEffect(() => {
 
     if (currentItem === undefined || null) return
-
-    let TERM = currentItem.name;
-    let ARTIST = currentItem.artists[0].name;
-    let URL = `https://www.stands4.com/services/v2/lyrics.php?uid=10583&tokenid=2pdUbBZ4cDynIZgU&term=${TERM}&artist=${ARTIST}&format=xml`
-    getLyrics(URL)
-      .then(result => {
-        if (result.errorMsg === false) {
-          console.log(result.data)
-        }
-        else console.error(result.errorMsg)
-      })
+    // getLyrics(currentItem.name + currentItem.artists[0].name)
+    //   .then(result => {
+    //     if (result.errorMsg === false) {
+    //       setLyrics(result.data.lyrics.body.html)
+    //     }
+    //     else console.error(result.errorMsg)
+    //   })
 
   }, [currentItem])
+
+  const SetLyricsHTML = () => {
+    // replace anchor tags inside lyrics string before setting the innerHTML
+    return <span className='lyrics' dangerouslySetInnerHTML={{__html: lyrics.replace(/<\/?a[^>]*>/g, "")}}>
+    </span>
+  }
 
 
   return (
@@ -98,9 +101,8 @@ export default function CurrentSong() {
 
     <div className="lyrics-wrap">
       <h2 className="lyrics-title">Lyrics</h2>
-      <span className='lyrics'>
-        connect lyrics api here...
-      </span>
+      <h3>Lyrics from: <a href="https://genius.com/" target="blank">Genius</a></h3><br/>
+      <SetLyricsHTML />
     </div>
     
   </div>
