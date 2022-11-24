@@ -35,7 +35,7 @@ export default function CurrentSong() {
 
   useEffect(() => {
 
-    if (currentItem === undefined || null) return
+    if (currentItem === undefined || currentItem === null) return
     // getLyrics(currentItem.name + currentItem.artists[0].name)
     //   .then(result => {
     //     if (result.errorMsg === false) {
