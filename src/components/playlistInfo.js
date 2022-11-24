@@ -39,7 +39,7 @@ function PlaylistInfo() {
       setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
   }
 
-  // gets users playlists, for add-to-playlist button
+  // return only user owned playlists, for add-to-playlist button
   useEffect(() => {
     getUserPlaylists(token)
       .then(result => {
