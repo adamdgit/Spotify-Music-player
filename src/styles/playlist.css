@@ -208,6 +208,11 @@
   margin-bottom: 20px;
 }
 
+.lyrics-wrap a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
 .song-info {
   display: grid;
   justify-items: center;
