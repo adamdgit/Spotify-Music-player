@@ -13,7 +13,7 @@ export const GlobalContext = React.createContext()
 function Login() {
   
   const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-  const REDIRECT_URI = "http://localhost:3000/spotify"
+  const REDIRECT_URI = "http://localhost:3000/spotify/library"
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
   const SCOPE = 'user-library-read%20user-library-modify%20user-top-read%20user-read-private%20user-read-recently-played%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20playlist-modify-private%20playlist-modify-public%20playlist-read-private%20streaming'
@@ -97,10 +97,10 @@ function Login() {
       <>
         <Header />
         <Routes>
-          <Route path="/spotify/" element={<Library />} />
-          <Route path="/spotify/artists" element={<Artists />} />
-          <Route path="/spotify/search" element={<Search />} />
-          <Route path="/spotify/editPlaylist/:id" element={<EditPlaylist />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/artists" element={<Artists />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/editPlaylist/:id" element={<EditPlaylist />} />
         </Routes>
         <Controls />
       </>
