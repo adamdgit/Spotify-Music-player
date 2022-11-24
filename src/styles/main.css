@@ -133,7 +133,6 @@
   background-color: var(--bg-blue);
   padding: 5px;
   margin: 2rem 0;
-  z-index: -1;
 }
 
 .search-bar .search {
