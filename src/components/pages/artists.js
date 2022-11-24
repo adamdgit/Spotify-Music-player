@@ -81,7 +81,7 @@ export default function Explore() {
         else console.error(result.errorMsg)
       })
 
-  },[token, userID])
+  },[userID])
 
   useEffect(() => {
 
@@ -98,7 +98,7 @@ export default function Explore() {
     }
     getTopArtists()
 
-  },[token, userID])
+  },[token])
 
   return (
     <div className="page-wrap">
