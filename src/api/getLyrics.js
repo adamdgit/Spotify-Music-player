@@ -6,6 +6,7 @@ export async function getLyrics(query){
   let data = null
   let errorMsg = false
 
+  // send currentsong artist name + song name as 'query' to get song ID
   await axios({
     method: 'GET',
     url: 'https://genius-song-lyrics1.p.rapidapi.com/search',
@@ -18,6 +19,7 @@ export async function getLyrics(query){
     trackID = result.data.response.hits[0].result.id
   }).catch(error => errorMsg = error)
 
+  // pass song ID to get lyrics for song, return as 'data'
   await axios({ 
     method: 'GET',
     url: `https://genius-song-lyrics1.p.rapidapi.com/songs/${trackID}/lyrics`,
