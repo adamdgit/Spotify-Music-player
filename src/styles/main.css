@@ -32,7 +32,7 @@
   grid-template-columns: 200px auto;
   background-color: var(--secondary-blue);
   box-shadow: inset 3px 3px 8px black;
-  border: 1px solid rgb(103 114 133);
+  border: 1px solid rgb(59, 64, 75);
 }
 
 .result-info {
