@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react"
 import axios from "axios"
 import Loading from "./Loading"
 import { GlobalContext } from "./login"
+import { getLyrics } from "../api/getLyrics"
 
 export default function CurrentSong() {
 
@@ -30,6 +31,23 @@ export default function CurrentSong() {
       getCurrentTrack()
     }
   },[currentTrackID])
+
+  useEffect(() => {
+
+    if (currentItem === undefined || null) return
+
+    let TERM = currentItem.name;
+    let ARTIST = currentItem.artists[0].name;
+    let URL = `https://www.stands4.com/services/v2/lyrics.php?uid=10583&tokenid=2pdUbBZ4cDynIZgU&term=${TERM}&artist=${ARTIST}&format=xml`
+    getLyrics(URL)
+      .then(result => {
+        if (result.errorMsg === false) {
+          console.log(result.data)
+        }
+        else console.error(result.errorMsg)
+      })
+
+  }, [currentItem])
 
 
   return (
