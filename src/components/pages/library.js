@@ -151,7 +151,7 @@ export default function Library() {
                     </button>
                   : 
                   <span className="result-btns">
-                    <NavLink to={`/editPlaylist/${result.id}`} className="edit-link">
+                    <NavLink to={`/spotify/editPlaylist/${result.id}`} className="edit-link">
                       Edit
                     </NavLink>
                     <button 
