@@ -2,7 +2,6 @@ import { useEffect, useState, useContext } from "react"
 import axios from "axios"
 import Loading from "./Loading"
 import { GlobalContext } from "./login"
-import { getLyrics } from "../api/getLyrics"
 
 export default function CurrentSong() {
 
@@ -11,7 +10,6 @@ export default function CurrentSong() {
   const { currentTrackID } = useContext(GlobalContext)
 
   const [currentItem, setCurrentItem] = useState()
-  const [lyrics, setLyrics] = useState('')
 
   // when player updates currentTrackID get new track info
   useEffect(() => {
@@ -32,26 +30,6 @@ export default function CurrentSong() {
       getCurrentTrack()
     }
   },[currentTrackID])
-
-  useEffect(() => {
-
-    if (currentItem === undefined || currentItem === null) return
-    // getLyrics(currentItem.name + currentItem.artists[0].name)
-    //   .then(result => {
-    //     if (result.errorMsg === false) {
-    //       setLyrics(result.data.lyrics.body.html)
-    //     }
-    //     else console.error(result.errorMsg)
-    //   })
-
-  }, [currentItem])
-
-  const SetLyricsHTML = () => {
-    // replace anchor tags inside lyrics string before setting the innerHTML
-    return <span className='lyrics' dangerouslySetInnerHTML={{__html: lyrics.replace(/<\/?a[^>]*>/g, "")}}>
-    </span>
-  }
-
 
   return (
     <div className="song-wrap">
@@ -101,8 +79,7 @@ export default function CurrentSong() {
 
     <div className="lyrics-wrap">
       <h2 className="lyrics-title">Lyrics</h2>
-      <h3>Lyrics from: <a href="https://genius.com/" target="blank">Genius</a></h3><br/>
-      <SetLyricsHTML />
+      <span className="lyrics">connect lyrics api...</span>
     </div>
     
   </div>
