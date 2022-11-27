@@ -7,6 +7,7 @@ import Artists from './pages/artists';
 import Library from "./pages/library";
 import EditPlaylist from "./pages/editPlaylist";
 import Search from "./pages/search";
+import { getUserInfo } from "../api/getUserInfo";
 
 export const GlobalContext = React.createContext()
 
@@ -44,24 +45,16 @@ function Login() {
     setToken(token)
 
     if(token) {
-      // get logged in user's display name
-      axios.get(`https://api.spotify.com/v1/me`, {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      }).then((res) => {
-        setUserID(res.data.id)
-        setUsername(res.data.display_name)
-      }).catch(error => {
-        // we get 401 access token expired
-        // redirect -> endpoint
-        console.error(error)
-        setToken('')
-        window.localStorage.removeItem('token')
-        //window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`
-      })
+      getUserInfo(token)
+        .then(result => {
+          if (result.errorMsg === false) {
+            console.log(result)
+            setUserID(result.data.id)
+            setUsername(result.data.display_name)
+          } else {
+            console.error(result.errorMsg)
+          }
+        })
     }
 
   },[token])
