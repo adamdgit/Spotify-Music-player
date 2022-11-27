@@ -95,7 +95,6 @@
 }
 
 .draggable:hover, .edit-draggable:hover {
-  cursor: pointer;
   background-color: var(--bg-blue);
 }
 
@@ -118,9 +117,9 @@
   height: var(--img-width);
 }
 
-.song-length {
-  font-size: .8rem;
-}
+.draggable img:hover { cursor: pointer; }
+
+.song-length { font-size: .8rem; }
 
 .draggable-trackname {
   display: grid;
@@ -138,7 +137,6 @@
   opacity: 1;
   left: 8px;
 }
-
 
 .remove-track-btn {
   position: relative;
