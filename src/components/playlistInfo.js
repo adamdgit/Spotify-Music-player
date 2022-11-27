@@ -99,10 +99,17 @@ function PlaylistInfo() {
 
   useMemo(() => {
     setContextDuration(0)
-    // get total playlist duration
-    songs.forEach(song => {
-      setContextDuration((current) => current += song.track.duration_ms)
-    })
+    if (contextURI?.includes('playlist')) {
+      // get playlist duration
+      songs.forEach(song => {
+        setContextDuration((current) => current += song.track.duration_ms)
+      })
+    } else if (contextURI?.includes('album')) {
+      // get album duration
+      songs.forEach(song => {
+        setContextDuration((current) => current += song.duration_ms)
+      })
+    }
   }, [songs])
 
   return (
@@ -138,12 +145,14 @@ function PlaylistInfo() {
             contextURI?.includes('playlist') ? songs.map((song, index) => {
               if (song === null || song === undefined) return null
               return (
-                <span key={index} data-index={index} onClick={() => changePlaylistSong(index, token, contextURI)}
+                <span key={index} data-index={index} 
                   style={playlistOwner === userID ? {gridTemplateColumns: '18px 80px auto 40px'} : {}} 
                   className={currentTrackID === song.track.id ? "draggable selected" : "draggable"}> 
                   <Tooltip tip={'Play'} />
                   <span>{index+1}</span>
-                    <img src={
+                    <img 
+                      onClick={() => changePlaylistSong(index, token, contextURI)}
+                      src={
                       song.track.album.images.length === 0 ?
                       'no image found' :
                       song.track.album.images.length === 3 ?
@@ -178,15 +187,15 @@ function PlaylistInfo() {
             contextURI?.includes('album') ? songs.map((song, index) => {
               if (song === null || song === undefined) return null
               return (
-                <span key={index} data-index={index} className={currentTrackID === song.id ? "draggable selected" : "draggable"}>
+                <span key={index} data-index={index}
+                  className={currentTrackID === song.id ? "draggable selected" : "draggable"}>
                   <span>{index+1}</span>
-                  <button onClick={() => { changePlaylistSong(index, token, contextURI) }} className="play-song-btn">
                   <Tooltip tip={'Play'} />
                   <img 
+                    onClick={() => { changePlaylistSong(index, token, contextURI) }}
                     src={playlistArt? playlistArt : 'no image found'} 
                     alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} 
                   />
-                  </button>
                   <span className="draggable-trackname">
                     <h1>{song.name}</h1>
                     <p>{sanitizeArtistNames(song.artists)}</p>
