@@ -102,7 +102,7 @@ export default function Library() {
     if (!userID) return
     getLibraryData()
 
-  },[token, userID])
+  },[userID])
 
   return (
     <div className="page-wrap">
