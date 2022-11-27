@@ -51,12 +51,6 @@ function PlaylistInfo() {
       })
   },[userID])
 
-  // cleanup arrays when playlist changes
-  useEffect(() => {
-    console.log('cleanup')
-    setSongs([])
-  },[contextURI, setSongs])
-
   // when context changes check for playlist or album and get data
   useEffect(() => {
     // get playlist data
