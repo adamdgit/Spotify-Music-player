@@ -37,6 +37,9 @@ export default function Explore() {
   }
 
   const playSong = (uri) => {
+    // clear context before starting new one
+    setSongs([])
+    setContextID('')
     playTrack(token, uri)
     .then(result => {
       if (!result) return
