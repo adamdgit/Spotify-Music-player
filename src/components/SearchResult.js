@@ -47,7 +47,6 @@ export default function SearchResult({...props}) {
       })
     } else {
       setSongs([])
-      // remove contextID for tracks only
       setContextID(id)
       // save new URIS data to global context (playlist or track)
       setContextURI(uri)
