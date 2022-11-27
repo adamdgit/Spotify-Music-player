@@ -7,6 +7,7 @@ import { playTrack } from "../../api/playTrack";
 import axios from "axios";
 import Loading from "../Loading";
 import AddToPlaylistBtn from "../AddToPlaylistBtn";
+import { getTopArtists } from "../../api/getTopArtists";
 
 export default function Explore() {
 
@@ -37,18 +38,16 @@ export default function Explore() {
   }
 
   const playSong = (uri) => {
-    // clear context before starting new one
-    setSongs([])
-    setContextID('')
     playTrack(token, uri)
     .then(result => {
-      if (!result) return
-      console.error(result)
+      if (!result) {
+        // clear context if no errors
+        setSongs([])
+        setContextID('')
+        // save new URIS data to global context
+        setContextURI(uri)
+      } else { console.error(result) }
     })
-    // save new URIS data to global context (playlist or track)
-    setContextURI(uri)
-    // remove playlist ID as track is playing not playlist
-    setContextID('')
   }
 
   const getArtistSongs = (id) => {
@@ -88,18 +87,12 @@ export default function Explore() {
 
   useEffect(() => {
 
-    const getTopArtists = async () => {
-      await axios.get('https://api.spotify.com/v1/me/top/artists?limit=20', {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      }).then((res) => {
-        setArtists(res.data.items)
-      }).catch(error => console.error(error))
-    }
-    getTopArtists()
+    getTopArtists(token)
+      .then(result => {
+        if (result.errorMsg === false) {
+          setArtists(result.data.items)
+        } else { console.error(result.errorMsg) }
+      })
 
   },[token])
 
