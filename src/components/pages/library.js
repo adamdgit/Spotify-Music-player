@@ -14,7 +14,7 @@ export default function Library() {
 
   // global context
   const { token } = useContext(GlobalContext)
-  const { setContextURI } = useContext(GlobalContext)
+  const { contextURI, setContextURI } = useContext(GlobalContext)
   const { setContextID } = useContext(GlobalContext)
   const { userID } = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
@@ -27,6 +27,7 @@ export default function Library() {
   const navigate = useNavigate()
 
   const playNewContext = (context) => {
+    if (context.uri === contextURI) return console.error('context already playing')
     setPlayerIsHidden(false) // show playlist info when playing new context
     playContext(token, context.uri)
       .then(result => {
