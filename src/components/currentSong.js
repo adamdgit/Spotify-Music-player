@@ -16,7 +16,6 @@ export default function CurrentSong() {
     if(currentTrackID) {
       getCurrentTrackData(token, currentTrackID)
         .then(result => {
-          console.log(result)
           if (result.errorMsg === false) setCurrentItem(result.data)
           else console.error(result.errorMsg)
         })
