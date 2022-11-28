@@ -1,31 +1,34 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 export default function AddToPlaylistBtn({track, userPlaylists, addToPlaylist}) {
 
   const [modalIsHidden, setModalIsHidden] = useState(true)
+  const addToPlaylistBtn = useRef()
 
   function preventModalOverflow(e) {
     // prevent check for small devices
     if (window.innerWidth < 900) return
-    // modal is child of button clicked
-    let clickedNode = e.target.childNodes[1]
-    if(clickedNode.getBoundingClientRect().top < 120) {
-      clickedNode.style.top = "35px"
+    // only run modal checks when button is clicked, not children of button
+    if (e.target !== addToPlaylistBtn.current) return
+    // modal is 2nd child of button clicked
+    let modal = e.target.childNodes[1]
+    if(modal.getBoundingClientRect().top < 120) {
+      modal.style.top = "35px"
     }
     // prevent modal displaying outside of screen
     // 125px is height of controls panel
-    if(clickedNode.getBoundingClientRect().bottom > (document.querySelector('.page-wrap').offsetHeight)) {
-      clickedNode.style.top = `-${clickedNode.clientHeight}px`
+    if(modal.getBoundingClientRect().bottom > (document.querySelector('.page-wrap').offsetHeight)) {
+      modal.style.top = `-${modal.clientHeight}px`
     }
 
-    if(clickedNode.getBoundingClientRect().left < 5) {
-      clickedNode.style.left = '0px'
-      clickedNode.style.right = 'unset'
+    if(modal.getBoundingClientRect().left < 5) {
+      modal.style.left = '0px'
+      modal.style.right = 'unset'
     }
   }
 
   return (
-    <button className="add-to-playlist" onClick={(e) => {
+    <button ref={addToPlaylistBtn} className="add-to-playlist" onClick={(e) => {
       setModalIsHidden(!modalIsHidden)
       preventModalOverflow(e)
       }
