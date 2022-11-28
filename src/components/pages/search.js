@@ -2,7 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { GlobalContext } from "../login";
 import { getUserPlaylists } from "../../api/getUserPlaylists"
 import { searchSongs } from "../../api/search";
-import SearchResult from "../SearchResult";
+import SearchAlbumsResult from "../SearchAlbumsResult";
+import SearchTracksResult from "../SearchTracksResult";
+import SearchPlaylistsResult from "../SearchPlaylistsResult";
 
 export default function SearchSongs() {
   
@@ -22,46 +24,23 @@ export default function SearchSongs() {
   const [searchAlbums, setSearchAlbums] = useState(false)
 
   const handleCheckboxChange = (e) => {
-    console.log(e.target.value)
-    // whenever value is checked, refresh search
-    if (e.target.checked === true && e.target.value === 'Tracks') {
-      setSearchTracks(true)
-    } else if (e.target.checked === false && e.target.value === 'Tracks') {
-      setSearchTracks(false)
-    }
-    if (e.target.checked === true && e.target.value === 'Playlists') {
-      setSearchPlaylists(true)
-    } else if (e.target.checked === false && e.target.value === 'Playlists') {
-      setSearchPlaylists(false)
-    }
-    if (e.target.checked === true && e.target.value === 'Albums') {
-      setSearchAlbums(true)
-    } else if (e.target.checked === false && e.target.value === 'Albums') {
-      setSearchAlbums(false)
+    switch(e.target.value) {
+      case 'Tracks': 
+        if(e.target.checked === true) setSearchTracks(true)
+        else setSearchTracks(false)
+        break;
+      case 'Playlists':
+        if(e.target.checked === true) setSearchPlaylists(true)
+        else setSearchPlaylists(false)
+        break;
+      case 'Albums':
+        if(e.target.checked === true) setSearchAlbums(true)
+        else setSearchAlbums(false)
+        break;
+      default:
+        break;
     }
   }
-
-  useEffect(() => {
-    if(query === '') return
-    const delaySearch = setTimeout(() => {
-      const search = async () => {
-        if (searchTracks === false) setTracksResults([])
-        if (searchAlbums === false) setAlbumsResults([])
-        if (searchPlaylists === false) setPlaylistResults([])
-        searchSongs(token, query)
-          .then(result => {
-            if(result.errorMsg === false) {
-              if (searchTracks === true) setTracksResults(result.searchResult.tracks.items)
-              if (searchAlbums === true) setAlbumsResults(result.searchResult.albums.items)
-              if (searchPlaylists === true) setPlaylistResults(result.searchResult.playlists.items)
-            }
-            else console.error(result.errorMsg)
-          })
-      }
-      search()
-      clearTimeout(delaySearch)
-    }, 300)
-  }, [searchTracks, searchAlbums, searchPlaylists])
 
   useEffect(() => {
 
@@ -82,21 +61,16 @@ export default function SearchSongs() {
     if(query === '') return
     // set delay for search requests
     const delaySearch = setTimeout(() => {
-      const search = async () => {
-        if (searchTracks === false) setTracksResults([])
-        if (searchAlbums === false) setAlbumsResults([])
-        if (searchPlaylists === false) setPlaylistResults([])
-        searchSongs(token, query)
-          .then(result => {
-            if(result.errorMsg === false) {
-              if (searchTracks === true) setTracksResults(result.searchResult.tracks.items)
-              if (searchAlbums === true) setAlbumsResults(result.searchResult.albums.items)
-              if (searchPlaylists === true) setPlaylistResults(result.searchResult.playlists.items)
-            }
-            else console.error(result.errorMsg)
-          })
-      }
-      search()
+      searchSongs(token, query)
+        .then(result => {
+          if(result.errorMsg === false) {
+            console.log(result.searchResult)
+            setTracksResults(result.searchResult.tracks.items)
+            setAlbumsResults(result.searchResult.albums.items)
+            setPlaylistResults(result.searchResult.playlists.items)
+          }
+          else console.error(result.errorMsg)
+        })
     }, 300)
     // remove timeout function
     return () => {
@@ -136,25 +110,20 @@ export default function SearchSongs() {
           />
         </div>
 
-        <SearchResult 
-          heading={'Tracks'}
-          svg={<svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="currentColor" viewBox="0 0 512 512"><path d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7v72V368c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V147L192 223.8V432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V200 128c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z"/></svg>}
+        <SearchTracksResult 
           array={tracksResults}
           playlists={playlists}
+          searchTracks={searchTracks}
         />
 
-        <SearchResult 
-          heading={'Albums'}
-          svg={<svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="currentColor" viewBox="0 0 512 512"><path d="M512 256c0 141.4-114.6 256-256 256S0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM256 352c-53 0-96-43-96-96s43-96 96-96s96 43 96 96s-43 96-96 96zm0 32c70.7 0 128-57.3 128-128s-57.3-128-128-128s-128 57.3-128 128s57.3 128 128 128zm0-96c17.7 0 32-14.3 32-32s-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32z"/></svg>}
+        <SearchAlbumsResult 
           array={albumResults}
-          playlists={playlists}
+          searchAlbums={searchAlbums}
         />
 
-        <SearchResult 
-          heading={'Playlists'}
-          svg={<svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="currentColor" viewBox="0 0 576 512"><path d="M0 96C0 60.7 28.7 32 64 32H512c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM128 288c17.7 0 32-14.3 32-32s-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32zm32-128c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32zM128 384c17.7 0 32-14.3 32-32s-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32zm96-248c-13.3 0-24 10.7-24 24s10.7 24 24 24H448c13.3 0 24-10.7 24-24s-10.7-24-24-24H224zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H448c13.3 0 24-10.7 24-24s-10.7-24-24-24H224zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H448c13.3 0 24-10.7 24-24s-10.7-24-24-24H224z"/></svg>}
+        <SearchPlaylistsResult 
           array={playlistResults}
-          playlists={playlists}
+          searchPlaylists={searchPlaylists}
         />
 
       </div>
