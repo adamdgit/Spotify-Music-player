@@ -20,8 +20,5 @@ export async function searchSongs(token, query) {
     searchResult = res.data
   }).catch(error => console.error(error))
 
-  return {
-    errorMsg,
-    searchResult
-  }
+  return { errorMsg, searchResult }
 }

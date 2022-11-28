@@ -15,8 +15,5 @@ export async function getSavedAlbums(token) {
     albums = res.data.items
   }).catch(error => errorMsg = error)
 
-  return {
-    errorMsg,
-    albums
-  }
+  return { errorMsg, albums }
 }

@@ -15,8 +15,5 @@ export async function getDevices(token) {
     devices = res.data.devices
   }).catch(error => errorMsg = error)
 
-  return {
-    errorMsg,
-    devices
-  }
+  return { errorMsg, devices }
 }

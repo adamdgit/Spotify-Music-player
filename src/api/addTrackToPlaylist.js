@@ -15,7 +15,7 @@ export async function addTrackToPlaylist(resultURI, playlistID, token) {
   }).catch(error => errorMsg = error)
 
   // get newly updated playlist items
-  await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=50`, {
+  await axios.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks?limit=100`, {
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,

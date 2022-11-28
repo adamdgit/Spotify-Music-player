@@ -18,8 +18,5 @@ export async function createPlaylist(token, userID){
     playlistData = res.data
   }).catch(error => errorMsg = error)
 
-  return {
-    errorMsg,
-    playlistData
-  }
+  return { errorMsg, playlistData }
 }

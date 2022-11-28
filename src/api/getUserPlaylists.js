@@ -15,8 +15,5 @@ export async function getUserPlaylists(token) {
     playlists = res.data.items
   }).catch(error => errorMsg = error)
 
-  return {
-    errorMsg,
-    playlists
-  }
+  return { errorMsg, playlists }
 }
