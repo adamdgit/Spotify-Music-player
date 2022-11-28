@@ -3,9 +3,9 @@ import Tooltip from "./Tooltip";
 
 export default function VolumeControl({ ...props }) {
 
-  const [prevVolume, setPrevVolume] = useState(0.3)
+  const [prevVolume, setPrevVolume] = useState(0.2)
   const [isMuted, setIsMuted] = useState(false)
-  const [percent, setPercent] = useState(0.3) // int between 0-1
+  const [percent, setPercent] = useState(0.2) // int between 0-1
 
   let volumeTrack = null
   const setVolumeTrack = useCallback(node => {
