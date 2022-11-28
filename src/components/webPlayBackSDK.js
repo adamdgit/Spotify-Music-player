@@ -54,10 +54,14 @@ export default function WebPlayback({ token }) {
 
       player.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id);
-        console.log('token expired test');
       })
 
       player.connect()
+
+      player.on('authentication_error', ({ message }) => {
+        console.error('Failed to authenticate', message);
+        player.disconnect();
+      });
 
       player.addListener('player_state_changed', ( state => {
         if (!state) return
