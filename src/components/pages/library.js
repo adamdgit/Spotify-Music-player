@@ -1,14 +1,14 @@
 import { useEffect, useContext, useState } from "react"
-import { GlobalContext } from "../login";
 import { NavLink, useNavigate } from "react-router-dom"
+import { GlobalContext } from "../login";
+import Loading from "../Loading";
+import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { createPlaylist } from "../../api/createPlaylist"
-import { changePlaylistSong } from "../../api/changePlaylistSong";
 import { getUserPlaylists } from "../../api/getUserPlaylists"
 import { unfollowPlaylist } from "../../api/unfollowPlaylist"
 import { getSavedAlbums } from "../../api/getSavedAlbums"
-import Loading from "../Loading";
-import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { removeAlbum } from "../../api/removeAlbum"
+import { playContext } from "../../api/playContext";
 
 export default function Library() {
 
@@ -26,9 +26,9 @@ export default function Library() {
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
 
-  const playContext = (context) => {
+  const playNewContext = (context) => {
     setPlayerIsHidden(false) // show playlist info when playing new context
-    changePlaylistSong(0, token, context.uri)
+    playContext(token, context.uri)
       .then(result => {
         if (result === false) {
           // clear playlist songs to allow new songs to be populated
@@ -134,7 +134,7 @@ export default function Library() {
                     'no image found' :
                     `${result.name} playlist art`
                     }
-                    onClick={() => playContext(result)}
+                    onClick={() => playNewContext(result)}
                   />
                 }
                 <span className="result-info">
@@ -186,7 +186,7 @@ export default function Library() {
                     'no image found' :
                     `${result.name} playlist art`
                     }
-                  onClick={() => playContext(result.album)}
+                  onClick={() => playNewContext(result.album)}
                 />
                 <span className="result-info">
                   <h2>{result.album.name}</h2>
