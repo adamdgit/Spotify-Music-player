@@ -11,10 +11,9 @@ import VolumeControl from "./VolumeControl";
 import Tooltip from "./Tooltip";
 import PlaybackDevices from "./PlaybackDevices";
 
-export default function WebPlayback(props) {
+export default function WebPlayback({ token }) {
 
   // global context
-  const { playerCBType, setPlayerCBType } = useContext(GlobalContext)
   const { setCurrentTrackID } = useContext(GlobalContext)
   const { setContextID } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
@@ -22,6 +21,7 @@ export default function WebPlayback(props) {
   const { setMessage } = useContext(GlobalContext)
 
   const [player, setPlayer] = useState(undefined)
+  const [playerIsReady, setPlayerIsReady] = useState(false)
   const [is_paused, setPaused] = useState(true)
   const [shuffle, setShuffle] = useState(false)
   const [current_track, setTrack] = useState()
@@ -29,8 +29,6 @@ export default function WebPlayback(props) {
   const [loading, setLoading] = useState(false)
   const [currentTrackPos, setPos] = useState(0) // milliseconds
   const [repeatMode, setRepeatMode] = useState(0)
-
-  let runOnce = false
 
   useEffect(() => {
     const script = document.createElement("script")
@@ -42,7 +40,7 @@ export default function WebPlayback(props) {
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new window.Spotify.Player({
           name: 'React Webplayer',
-          getOAuthToken: cb => { cb(props.token); },
+          getOAuthToken: cb => { cb(token); },
           volume: 0.2
       })
 
@@ -50,11 +48,13 @@ export default function WebPlayback(props) {
 
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
-        transferPlayback(props.token, device_id)
+        transferPlayback(token, device_id)
+        setPlayerIsReady(true)
       })
 
       player.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id);
+        console.log('token expired test');
       })
 
       player.connect()
@@ -62,11 +62,6 @@ export default function WebPlayback(props) {
       player.addListener('player_state_changed', ( state => {
         if (!state) return
         console.log(state)
-        if (runOnce === false) {
-          setPlayerCBType('player_ready')
-          runOnce = true
-        }
-
         setLoading(state.loading)
         setPos(state.position)
         setTrack(state.track_window.current_track)
@@ -85,7 +80,7 @@ export default function WebPlayback(props) {
 
   const shuffleSongs = () => {
     // toggle shuffle between true/false
-    shufflePlaylist(props.token, !shuffle)
+    shufflePlaylist(token, !shuffle)
       .then(result => {
         if (!result) return
         console.error(result)
@@ -101,7 +96,7 @@ export default function WebPlayback(props) {
     switch(repeatMode) {
       case 0:
         setRepeatMode(repeatMode + 1)
-        repeatTrack(props.token, 'context')
+        repeatTrack(token, 'context')
           .then(result => {
             if (!result) return
             console.error(result)
@@ -110,7 +105,7 @@ export default function WebPlayback(props) {
         break
       case 1:
         setRepeatMode(repeatMode + 1)
-        repeatTrack(props.token, 'track')
+        repeatTrack(token, 'track')
           .then(result => {
             if (!result) return
             console.error(result)
@@ -119,9 +114,8 @@ export default function WebPlayback(props) {
         break
       case 2:
         setRepeatMode(0)
-        repeatTrack(props.token, 'off')
+        repeatTrack(token, 'off')
           .then(result => {
-            console.log('off')
             if (!result) return
             console.error(result)
           })
@@ -129,7 +123,7 @@ export default function WebPlayback(props) {
         break
       default: 
        setRepeatMode(0)
-       repeatTrack(props.token, 'off')
+       repeatTrack(token, 'off')
         .then(result => {
           if (!result) return
           console.error(result)
@@ -140,7 +134,7 @@ export default function WebPlayback(props) {
   return (
     <>
       {
-      playerCBType !== '' ?
+      playerIsReady !== false ?
       <div className="playback-wrap">
 
         <Timeline 
@@ -180,7 +174,7 @@ export default function WebPlayback(props) {
             <svg viewBox="0 0 24 24" height="24px" width="24px" fill="currentcolor"><path d="M16.808 4.655l2.069 1.978h-.527c-1.656 0-3.312.68-4.458 1.814L12.797 9.75l1.179 1.246 1.317-1.527c.764-.794 1.91-1.247 3.057-1.247h.55l-2.07 2.014 1.178 1.179 4.005-3.993-4.026-3.945-1.178 1.179zm1.974 10.998l-1.974-1.888 1.18-1.179 4.024 3.945-4.004 3.993-1.178-1.179 1.954-1.901h-.434c-1.656 0-3.312-.625-4.458-1.667L8.242 9.8C7.35 9.071 6.204 8.55 4.93 8.55H2l.006-1.794 2.965.003c1.784 0 3.312.521 4.459 1.563l5.904 6.185c.765.73 1.911 1.146 3.058 1.146h.39zm-9.02-2.092l-1.52 1.394c-.892.793-2.038 1.36-3.312 1.36H2v1.588h2.93c1.783 0 3.312-.567 4.459-1.701l1.537-1.396-1.164-1.245z"></path></svg>
           </button>
           <button className="previous-btn" onClick={() => { 
-            previousTrack(props.token) 
+            previousTrack(token) 
           }}>
             <Tooltip tip={'Previous'}/>
             <svg role="img" fill="currentcolor" 
@@ -206,7 +200,7 @@ export default function WebPlayback(props) {
             }
           </button>
           <button className="next-btn" onClick={() => { 
-            nextTrack(props.token)
+            nextTrack(token)
           }}>
             <Tooltip tip={'Next'}/>
             <svg role="img" fill="currentcolor" 
