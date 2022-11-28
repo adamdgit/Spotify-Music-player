@@ -66,6 +66,7 @@ export default function WebPlayback(props) {
           setPlayerCBType('player_ready')
           runOnce = true
         }
+
         setLoading(state.loading)
         setPos(state.position)
         setTrack(state.track_window.current_track)
