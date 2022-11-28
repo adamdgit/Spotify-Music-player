@@ -21,7 +21,6 @@ function Login() {
 
   // Global context items
   const [token, setToken] = useState('')
-  const [playerCBType, setPlayerCBType] = useState('')
   const [currentTrackID, setCurrentTrackID] = useState('')
   const [contextURI, setContextURI] = useState('') // album, playlist etc
   const [contextID, setContextID] = useState('')
@@ -67,7 +66,6 @@ function Login() {
       message, setMessage, 
       contextID, setContextID, 
       contextURI, setContextURI, 
-      playerCBType, setPlayerCBType,
       currentTrackID, setCurrentTrackID,
       playerIsHidden, setPlayerIsHidden
     }}>

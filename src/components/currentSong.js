@@ -6,7 +6,6 @@ import { GlobalContext } from "./login"
 export default function CurrentSong() {
 
   const { token } = useContext(GlobalContext)
-  const { playerCBType } = useContext(GlobalContext)
   const { currentTrackID } = useContext(GlobalContext)
 
   const [currentItem, setCurrentItem] = useState()
@@ -14,7 +13,7 @@ export default function CurrentSong() {
   // when player updates currentTrackID get new track info
   useEffect(() => {
     // only runs once player is ready otherwise value would be an empty string
-    if(playerCBType !== '') {
+    if(currentTrackID) {
       const getCurrentTrack = async () => {
         await axios.get(`https://api.spotify.com/v1/tracks/${currentTrackID}`, {
           headers: {
