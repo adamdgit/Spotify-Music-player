@@ -27,14 +27,12 @@ export default function Library() {
   const navigate = useNavigate()
 
   const playContext = (context) => {
-    // clear playlist songs to allow new songs to be populated
-    setSongs([])
-    setContextID('')
-    setContextURI('')
     setPlayerIsHidden(false) // show playlist info when playing new context
     changePlaylistSong(0, token, context.uri)
       .then(result => {
         if (result === false) {
+          // clear playlist songs to allow new songs to be populated
+          setSongs([])
           // save selected playlist data to global context
           setContextURI(context.uri)
           setContextID(context.id)
