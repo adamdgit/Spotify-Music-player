@@ -160,16 +160,12 @@
 }
 
 .search-results-wrap {
-  display: none;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   padding: 2rem 0;
   width:100%;
   min-width: 140px;
-}
-
-.show-search {
-  display: grid;
 }
 
 .search-checkbox {
