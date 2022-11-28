@@ -29,11 +29,11 @@ export default function Library() {
   const playNewContext = (context) => {
     if (context.uri === contextURI) return console.error('context already playing')
     setPlayerIsHidden(false) // show playlist info when playing new context
+    setSongs([])
     playContext(token, context.uri)
       .then(result => {
         if (result === false) {
           // clear playlist songs to allow new songs to be populated
-          setSongs([])
           // save selected playlist data to global context
           setContextURI(context.uri)
           setContextID(context.id)
