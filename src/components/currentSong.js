@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react"
-import axios from "axios"
 import Loading from "./Loading"
 import { GlobalContext } from "./login"
+import { getCurrentTrackData } from "../api/getCurrentTrackData"
 
 export default function CurrentSong() {
 
@@ -14,19 +14,12 @@ export default function CurrentSong() {
   useEffect(() => {
     // only runs once player is ready otherwise value would be an empty string
     if(currentTrackID) {
-      const getCurrentTrack = async () => {
-        await axios.get(`https://api.spotify.com/v1/tracks/${currentTrackID}`, {
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          }
-        }).then(result => { 
-          if (result.data) return setCurrentItem(result.data)
-          else console.error(result) 
+      getCurrentTrackData(token, currentTrackID)
+        .then(result => {
+          console.log(result)
+          if (result.errorMsg === false) setCurrentItem(result.data)
+          else console.error(result.errorMsg)
         })
-      }
-      getCurrentTrack()
     }
   },[currentTrackID])
 
