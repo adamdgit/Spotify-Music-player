@@ -38,6 +38,7 @@ export default function SearchSongs() {
         else setSearchAlbums(false)
         break;
       default:
+        setSearchTracks(true)
         break;
     }
   }
@@ -64,7 +65,6 @@ export default function SearchSongs() {
       searchSongs(token, query)
         .then(result => {
           if(result.errorMsg === false) {
-            console.log(result.searchResult)
             setTracksResults(result.searchResult.tracks.items)
             setAlbumsResults(result.searchResult.albums.items)
             setPlaylistResults(result.searchResult.playlists.items)
