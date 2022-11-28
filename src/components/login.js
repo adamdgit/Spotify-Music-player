@@ -48,7 +48,6 @@ function Login() {
       getUserInfo(token)
         .then(result => {
           if (result.errorMsg === false) {
-            console.log(result)
             setUserID(result.data.id)
             setUsername(result.data.display_name)
           } else {
