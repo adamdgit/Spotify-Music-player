@@ -137,7 +137,6 @@ export default function EditPlaylist() {
     if(!id) return
 
     const getPlaylists = async () => {
-      console.log('get playlists data')
       await axios.get(`https://api.spotify.com/v1/playlists/${id}`, {
         headers: {
           Accept: 'application/json',
