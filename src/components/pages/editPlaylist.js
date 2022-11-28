@@ -157,14 +157,6 @@ export default function EditPlaylist() {
 
   },[token, id])
 
-  // cleanup arrays when playlist changes
-  useEffect(() => {
-    if (contextID === playlistData?.id) {
-      setDraggables([])
-      setSongs([])
-    }
-  },[contextID, setSongs])
-
   // Adds event listners for playlist items after the draggables array is filled
   // useCallback provides update when html draggables are rendered
   useEffect(() => {
