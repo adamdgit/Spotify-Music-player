@@ -51,6 +51,8 @@ function Login() {
             setUsername(result.data.display_name)
           } else {
             console.error(result.errorMsg)
+            setToken('')
+            window.localStorage.removeItem('token')
           }
         })
     }
