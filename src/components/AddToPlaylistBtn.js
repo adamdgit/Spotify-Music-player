@@ -1,8 +1,9 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
-export default function AddToPlaylistBtn({track, userPlaylists, addToPlaylist}) {
+export default function AddToPlaylistBtn({track, userID, userPlaylists, addToPlaylist}) {
 
   const [modalIsHidden, setModalIsHidden] = useState(true)
+  const [filteredPlaylists, setFilteredPlaylists] = useState([])
   const addToPlaylistBtn = useRef()
 
   function preventModalOverflow(e) {
@@ -27,6 +28,13 @@ export default function AddToPlaylistBtn({track, userPlaylists, addToPlaylist}) 
     }
   }
 
+  useEffect(() => {
+    setFilteredPlaylists(userPlaylists.filter(a => {
+      if(a.owner.id === userID) return a
+      else return null
+    }))
+  }, [userPlaylists])
+
   return (
     <button ref={addToPlaylistBtn} className="add-to-playlist" onClick={(e) => {
       setModalIsHidden(!modalIsHidden)
@@ -42,7 +50,7 @@ export default function AddToPlaylistBtn({track, userPlaylists, addToPlaylist}) 
         </span>
         <ul>
         {
-          userPlaylists? userPlaylists.map((playlist, index) => {
+          filteredPlaylists? filteredPlaylists.map((playlist, index) => {
             return <li key={index} style={{listStyle:"none"}} onClick={() => addToPlaylist(track.uri, playlist.id, playlist.name)}>{playlist.name}</li>
           })
           : <li>No playlists found</li>
