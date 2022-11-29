@@ -22,7 +22,7 @@ export default function Library() {
   const { setPlayerIsHidden } = useContext(GlobalContext)
   // users playlists results
   const [isLoading, setLoading] = useState(false)
-  const [playlists, setPlaylists] = useState([])
+  const { playlists, setPlaylists } = useContext(GlobalContext)
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
 
