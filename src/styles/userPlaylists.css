@@ -25,11 +25,32 @@
 }
 
 .user-input-wrap {
+  position: relative;
   display: grid;
   grid-template-rows:repeat(4, 55px) ;
   gap: .8rem;
   width: 100%;
   align-items: center;
+}
+
+.error-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(204, 74, 74);
+  color: white;
+  border-radius: 5px;
+  top: -35px;
+  left: 278px;
+  transform: translateX(-50%);
+  height: 40px;
+  width: max-content;
+  padding: 0 20px;
+  box-shadow: 0 5px 10px #111;
+  transition: all 200ms ease-in-out;
 }
 
 .edit-input {
