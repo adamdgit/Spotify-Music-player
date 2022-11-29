@@ -89,7 +89,7 @@ export default function EditSearchResults({ playlistData, id, setTracks, playlis
               'no image found' :
               `${track.name} album art`
               }/>
-            <span>
+            <span className="info">
               <h3>{track.name}</h3>
               <p>{sanitizeArtistNames(track.artists)}</p>
             </span>
