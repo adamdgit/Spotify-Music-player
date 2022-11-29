@@ -17,7 +17,12 @@ export default function EditPlaylistDetails({ setOriginalDesc, originalDesc, set
     e.preventDefault()
     // simple validation
     if (playlistName === '' && playlistDesc === '') {
-      return setError(true)
+      setError(true)
+      const timer = setTimeout(() => {
+        setError(false)
+        clearTimeout(timer)
+      }, 4000)
+      return
     }
     if (playlistName === '' && playlistDesc !== '') {
       setError(false)
