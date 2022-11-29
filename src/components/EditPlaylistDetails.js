@@ -2,6 +2,7 @@ import { useState, useContext } from "react"
 import { useParams } from "react-router-dom"
 import { changePlaylistDetails } from "../api/changePlaylistDetails"
 import { GlobalContext } from "./login"
+import ErrorTooltip from "../components/ErrorTooltip"
 
 export default function EditPlaylistDetails({ setOriginalDesc, originalDesc, setOriginalName, originalName, playlistData, playlistName, playlistDesc, setPlaylistName, setPlaylistDesc }) {
 
@@ -22,33 +23,36 @@ export default function EditPlaylistDetails({ setOriginalDesc, originalDesc, set
       setError(false)
       changePlaylistDetails(token, id, playlistDesc, originalName, isPublic)
         .then(result => {
-          if (result === false) return
+          if (result === false) {
+            setOriginalDesc(playlistDesc)
+            setMessage({msg: 'Playlist details updated', needsUpdate: true})
+            return
+          }
           else console.error(result)
         })
-      setOriginalDesc(playlistDesc)
-      setMessage({msg: 'Playlist details updated', needsUpdate: true})
-      return
     }
     if (playlistName !== '' && playlistDesc === '') {
       setError(false)
       changePlaylistDetails(token, id, originalDesc, playlistName, isPublic)
         .then(result => {
-          if (result === false) return
+          if (result === false) {
+            setOriginalName(playlistName)
+            setMessage({msg: 'Playlist details updated', needsUpdate: true})
+            return
+          }
           else console.error(result)
         })
-      setOriginalName(playlistName)
-      setMessage({msg: 'Playlist details updated', needsUpdate: true})
-      return
     }
     setError(false)
     changePlaylistDetails(token, id, playlistDesc, playlistName, isPublic)
       .then(result => {
-        if (result === false) return
+        if (result === false) {
+          setOriginalDesc(playlistDesc)
+          setOriginalName(playlistName)
+          setMessage({msg: 'Playlist details updated', needsUpdate: true})
+        }
         else console.error(result)
       })
-    setOriginalDesc(playlistDesc)
-    setOriginalName(playlistName)
-    setMessage({msg: 'Playlist details updated', needsUpdate: true})
   }
 
   return (
@@ -66,6 +70,7 @@ export default function EditPlaylistDetails({ setOriginalDesc, originalDesc, set
         /> 
       }
       <form className="user-input-wrap">
+        <ErrorTooltip tip={'No name or description entered'} error={error}/>
         <span className="change-details">
           <h3>Name:</h3>
           <input
