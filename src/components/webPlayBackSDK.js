@@ -49,7 +49,6 @@ export default function WebPlayback({ token }) {
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         transferPlayback(token, device_id)
-        setPlayerIsReady(true)
       })
 
       player.addListener('not_ready', ({ device_id }) => {
@@ -58,14 +57,10 @@ export default function WebPlayback({ token }) {
 
       player.connect()
 
-      player.on('authentication_error', ({ message }) => {
-        console.error('Failed to authenticate', message);
-        player.disconnect();
-      });
-
       player.addListener('player_state_changed', ( state => {
         if (!state) return
         console.log(state)
+        setPlayerIsReady(true)
         setLoading(state.loading)
         setPos(state.position)
         setTrack(state.track_window.current_track)
@@ -138,7 +133,7 @@ export default function WebPlayback({ token }) {
   return (
     <>
       {
-      playerIsReady !== false ?
+      playerIsReady === true ?
       <div className="playback-wrap">
 
         <Timeline 
