@@ -28,6 +28,7 @@ function Login() {
   const [songs, setSongs] = useState([]) // playlist items
   const [message, setMessage] = useState({msg: '', needsUpdate: false}) // playlist update message
   const [playerIsHidden, setPlayerIsHidden] = useState(true)
+  const [playlists, setPlaylists] = useState([]) // user playlists
 
   useEffect(() => {
     let hash = window.location.hash
@@ -68,7 +69,8 @@ function Login() {
       contextID, setContextID, 
       contextURI, setContextURI, 
       currentTrackID, setCurrentTrackID,
-      playerIsHidden, setPlayerIsHidden
+      playerIsHidden, setPlayerIsHidden,
+      playlists, setPlaylists
     }}>
     {
     !token ?
