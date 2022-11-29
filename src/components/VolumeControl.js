@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import Tooltip from "./Tooltip";
 
 export default function VolumeControl({ ...props }) {
@@ -11,51 +11,43 @@ export default function VolumeControl({ ...props }) {
   const setVolumeTrack = useCallback(node => {
     if(node != null) {
       volumeTrack = node
+      volumeTrack.addEventListener('pointerdown', changeVolume)
+      document.addEventListener('pointerup', cleanup)
+      function changeVolume(e) {
+        // check opposite value as state will not update instantly
+        if (isMuted === false) {
+          setIsMuted(false) 
+        }
+        const rect = e.target.getBoundingClientRect()
+        let calcPercent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width
+        setPercent(calcPercent) 
+        setPrevVolume(calcPercent)
+        props.player.setVolume(calcPercent)
+        document.addEventListener('pointermove', seek)
+      }
+  
+      function seek(e) {
+        const rect = volumeTrack.getBoundingClientRect()
+        let calcPercent = Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width
+        setPercent(calcPercent) 
+        setPrevVolume(calcPercent)
+        props.player.setVolume(calcPercent)
+      }
+  
+      // cleanup listeners when user has set the volume
+      function cleanup(e) {
+        e.preventDefault()
+        document.removeEventListener('pointermove', seek)
+      }
     }
   },[])
-
-  useEffect(() => {
-
-    volumeTrack.addEventListener('pointerdown', changeVolume)
-    document.addEventListener('pointerup', cleanup)
-    function changeVolume(e) {
-      const rect = e.target.getBoundingClientRect()
-      let calcPercent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width
-      setPercent(calcPercent) 
-      setPrevVolume(calcPercent)
-      props.player.setVolume(calcPercent)
-      document.addEventListener('pointermove', seek)
-    }
-
-    function seek(e) {
-      const rect = volumeTrack.getBoundingClientRect()
-      let calcPercent = Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width
-      setPercent(calcPercent) 
-      setPrevVolume(calcPercent)
-      props.player.setVolume(calcPercent)
-    }
-
-    // cleanup listeners when user has set the volume
-    function cleanup(e) {
-      e.preventDefault()
-      document.removeEventListener('pointermove', seek)
-      //document.removeEventListener('pointerup', cleanup)
-    }
-    
-    // clean up event listeners on re-render
-    return () => {
-      volumeTrack.removeEventListener('pointerdown', changeVolume)
-      document.removeEventListener('pointermove', seek)
-      document.removeEventListener('pointerup', cleanup)
-    }    
-
-  },[volumeTrack])
 
   return (
 
     <div className="volume-control">
       <button className="volume-btn" onClick={() => {
         setIsMuted(!isMuted)
+        // check opposite value as state will not update instantly
         isMuted === false ? props.player.setVolume(0) : props.player.setVolume(prevVolume)
       }}>
         <Tooltip tip={'Toggle mute'} />
