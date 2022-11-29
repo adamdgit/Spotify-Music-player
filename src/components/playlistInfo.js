@@ -6,7 +6,6 @@ import { changePlaylistSong } from "../api/changePlaylistSong";
 import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { convertTime } from "./utils/convertTime"
 import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
-import { getUserPlaylists } from "../api/getUserPlaylists"
 import Tooltip from "./Tooltip";
 import AddToPlaylistBtn from "./AddToPlaylistBtn";
 
@@ -20,13 +19,13 @@ function PlaylistInfo() {
   const { contextID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
   const { playerIsHidden } = useContext(GlobalContext)
+  const { playlists } = useContext(GlobalContext)
   // playlist update message
   const { setMessage } = useContext(GlobalContext)
   // component state
   const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
-  const [playlists, setPlaylists] = useState([]) // filtered to show user owned
   const [playlistArt, setPlaylistArt] = useState('')
   const [totalContextDuration, setContextDuration] = useState(0)
 
@@ -38,18 +37,6 @@ function PlaylistInfo() {
       })
       setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
   }
-
-  // return only user owned playlists, for add-to-playlist button
-  useEffect(() => {
-    getUserPlaylists(token)
-      .then(result => {
-        if (result.errorMsg === false) return setPlaylists(result.playlists.filter(a => {
-          if(a.owner.id === userID) return a
-          return null
-        }))
-        else console.error(result.errorMsg)
-      })
-  },[userID])
 
   // when context changes check for playlist or album and get data
   useEffect(() => {
@@ -174,13 +161,14 @@ function PlaylistInfo() {
                     :
                     <AddToPlaylistBtn 
                       track={song.track}
+                      userID={userID}
                       userPlaylists={playlists}
                       addToPlaylist={addToPlaylist}
                     />
                   }
                 </span>
               )
-            }) : contextURI === "" ? <h1>No playlist available</h1> : <></>
+            }) : songs.length === 0 ? <h1>No tracks available</h1> : <></>
           }
 
           {
@@ -203,12 +191,13 @@ function PlaylistInfo() {
                   <p className="song-length">{convertTime(song.duration_ms)}</p>
                   <AddToPlaylistBtn 
                     track={song}
+                    userID={userID}
                     userPlaylists={playlists}
                     addToPlaylist={addToPlaylist}
                   />
                 </span>
               )
-            }) : contextURI === "" ? <h1>No playlist available</h1> : <></>
+            }) : songs.length === 0 ? <h1>No tracks available</h1> : <></>
           }
         </div>
       </div>
