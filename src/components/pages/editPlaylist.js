@@ -269,68 +269,67 @@ export default function EditPlaylist() {
             <p>{playlistData?.public === false ? 'Private playlist' : 'Public playlist'}</p>
           </span>
         </div>
-     {playlistData ?
-     <>
-        <EditPlaylistDetails 
+      {
+        playlistData ?
+        <>
+          <EditPlaylistDetails 
+            playlistData={playlistData} 
+            setPlaylistName={setPlaylistName}
+            playlistName={playlistName}
+            setPlaylistDesc={setPlaylistDesc}
+            playlistDesc={playlistDesc}
+            setOriginalDesc={setOriginalDesc}
+            originalDesc={originalDesc}
+            setOriginalName={setOriginalName}
+            originalName={originalName}
+          />
+
+          <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Edit tracks:</h2>
+
+          <div className="edit-songlist" ref={container}>
+            {contextID === playlistData.id?
+              songs.length === 0 ? 
+              <BlankSongResult />
+              :
+              songs.map((song, index) => {
+                return (
+                  <EditPlaylistItem 
+                    key={index}
+                    song={song} 
+                    index={index} 
+                    func={removeTrack} 
+                    setDraggableElement={setDraggableElement}
+                  />
+                )
+              }) 
+              : 
+              tracks.length === 0 ? 
+              <BlankSongResult />
+              :
+              tracks.map((song, index) => {
+                return (
+                  <EditPlaylistItem 
+                    key={index}
+                    song={song} 
+                    index={index} 
+                    func={removeTrack} 
+                    setDraggableElement={setDraggableElement}
+                  />
+                )
+              })
+            }
+          </div>
+        </>
+        : <Loading loadingMsg={'Loading playlist info...'}/>
+      }
+        <EditSearchResults 
           playlistData={playlistData} 
-          setPlaylistName={setPlaylistName}
-          playlistName={playlistName}
-          setPlaylistDesc={setPlaylistDesc}
-          playlistDesc={playlistDesc}
-          setOriginalDesc={setOriginalDesc}
-          originalDesc={originalDesc}
-          setOriginalName={setOriginalName}
+          id={id} 
+          setTracks={setTracks} 
           originalName={originalName}
+          playlistName={playlistName}
         />
-
-        <h2 style={{textAlign: 'center', marginBottom: '2rem'}}>Edit tracks:</h2>
-
-        <div className="edit-songlist" ref={container}>
-          {contextID === playlistData.id?
-            songs.length === 0 ? 
-            <BlankSongResult />
-            :
-            songs.map((song, index) => {
-              return (
-                <EditPlaylistItem 
-                  key={index}
-                  song={song} 
-                  index={index} 
-                  func={removeTrack} 
-                  setDraggableElement={setDraggableElement}
-                />
-              )
-            }) 
-            : 
-            tracks.length === 0 ? 
-            <BlankSongResult />
-            :
-            tracks.map((song, index) => {
-              return (
-                <EditPlaylistItem 
-                  key={index}
-                  song={song} 
-                  index={index} 
-                  func={removeTrack} 
-                  setDraggableElement={setDraggableElement}
-                />
-              )
-            })
-          }
-        </div>
-      </>
-      : <Loading loadingMsg={'Loading playlist info...'}/>
-    }
       </div>
-
-      <EditSearchResults 
-        playlistData={playlistData} 
-        id={id} 
-        setTracks={setTracks} 
-        originalName={originalName}
-        playlistName={playlistName}
-      />
-
     </div>
   )
 }
