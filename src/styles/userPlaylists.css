@@ -75,9 +75,9 @@
 .search-songs-wrap {
   display: grid;
   gap: 2rem;
-  margin: 0 auto;
-  padding: 3rem;
+  margin: 3rem auto 0 auto;
   max-width: var(--max-page-width);
+  z-index: 1;
 }
 
 .playlist-info {
@@ -94,10 +94,12 @@
 
 .edit-songlist {
   display: grid;
+  position: relative;
   transition: transform 400ms cubic-bezier(.17,.67,.07,.94);
   background: var(--primary-blue);
   max-width: 1200px;
   margin: 0 auto;
+  z-index: 2;
 }
 
 .edit-heading {
