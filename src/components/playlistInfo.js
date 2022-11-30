@@ -168,7 +168,7 @@ function PlaylistInfo() {
                   }
                 </span>
               )
-            }) : songs.length === 0 ? <h1>No tracks available</h1> : <></>
+            }) : <h1>No tracks available</h1>
           }
 
           {
@@ -197,7 +197,7 @@ function PlaylistInfo() {
                   />
                 </span>
               )
-            }) : songs.length === 0 ? <h1>No tracks available</h1> : <></>
+            }) : <h1>No tracks available</h1>
           }
         </div>
       </div>
