@@ -46,7 +46,6 @@ export default function VolumeControl({ player, volumeLS }) {
   },[])
 
   return (
-
     <div className="volume-control">
       <button className="volume-btn" onClick={() => {
         setIsMuted(!isMuted)
