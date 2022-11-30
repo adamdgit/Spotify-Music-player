@@ -11,6 +11,7 @@ export default function SearchTracksResult({...props}) {
   // global context
   const { token } = useContext(GlobalContext)
   const { setSongs } = useContext(GlobalContext)
+  const { userID } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
   const { contextID, setContextID} = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
@@ -87,6 +88,7 @@ export default function SearchTracksResult({...props}) {
             </span>
             <AddToPlaylistBtn 
               track={result}
+              userID={userID}
               userPlaylists={props.playlists}
               addToPlaylist={addToPlaylist}
             />
