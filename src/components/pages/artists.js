@@ -122,6 +122,7 @@ export default function Explore() {
               </span>
               <AddToPlaylistBtn 
                 track={track}
+                userID={userID}
                 userPlaylists={userPlaylists} 
                 addToPlaylist={addToPlaylist} 
               />
