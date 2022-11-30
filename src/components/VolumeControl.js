@@ -1,11 +1,11 @@
 import { useState, useCallback } from "react";
 import Tooltip from "./Tooltip";
 
-export default function VolumeControl({ ...props }) {
+export default function VolumeControl({ player, volumeLS }) {
 
-  const [prevVolume, setPrevVolume] = useState(0.2)
+  const [prevVolume, setPrevVolume] = useState(volumeLS)
   const [isMuted, setIsMuted] = useState(false)
-  const [percent, setPercent] = useState(0.2) // int between 0-1
+  const [percent, setPercent] = useState(volumeLS) // int between 0-1
 
   let volumeTrack = null
   const setVolumeTrack = useCallback(node => {
@@ -22,7 +22,9 @@ export default function VolumeControl({ ...props }) {
         let calcPercent = Math.min(Math.max(0, e.pageX - rect.x), rect.width) / rect.width
         setPercent(calcPercent) 
         setPrevVolume(calcPercent)
-        props.player.setVolume(calcPercent)
+        player.setVolume(calcPercent)
+        // stores volume to localstorage, to use on app open
+        window.localStorage.setItem('volume', calcPercent)
         document.addEventListener('pointermove', seek)
       }
   
@@ -31,7 +33,8 @@ export default function VolumeControl({ ...props }) {
         let calcPercent = Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width
         setPercent(calcPercent) 
         setPrevVolume(calcPercent)
-        props.player.setVolume(calcPercent)
+        player.setVolume(calcPercent)
+        window.localStorage.setItem('volume', calcPercent)
       }
   
       // cleanup listeners when user has set the volume
@@ -48,7 +51,7 @@ export default function VolumeControl({ ...props }) {
       <button className="volume-btn" onClick={() => {
         setIsMuted(!isMuted)
         // check opposite value as state will not update instantly
-        isMuted === false ? props.player.setVolume(0) : props.player.setVolume(prevVolume)
+        isMuted === false ? player.setVolume(0) : player.setVolume(prevVolume)
       }}>
         <Tooltip tip={'Toggle mute'} />
         {

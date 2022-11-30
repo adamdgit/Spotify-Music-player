@@ -29,6 +29,8 @@ export default function WebPlayback({ token }) {
   const [loading, setLoading] = useState(false)
   const [currentTrackPos, setPos] = useState(0) // milliseconds
   const [repeatMode, setRepeatMode] = useState(0)
+  // stored volume level, updates when user changes volume, defaults to 0.2
+  const [volumeLS] = useState(window.localStorage.getItem('volume'))
 
   useEffect(() => {
     const script = document.createElement("script")
@@ -41,7 +43,7 @@ export default function WebPlayback({ token }) {
       const player = new window.Spotify.Player({
           name: 'React Webplayer',
           getOAuthToken: cb => { cb(token); },
-          volume: 0.2
+          volume: volumeLS
       })
 
       setPlayer(player)
@@ -229,7 +231,7 @@ export default function WebPlayback({ token }) {
           </button>
         </div>
   
-        <VolumeControl player={player} />
+        <VolumeControl player={player} volumeLS={volumeLS}/>
         <PlaybackDevices />
   
       </div>
