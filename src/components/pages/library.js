@@ -28,7 +28,8 @@ export default function Library() {
 
   const playNewContext = (context) => {
     if (context.uri === contextURI) return console.error('context already playing')
-    setPlayerIsHidden(false) // show playlist info when playing new context
+    // show playlist info when playing new context
+    setPlayerIsHidden(false)
     // clear playlist songs to allow new songs to be populated
     setSongs([])
     playContext(token, context.uri)
