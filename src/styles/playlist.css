@@ -127,13 +127,13 @@
   width: 100%;
 }
 
-.draggable .tooltip {
+.play-song-btn .tooltip {
   left: -5px;
   top: 30px;
   font-size: .9rem;
 }
 
-.draggable:hover .tooltip {
+.play-song-btn:hover .tooltip {
   opacity: 1;
   left: 8px;
 }

@@ -134,11 +134,11 @@ function PlaylistInfo() {
               return (
                 <span key={index} data-index={index} 
                   style={playlistOwner === userID ? {gridTemplateColumns: '18px 80px auto 40px'} : {}} 
-                  className={currentTrackID === song.track.id ? "draggable selected" : "draggable"}> 
-                  <Tooltip tip={'Play'} />
+                  className={currentTrackID === song.track.id ? "draggable selected" : "draggable"}>
                   <span>{index+1}</span>
+                  <button className="play-song-btn" onClick={() => changePlaylistSong(index, token, contextURI)}>
+                    <Tooltip tip={'Play'} />
                     <img 
-                      onClick={() => changePlaylistSong(index, token, contextURI)}
                       src={
                       song.track.album.images.length === 0 ?
                       'no image found' :
@@ -149,7 +149,8 @@ function PlaylistInfo() {
                       song.track.album.images.length === 0 ?
                       'no image found' :
                       `${song.track.name} album art`}
-                    />
+                      />
+                  </button>
                   <span className="draggable-trackname">
                     <h1>{song.track.name}</h1>
                     <p>{sanitizeArtistNames(song.track.artists)}</p>
