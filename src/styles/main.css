@@ -31,8 +31,7 @@
   display: grid;
   grid-template-columns: 200px auto;
   background-color: var(--secondary-blue);
-  box-shadow: inset 3px 3px 8px black;
-  border: 1px solid rgb(59, 64, 75);
+  box-shadow: 3px 3px 8px black;
 }
 
 .result-info {
@@ -128,31 +127,31 @@
   width:100%;
   min-width: 140px;
   max-width: 700px;
-  border: 1px solid var(--secondary-blue);
   box-shadow: inset 3px 3px 5px #000;
   background-color: var(--bg-blue);
   padding: 5px;
   margin: 2rem 0;
 }
 
-.search-bar .search {
+.search {
   color: white;
   height: 30px;
   width: 100%;
   padding: 0 10px;
-  background-color: var(--bg-blue);
+  background-color: unset;
 }
 
-.search-bar .search-btn {
+.search-btn {
   position: absolute;
   right: 10px;
   top: 10px;
-  background-color: var(--primary-blue);
+  background-color: unset;
   color: white;
 }
 
 .search-bar:hover {
-  border: 1px solid var(--blue);
+  background-color: var(--secondary-blue);
+  box-shadow: 3px 3px 5px #000;
 }
 
 .search-bar input:focus {
