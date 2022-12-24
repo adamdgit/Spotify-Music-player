@@ -2,41 +2,24 @@ import axios from "axios";
 import CurrentSong from "./CurrentSong";
 import { useState, useEffect, useContext, useMemo } from "react";
 import { GlobalContext } from "./login";
-import { changePlaylistSong } from "../api/changePlaylistSong";
-import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
 import { convertTime } from "./utils/convertTime"
-import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
-import Tooltip from "./Tooltip";
-import AddToPlaylistBtn from "./AddToPlaylistBtn";
+import PlaylistContext from "./PlaylistContext";
+import AlbumContext from "./AlbumContext";
 
 function PlaylistInfo() {
 
   // global context
   const { token } = useContext(GlobalContext)
-  const { userID } = useContext(GlobalContext)
   const { contextURI } = useContext(GlobalContext)
-  const { currentTrackID } = useContext(GlobalContext)
   const { contextID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
   const { playerIsHidden } = useContext(GlobalContext)
-  const { playlists } = useContext(GlobalContext)
-  // playlist update message
-  const { setMessage } = useContext(GlobalContext)
   // component state
   const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
   const [playlistArt, setPlaylistArt] = useState('')
   const [totalContextDuration, setContextDuration] = useState(0)
-
-  const addToPlaylist = (resultURI, playlistid, playlistName) => {
-    addTrackToPlaylist(resultURI, playlistid, token)
-      .then(result => { 
-        if (result.errorMsg === false) return
-        else console.error(result.errorMsg)
-      })
-      setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
-  }
 
   // when context changes check for playlist or album and get data
   useEffect(() => {
@@ -129,76 +112,18 @@ function PlaylistInfo() {
         
         <div className="container">
           {
-            contextURI?.includes('playlist') ? songs.map((song, index) => {
-              if (song === null || song === undefined) return null
-              return (
-                <span key={index} data-index={index} 
-                  style={playlistOwner === userID ? {gridTemplateColumns: '18px 80px auto 40px'} : {}} 
-                  className={currentTrackID === song.track.id ? "draggable selected" : "draggable"}>
-                  <span>{index+1}</span>
-                  <button className="play-song-btn" onClick={() => changePlaylistSong(index, token, contextURI)}>
-                    <Tooltip tip={'Play'} />
-                    <img 
-                      src={
-                      song.track.album.images.length === 0 ?
-                      'no image found' :
-                      song.track.album.images.length === 3 ?
-                      song.track.album.images[2].url :
-                      song.track.album.images[0].url}
-                      alt={
-                      song.track.album.images.length === 0 ?
-                      'no image found' :
-                      `${song.track.name} album art`}
-                      />
-                  </button>
-                  <span className="draggable-trackname">
-                    <h1>{song.track.name}</h1>
-                    <p>{sanitizeArtistNames(song.track.artists)}</p>
-                  </span>
-                  <p className="song-length">{convertTime(song.track.duration_ms)}</p>
-                  {
-                    playlistOwner === userID ?
-                    <></>
-                    :
-                    <AddToPlaylistBtn 
-                      track={song.track}
-                      userID={userID}
-                      userPlaylists={playlists}
-                      addToPlaylist={addToPlaylist}
-                    />
-                  }
-                </span>
-              )
-            }) : songs.length === 0 ? <h1>No tracks available</h1> : <></>
-          }
-
-          {
-            contextURI?.includes('album') ? songs.map((song, index) => {
-              if (song === null || song === undefined) return null
-              return (
-                <span key={index} data-index={index}
-                  className={currentTrackID === song.id ? "draggable selected" : "draggable"}>
-                  <span>{index+1}</span>
-                  <Tooltip tip={'Play'} />
-                  <img 
-                    onClick={() => { changePlaylistSong(index, token, contextURI) }}
-                    src={playlistArt? playlistArt : 'no image found'} 
-                    alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} 
-                  />
-                  <span className="draggable-trackname">
-                    <h1>{song.name}</h1>
-                    <p>{sanitizeArtistNames(song.artists)}</p>
-                  </span>
-                  <p className="song-length">{convertTime(song.duration_ms)}</p>
-                  <AddToPlaylistBtn 
-                    track={song}
-                    userID={userID}
-                    userPlaylists={playlists}
-                    addToPlaylist={addToPlaylist}
-                  />
-                </span>
-              )
-            }) : songs.length === 0 ? <h1>No tracks available</h1> : <></>
+            contextURI?.includes('playlist') ? 
+            <PlaylistContext 
+              songs={songs}
+              playlistOwner={playlistOwner} 
+            /> 
+            : contextURI?.includes('album') ? 
+            <AlbumContext 
+              songs={songs} 
+              playlistArt={playlistArt} 
+              playlistName={playlistName} 
+            /> 
+            : <h1>No tracks available</h1>
           }
         </div>
       </div>
