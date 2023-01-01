@@ -1,8 +1,8 @@
 import { useState, useContext } from "react"
 import { useParams } from "react-router-dom"
-import { changePlaylistDetails } from "../api/changePlaylistDetails"
-import { GlobalContext } from "./login"
-import ErrorTooltip from "../components/ErrorTooltip"
+import { changePlaylistDetails } from "../../../api/changePlaylistDetails"
+import { GlobalContext } from "../login"
+import ErrorTooltip from "../../ErrorTooltip"
 
 export default function EditPlaylistDetails({ setOriginalDesc, originalDesc, setOriginalName, originalName, playlistData, playlistName, playlistDesc, setPlaylistName, setPlaylistDesc }) {
 

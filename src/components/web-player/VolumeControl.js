@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import Tooltip from "./Tooltip";
+import Tooltip from "../Tooltip";
 
 export default function VolumeControl({ player, volumeLS }) {
 

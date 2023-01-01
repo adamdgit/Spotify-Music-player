@@ -1,11 +1,11 @@
-import { GlobalContext } from "./login";
+import { GlobalContext } from "../pages/login";
 import { useContext } from "react";
-import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
-import { changePlaylistSong } from "../api/changePlaylistSong"
-import { sanitizeArtistNames } from "./utils/sanitizeArtistNames";
-import { convertTime } from "./utils/convertTime";
-import AddToPlaylistBtn from "../components/AddToPlaylistBtn"
-import Tooltip  from "../components/Tooltip"
+import { addTrackToPlaylist } from "../../api/addTrackToPlaylist"
+import { changePlaylistSong } from "../../api/changePlaylistSong"
+import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
+import { convertTime } from "../utils/convertTime";
+import AddToPlaylistBtn from "../AddToPlaylistBtn"
+import Tooltip  from "../Tooltip"
 
 export default function AlbumContext({ songs, playlistArt, playlistName }) {
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { convertTime } from "./utils/convertTime"
+import { convertTime } from "../utils/convertTime"
 
 export default function Timeline({ ...props }) {
 

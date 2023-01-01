@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
-import { GlobalContext } from "./login";
-import { getDevices } from "../api/getDevices"
-import { transferPlayback } from "../api/transferPlayback";
+import { GlobalContext } from "../pages/login";
+import { getDevices } from "../../api/getDevices"
+import { transferPlayback } from "../../api/transferPlayback";
 
 export default function PlaybackDevices() {
 

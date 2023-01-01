@@ -2,14 +2,14 @@ import { useContext, useState, useEffect, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import { GlobalContext } from "../login";
 import axios from "axios";
-import { changePlaylistOrder } from "../../api/changePlaylistOrder"
-import { removeTrackFromPlaylist } from "../../api/removeTrackFromPlaylist"
-import { getNearestNode } from "../utils/getNearestNode";
-import EditPlaylistItem from "../EditPlaylistItem";
-import Loading from "../Loading";
-import EditSearchResults from "../EditSearchResults";
-import BlankSongResult from "../BlankSongResult";
-import EditPlaylistDetails from "../EditPlaylistDetails";
+import { changePlaylistOrder } from "../../../api/changePlaylistOrder"
+import { removeTrackFromPlaylist } from "../../../api/removeTrackFromPlaylist"
+import { getNearestNode } from "../../utils/getNearestNode";
+import EditPlaylistItem from "./EditPlaylistItem";
+import Loading from "../../Loading";
+import EditSearchResults from "./EditSearchResults";
+import BlankSongResult from "./BlankSongResult";
+import EditPlaylistDetails from "./EditPlaylistDetails";
 
 export default function EditPlaylist() {
 

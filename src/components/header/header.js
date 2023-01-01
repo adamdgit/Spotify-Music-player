@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { GlobalContext } from "./login";
+import { GlobalContext } from "../pages/login";
 import { NavLink } from "react-router-dom"
 
 function Header() {

@@ -1,14 +1,14 @@
 import { useEffect, useState, useContext } from "react";
-import { transferPlayback } from "../api/transferPlayback";
-import { GlobalContext } from "./login";
-import { shufflePlaylist } from "../api/shufflePlaylist"
-import { repeatTrack } from "../api/repeatTrack";
-import { nextTrack } from "../api/nextTrack"
-import { previousTrack } from "../api/previousTrack,"
-import Loading from "./Loading";
+import { transferPlayback } from "../../api/transferPlayback";
+import { GlobalContext } from "../pages/login";
+import { shufflePlaylist } from "../../api/shufflePlaylist"
+import { repeatTrack } from "../../api/repeatTrack";
+import { nextTrack } from "../../api/nextTrack"
+import { previousTrack } from "../../api/previousTrack,"
+import Loading from "../Loading";
 import Timeline from "./Timeline";
 import VolumeControl from "./VolumeControl";
-import Tooltip from "./Tooltip";
+import Tooltip from "../Tooltip";
 import PlaybackDevices from "./PlaybackDevices";
 
 export default function WebPlayback({ token }) {
@@ -29,7 +29,7 @@ export default function WebPlayback({ token }) {
   const [loading, setLoading] = useState(false)
   const [currentTrackPos, setPos] = useState(0) // milliseconds
   const [repeatMode, setRepeatMode] = useState(0)
-  // stored volume level, updates when user changes volume, defaults to 0.2
+  // saves volume to local storage
   const [volumeLS] = useState(window.localStorage.getItem('volume'))
 
   useEffect(() => {

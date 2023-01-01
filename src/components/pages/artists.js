@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { GlobalContext } from "../login";
+import { GlobalContext } from "../pages/login";
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { getUserPlaylists } from "../../api/getUserPlaylists"
 import { addTrackToPlaylist } from "../../api/addTrackToPlaylist";

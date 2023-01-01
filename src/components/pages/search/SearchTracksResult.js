@@ -1,10 +1,10 @@
 import { useContext } from "react"
-import { GlobalContext } from "./login"
-import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
-import { playTrack } from "../api/playTrack"
-import { playContext } from "../api/playContext"
-import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
-import AddToPlaylistBtn from "./AddToPlaylistBtn"
+import { GlobalContext } from "../login"
+import { sanitizeArtistNames } from "../../utils/sanitizeArtistNames"
+import { playTrack } from "../../../api/playTrack"
+import { playContext } from "../../../api/playContext"
+import { addTrackToPlaylist } from "../../../api/addTrackToPlaylist"
+import AddToPlaylistBtn from "../../AddToPlaylistBtn"
 
 export default function SearchTracksResult({...props}) {
 

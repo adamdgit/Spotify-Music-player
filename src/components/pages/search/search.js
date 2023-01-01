@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { GlobalContext } from "../login";
-import { getUserPlaylists } from "../../api/getUserPlaylists"
-import { searchSongs } from "../../api/search";
-import SearchAlbumsResult from "../SearchAlbumsResult";
-import SearchTracksResult from "../SearchTracksResult";
-import SearchPlaylistsResult from "../SearchPlaylistsResult";
+import { getUserPlaylists } from "../../../api/getUserPlaylists"
+import { searchSongs } from "../../../api/search";
+import SearchAlbumsResult from "./SearchAlbumsResult";
+import SearchTracksResult from "./SearchTracksResult";
+import SearchPlaylistsResult from "./SearchPlaylistsResult";
 
 export default function SearchSongs() {
   

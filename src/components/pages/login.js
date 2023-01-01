@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom"
-import Header from "./header";
-import Controls from './Controls';
-import Artists from './pages/artists';
-import Library from "./pages/library";
-import EditPlaylist from "./pages/editPlaylist";
-import Search from "./pages/search";
-import { getUserInfo } from "../api/getUserInfo";
+import Header from "../header/header";
+import Controls from '../web-player/Controls';
+import Artists from './artists';
+import Library from "./library";
+import EditPlaylist from "./edit-playlist/editPlaylist";
+import Search from "./search/search";
+import { getUserInfo } from "../../api/getUserInfo";
 
 export const GlobalContext = React.createContext()
 

@@ -1,19 +1,17 @@
 import { useContext } from "react"
-import { GlobalContext } from "./login"
-import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
-import { playTrack } from "../api/playTrack"
-import { playContext } from "../api/playContext"
-import { saveAlbum } from "../api/saveAlbum"
+import { GlobalContext } from "../login"
+import { playTrack } from "../../../api/playTrack"
+import { playContext } from "../../../api/playContext"
+import { followPlaylist } from "../../../api/followPlaylist"
 
-export default function SearchAlbumsResult({...props}) {
+export default function SearchPlaylistsResult({...props}) {
 
   // global context
   const { token } = useContext(GlobalContext)
   const { setSongs } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
-  const { setContextID } = useContext(GlobalContext)
+  const { setContextID} = useContext(GlobalContext)
   const { setMessage } = useContext(GlobalContext)
-
 
   const playItem = async (uri, id)  => {
     // tracks have different endpoint
@@ -41,28 +39,28 @@ export default function SearchAlbumsResult({...props}) {
     }
   }
 
-  const album = async (id, name) => {
-    saveAlbum(token, id)
+  const follow = async (id, name) => {
+    followPlaylist(token, id)
       .then(result => {
         if (!result) return
         console.error(result)
       })
-    setMessage({msg: `${name} Saved`, needsUpdate: true})
+    setMessage({msg: `${name} Followed`, needsUpdate: true})
   }
 
   return (
-    <div style={props.searchAlbums === false ? {display: 'none'} : {}}>
+    <div style={props.searchPlaylists === false ? {display: 'none'} : {}}>
       <h2 style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="currentColor" viewBox="0 0 512 512"><path d="M512 256c0 141.4-114.6 256-256 256S0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM256 352c-53 0-96-43-96-96s43-96 96-96s96 43 96 96s-43 96-96 96zm0 32c70.7 0 128-57.3 128-128s-57.3-128-128-128s-128 57.3-128 128s57.3 128 128 128zm0-96c17.7 0 32-14.3 32-32s-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32z"/></svg>
-        Albums
+      <svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="currentColor" viewBox="0 0 576 512"><path d="M0 96C0 60.7 28.7 32 64 32H512c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM128 288c17.7 0 32-14.3 32-32s-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32zm32-128c0-17.7-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32s32-14.3 32-32zM128 384c17.7 0 32-14.3 32-32s-14.3-32-32-32s-32 14.3-32 32s14.3 32 32 32zm96-248c-13.3 0-24 10.7-24 24s10.7 24 24 24H448c13.3 0 24-10.7 24-24s-10.7-24-24-24H224zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H448c13.3 0 24-10.7 24-24s-10.7-24-24-24H224zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24H448c13.3 0 24-10.7 24-24s-10.7-24-24-24H224z"/></svg>
+        Playlists
       </h2>
-      
-      <div className='search-results-wrap'>
-      { 
+
+      <div className={props.searchPlaylists === false ? 'search-results-wrap' : 'search-results-wrap show-search'}>
+      {
         props.array.map((result, i) => {
           if (result === null || result === undefined) return null
           return (
-          <div key={i} className="result-small">
+            <div key={i} className="result-small">
             <img src={
               result.images.length === 0 ?
               'no image found' :
@@ -76,10 +74,10 @@ export default function SearchAlbumsResult({...props}) {
               } width="64px" height="64px" />
             <span className="info">
               <h3>{result.name}</h3>
-              <p>{sanitizeArtistNames(result.artists)}</p>
+              <p>{result.description}</p>
             </span>
-            <button className="play" onClick={() => album(result.id, result.name)}>
-              Save
+            <button className="play" onClick={() => follow(result.id, result.name)}>
+              Follow
             </button>
             <button className="play" onClick={() => playItem(result.uri, result.id)}>
               <svg viewBox="0 0 16 16" height="25" width="25" fill="currentcolor"><path d="M3 1.713a.7.7 0 011.05-.607l10.89 6.288a.7.7 0 010 1.212L4.05 14.894A.7.7 0 013 14.288V1.713z"></path></svg>

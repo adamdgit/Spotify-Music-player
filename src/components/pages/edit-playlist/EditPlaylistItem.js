@@ -1,5 +1,5 @@
-import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
-import Tooltip from "./Tooltip"
+import { sanitizeArtistNames } from "../../utils/sanitizeArtistNames"
+import Tooltip from "../../Tooltip"
 
 export default function PlaylistItem({song, index, func, setDraggableElement}) {
 

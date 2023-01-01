@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import { GlobalContext } from "../components/login";
-import { sanitizeArtistNames } from "./utils/sanitizeArtistNames"
-import { addTrackToPlaylist } from "../api/addTrackToPlaylist"
-import { searchSongs } from "../api/search";
-import { playTrack } from "../api/playTrack";
+import { GlobalContext } from "../login";
+import { sanitizeArtistNames } from "../../utils/sanitizeArtistNames"
+import { addTrackToPlaylist } from "../../../api/addTrackToPlaylist"
+import { searchSongs } from "../../../api/search";
+import { playTrack } from "../../../api/playTrack";
 
 export default function EditSearchResults({ playlistData, id, setTracks, playlistName, originalName }) {
 
