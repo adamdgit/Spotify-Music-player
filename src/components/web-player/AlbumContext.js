@@ -35,12 +35,14 @@ export default function AlbumContext({ songs, playlistArt, playlistName }) {
             <span key={index} data-index={index}
               className={currentTrackID === song.id ? "draggable selected" : "draggable"}>
               <span>{index+1}</span>
-              <Tooltip tip={'Play'} />
-              <img 
-                onClick={() => { changePlaylistSong(index, token, contextURI) }}
-                src={playlistArt? playlistArt : 'no image found'} 
-                alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} 
-              />
+              <button className="play-song-btn" onClick={() => changePlaylistSong(index, token, contextURI)}>
+                <Tooltip tip={'Play'} />
+                <img 
+                  onClick={() => { changePlaylistSong(index, token, contextURI) }}
+                  src={playlistArt? playlistArt : 'no image found'} 
+                  alt={playlistArt? `${playlistName} playlist cover art` : 'no image found'} 
+                />
+              </button>
               <span className="draggable-trackname">
                 <h1>{song.name}</h1>
                 <p>{sanitizeArtistNames(song.artists)}</p>
