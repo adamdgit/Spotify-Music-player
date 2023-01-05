@@ -127,6 +127,11 @@
   width: 100%;
 }
 
+.play-song-btn {
+  width: var(--img-width);
+  height: var(--img-width);
+}
+
 .play-song-btn .tooltip {
   left: -5px;
   top: 30px;
