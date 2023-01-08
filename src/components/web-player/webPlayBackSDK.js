@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { transferPlayback } from "../../api/transferPlayback";
-import { GlobalContext } from "../pages/login";
+import { GlobalContext } from "../routes/login";
 import { shufflePlaylist } from "../../api/shufflePlaylist"
 import { repeatTrack } from "../../api/repeatTrack";
 import { nextTrack } from "../../api/nextTrack"
@@ -11,9 +11,10 @@ import VolumeControl from "./VolumeControl";
 import Tooltip from "../Tooltip";
 import PlaybackDevices from "./PlaybackDevices";
 
-export default function WebPlayback({ token }) {
+export default function WebPlayback() {
 
   // global context
+  const { token } = useContext(GlobalContext)
   const { setCurrentTrackID } = useContext(GlobalContext)
   const { setContextID } = useContext(GlobalContext)
   const { setContextURI } = useContext(GlobalContext)
@@ -113,15 +114,6 @@ export default function WebPlayback({ token }) {
           })
         setMessage({msg: 'Repeat track on', needsUpdate: true})
         break
-      case 2:
-        setRepeatMode(0)
-        repeatTrack(token, 'off')
-          .then(result => {
-            if (!result) return
-            console.error(result)
-          })
-        setMessage({msg: 'Repeat disabled', needsUpdate: true})
-        break
       default: 
        setRepeatMode(0)
        repeatTrack(token, 'off')
@@ -183,7 +175,7 @@ export default function WebPlayback({ token }) {
               <path d="M3.3 1a.7.7 0 01.7.7v5.15l9.95-5.744a.7.7 0 011.05.606v12.575a.7.7 0 01-1.05.607L4 9.149V14.3a.7.7 0 01-.7.7H1.7a.7.7 0 01-.7-.7V1.7a.7.7 0 01.7-.7h1.6z"></path>
             </svg>
           </button>
-          <button className="play-btn" onClick={() => { player.togglePlay() }}>
+          <button className="play-btn" onClick={() => player.togglePlay()}>
             <Tooltip tip={is_paused === true ? 'Play' : 'Pause'}/>
             { 
             is_paused ? 
@@ -210,7 +202,7 @@ export default function WebPlayback({ token }) {
             </svg>
           </button>
           <button className="loop-btn" 
-            onClick={() => { repeatSongs() }}
+            onClick={() => repeatSongs()}
             style={repeatMode === 0 ? {} : repeatMode === 1 ? {color: 'var(--blue)'} : {color: 'var(--blue)'}}
           >
             <Tooltip tip={repeatMode === 0 ? 'Toggle repeat Context' : repeatMode === 1 ? 'Toggle repeat Track' : 'Toggle repeat Off'}/>

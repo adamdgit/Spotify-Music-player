@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react"
 import Loading from "../Loading"
-import { GlobalContext } from "../pages/login"
+import { GlobalContext } from "../routes/login"
 import { getCurrentTrackData } from "../../api/getCurrentTrackData"
 
 export default function CurrentSong() {

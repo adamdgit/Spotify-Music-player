@@ -1,7 +1,7 @@
 import axios from "axios";
 import CurrentSong from "./CurrentSong";
 import { useState, useEffect, useContext, useMemo } from "react";
-import { GlobalContext } from "../pages/login";
+import { GlobalContext } from "../routes/login";
 import { convertTime } from "../utils/convertTime"
 import PlaylistContext from "./PlaylistContext";
 import AlbumContext from "./AlbumContext";

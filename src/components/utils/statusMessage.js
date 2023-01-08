@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { GlobalContext } from "../pages/login";
+import { GlobalContext } from "../routes/login";
 
 export default function StatusMessage() {
 

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import { GlobalContext } from "../pages/login";
+import { GlobalContext } from "../routes/login";
 import { getDevices } from "../../api/getDevices"
 import { transferPlayback } from "../../api/transferPlayback";
 

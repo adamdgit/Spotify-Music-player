@@ -1,4 +1,4 @@
-import { GlobalContext } from "../pages/login";
+import { GlobalContext } from "../routes/login";
 import { useContext } from "react";
 import { addTrackToPlaylist } from "../../api/addTrackToPlaylist"
 import { changePlaylistSong } from "../../api/changePlaylistSong"
