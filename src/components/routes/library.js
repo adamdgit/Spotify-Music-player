@@ -2,6 +2,7 @@ import { useEffect, useContext, useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { GlobalContext } from "./login";
 import Loading from "../Loading";
+import SkeletonLoader from "../SkeletonLoader";
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { createPlaylist } from "../../api/createPlaylist"
 import { getUserPlaylists } from "../../api/getUserPlaylists"
@@ -68,10 +69,11 @@ export default function Library() {
     unfollowPlaylist(token, id)
     .then(result => {
       // remove result when unfollowing playlist if no errors returned
-      if (result === false) return setPlaylists(playlists.filter((a) => {
-        if (a.id === id) return false
-        return true
-      }))
+      if (result === false)  {
+        setPlaylists(playlists.filter((playlist) => {
+          return playlist.id !== id;
+        }))
+      }
       else console.error(result)
     })
     setMessage({msg: `${name} unFollowed`, needsUpdate: true})
@@ -114,6 +116,7 @@ export default function Library() {
           </button>
         </div>
         <div className="user-playlists-wrap">
+        {isLoading === true ? <SkeletonLoader type={'playlist'} /> : <></>}
         {
           playlists? playlists.map((result, i) => {
             if (result === null || result === undefined) return <></>
@@ -167,7 +170,6 @@ export default function Library() {
           })
           : playlists?.length === 0 ? <h1>No playlists found</h1> : <></> 
         }
-        {isLoading === true ? <Loading loadingMsg={'Fetching library items...'}/> : <></>}
         </div>
 
         <h1>Saved Albums:</h1>
