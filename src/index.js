@@ -7,7 +7,7 @@ import './styles/playlist.css'
 import './styles/main.css'
 import './styles/userPlaylists.css'
 import './styles/mobile.css'
-import Login from './components/pages/login';
+import Login from './components/routes/login';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
