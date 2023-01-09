@@ -47,3 +47,9 @@ body {
   from {transform: rotate(0deg);}
   to {transform: rotate(360deg);}
 }
+
+@keyframes loading {
+  0% {opacity: .3;}
+  50% {opacity: .9;}
+  100% {opacity: .3;}
+}
