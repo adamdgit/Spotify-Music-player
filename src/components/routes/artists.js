@@ -4,10 +4,10 @@ import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { getUserPlaylists } from "../../api/getUserPlaylists"
 import { addTrackToPlaylist } from "../../api/addTrackToPlaylist";
 import { playTrack } from "../../api/playTrack";
-import axios from "axios";
-import Loading from "../Loading";
-import AddToPlaylistBtn from "../AddToPlaylistBtn";
+import { getArtistTopTracks } from "../../api/getArtistTopTracks";
 import { getTopArtists } from "../../api/getTopArtists";
+import SkeletonLoader from "../SkeletonLoader";
+import AddToPlaylistBtn from "../AddToPlaylistBtn";
 
 export default function Explore() {
 
@@ -22,6 +22,7 @@ export default function Explore() {
   const [artists, setArtists] = useState([])
   const [topSongs, setTopSongs] = useState([])
   const [selectedArtist, setSelectedArtist] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const addToPlaylist = (resultURI, playlistid, playlistName) => {
     addTrackToPlaylist(resultURI, playlistid, token)
@@ -51,25 +52,20 @@ export default function Explore() {
   }
 
   const getArtistSongs = (id) => {
+    setIsLoading(true);
+    setTopSongs([]);
+    document.querySelector('.page-wrap').scroll({top: 0, left: 0, behavior: 'smooth'});
 
-    const getTopTracks = async (id) => {
-      await axios.get(`https://api.spotify.com/v1/artists/${id}/top-tracks?market=AU`, {
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      }).then((res) => {
-        setTopSongs(res.data.tracks)
-      }).catch(error => console.error(error))
-    }
-
-    document.querySelector('.page-wrap').scroll({top: 0, left: 0, behavior: 'smooth'})
     const timer = setTimeout(() => {
-      getTopTracks(id)
+      getArtistTopTracks(token, id)
+      .then(result => {
+        if (result.errorMsg === false) {
+          setTopSongs(result.data.tracks)
+          setIsLoading(false)
+        } else console.error(result.errorMsg)
+      })
       clearTimeout(timer)
-    }, 400)
-
+    }, 400);
   }
 
   useEffect(() => {
@@ -133,6 +129,7 @@ export default function Explore() {
             )
           })
         }
+        {isLoading === true ? <SkeletonLoader type={'song'} /> : <></>}
         </div>
         <div className="artist-wrap">
           {artists.length !== 0 ?
@@ -148,7 +145,7 @@ export default function Explore() {
                   alt={''} />
               </span>
             })
-            : <Loading loadingMsg={'Fetching your top artists...'}/>
+            : <SkeletonLoader type={'artist'} />
           }
         </div>
       </div>
