@@ -19,7 +19,7 @@ export default function SearchSongs() {
   const [playlistResults, setPlaylistResults] = useState([])
   const [albumResults, setAlbumsResults] = useState([])
   // checkbox state for ssearch
-  const [searchTracks, setSearchTracks] = useState(false)
+  const [searchTracks, setSearchTracks] = useState(true)
   const [searchPlaylists, setSearchPlaylists] = useState(false)
   const [searchAlbums, setSearchAlbums] = useState(false)
 
@@ -86,7 +86,7 @@ export default function SearchSongs() {
         <div className="search-checkbox">
           <span style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
             <label htmlFor="tracks">Tracks: </label>
-            <input type="checkbox" name="tracks" value="Tracks"
+            <input type="checkbox" name="tracks" value="Tracks" defaultChecked={true}
             onChange={(e) => handleCheckboxChange(e)} />
           </span>
           <span style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
