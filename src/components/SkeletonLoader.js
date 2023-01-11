@@ -19,13 +19,17 @@ export default function SkeletonLoader({ type }) {
   const skeletonSong = {
     display: 'block',
     background: 'var(--secondary-blue)',
-    height: '100px',
+    height: '97px',
     width: '100%',
     animation: 'loading 1.5s ease-in-out infinite'
   };
 
   return (
     <>
+      <span style={type === 'playlist' ? skeletonPlaylist : type === 'song' ? skeletonSong : skeletonArtist}></span>
+      <span style={type === 'playlist' ? skeletonPlaylist : type === 'song' ? skeletonSong : skeletonArtist}></span>
+      <span style={type === 'playlist' ? skeletonPlaylist : type === 'song' ? skeletonSong : skeletonArtist}></span>
+      <span style={type === 'playlist' ? skeletonPlaylist : type === 'song' ? skeletonSong : skeletonArtist}></span>
       <span style={type === 'playlist' ? skeletonPlaylist : type === 'song' ? skeletonSong : skeletonArtist}></span>
       <span style={type === 'playlist' ? skeletonPlaylist : type === 'song' ? skeletonSong : skeletonArtist}></span>
       <span style={type === 'playlist' ? skeletonPlaylist : type === 'song' ? skeletonSong : skeletonArtist}></span>
