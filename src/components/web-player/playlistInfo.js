@@ -59,7 +59,7 @@ function PlaylistInfo() {
             setPlaylistDesc(result.data.label)
             setPlaylistName(result.data.name)
             setSongs(result.data.tracks.items)
-            setPlaylistOwner('n/a')
+            setPlaylistOwner('')
           } else { console.error(result) }
         })
       }
