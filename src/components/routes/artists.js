@@ -74,7 +74,6 @@ export default function Explore() {
       .then(result => {
         if (result.errorMsg === false) return setUserPlaylists(result.playlists.filter(a => {
           if(a.owner.id === userID) return a
-          return null
         }))
         else console.error(result.errorMsg)
       })
