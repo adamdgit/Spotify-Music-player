@@ -51,7 +51,6 @@ export default function SearchSongs() {
       .then(result => {
         if (result.errorMsg === false) return setPlaylists(result.playlists.filter(a => {
           if(a.owner.id === userID) return a
-          return null
         }))
         else console.error(result.errorMsg)
       })
