@@ -24,31 +24,24 @@ export default function Explore() {
   const [selectedArtist, setSelectedArtist] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const addToPlaylist = (resultURI, playlistid, playlistName) => {
-    addTrackToPlaylist(resultURI, playlistid, token)
-    .then(result => { 
-      if (result.errorMsg === false) {
-        if (contextID === playlistid) {
-          return setSongs(result.tracks)
-        }
-        return
-      }
-      else console.error(result.errorMsg)
-    })
+  const addToPlaylist = async (resultURI, playlistid, playlistName) => {
+    let { errorMsg, tracks } = await addTrackToPlaylist(resultURI, playlistid, token)
+    if (errorMsg) return console.error(errorMsg);
+    if (contextID === playlistid) setSongs(tracks);
+
     setMessage({msg: `Song added to playlist: ${playlistName}`, needsUpdate: true})
   }
 
-  const playSong = (uri) => {
-    playTrack(token, uri)
-    .then(result => {
-      if (!result) {
-        // clear context if no errors
-        setSongs([])
-        setContextID('')
-        // save new URIS data to global context
-        setContextURI(uri)
-      } else { console.error(result) }
-    })
+  const playSong = async (uri) => {
+    let errorMsg = await playTrack(token, uri)
+    if (errorMsg) return console.error(errorMsg);
+    else {
+      // clear context if no errors
+      setSongs([])
+      setContextID('')
+      // save new URIS data to global context
+      setContextURI(uri)
+    }
   }
 
   const getArtistSongs = (id) => {
