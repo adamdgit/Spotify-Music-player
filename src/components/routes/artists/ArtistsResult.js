@@ -3,21 +3,21 @@ import { getArtistTopTracks } from "../../../api/getArtistTopTracks";
 
 export default function ArtistsResult({ token, artists, setSelectedArtist, setIsLoading, setTopSongs }) {
 
-  const getArtistSongs = (id) => {
+  const getArtistSongs = async (id) => {
     setIsLoading(true);
     setTopSongs([]);
     document.querySelector('.page-wrap').scroll({top: 0, left: 0, behavior: 'smooth'});
 
-    const timer = setTimeout(() => {
-      getArtistTopTracks(token, id)
-      .then(result => {
-        if (result.errorMsg === false) {
-          setTopSongs(result.data.tracks)
-          setIsLoading(false)
-        } else console.error(result.errorMsg)
-      })
-      clearTimeout(timer)
-    }, 400);
+    // creates a small delay to allow the page scroll animation to go off / data fetching
+    let { errorMsg, data } = await getArtistTopTracks(token, id);
+    if (errorMsg) console.error(errorMsg)
+    else {
+      const timer = setTimeout(() => {
+        setTopSongs(data.tracks)
+        setIsLoading(false)
+        clearTimeout(timer)
+      }, 500);
+    }
   }
 
   return (
