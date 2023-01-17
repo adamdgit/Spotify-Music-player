@@ -1,20 +1,20 @@
-import axios from "axios";
 import CurrentSong from "./CurrentSong";
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useContext } from "react";
 import { GlobalContext } from "../routes/login";
 import { convertTime } from "../utils/convertTime"
+import { getPlaylistData } from "../../api/getPlaylistData";
+import { getAlbumData } from "../../api/getAlbumData"
 import PlaylistContext from "./PlaylistContext";
 import AlbumContext from "./AlbumContext";
 
-function PlaylistInfo() {
+export default function PlaylistInfo() {
 
-  // global context
   const { token } = useContext(GlobalContext)
   const { contextURI } = useContext(GlobalContext)
   const { contextID } = useContext(GlobalContext)
   const { songs, setSongs } = useContext(GlobalContext)
   const { playerIsHidden } = useContext(GlobalContext)
-  // component state
+
   const [playlistOwner, setPlaylistOwner] = useState('')
   const [playlistName, setPlaylistName] = useState('No playlist data')
   const [playlistDesc, setPlaylistDesc] = useState('')
@@ -25,61 +25,49 @@ function PlaylistInfo() {
   useEffect(() => {
     // get playlist data
     if(contextURI?.includes('playlist')) {
-      const getPlaylistData = async () => {
-        await axios.get(`https://api.spotify.com/v1/playlists/${contextID}?limit=100`, {
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          }
-        }).then((result) => {
-          if (result.data) {
-            setPlaylistArt(result.data.images[0].url)
-            setPlaylistDesc(result.data.description)
-            setPlaylistName(result.data.name)
-            setSongs(result.data.tracks.items)
-            setPlaylistOwner(result.data.owner.id)
-          } else { console.error(result) }
-        })
-      }
-      getPlaylistData()
+      (async function getData() {
+        const { errorMsg, data } = await getPlaylistData(token, contextID);
+        if (errorMsg) console.error(errorMsg)
+        else {
+          setPlaylistArt(data.images[0].url)
+          setPlaylistDesc(data.description)
+          setPlaylistName(data.name)
+          setSongs(data.tracks.items)
+          setPlaylistOwner(data.owner.id)
+        }
+      })();
     }
     // get album data
     if (contextURI?.includes('album')) {
-      const getAlbumData = async () => {
-        await axios.get(`https://api.spotify.com/v1/albums/${contextID}`, {
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          }
-        }).then((result) => {
-          if (result.data) {
-            setPlaylistArt(result.data.images[0].url)
-            setPlaylistDesc(result.data.label)
-            setPlaylistName(result.data.name)
-            setSongs(result.data.tracks.items)
-            setPlaylistOwner('')
-          } else { console.error(result) }
-        })
-      }
-      getAlbumData()
+      (async function getData2() {
+        const { errorMsg, data } = await getAlbumData(token, contextID);
+        if (errorMsg) console.error(errorMsg)
+        else {
+          setPlaylistArt(data.images[0].url)
+          setPlaylistDesc(data.label)
+          setPlaylistName(data.name)
+          setSongs(data.tracks.items)
+          setPlaylistOwner('')
+        }
+      })();
     }
   }, [contextURI])
 
-  useMemo(() => {
-    setContextDuration(0)
+  // calculates total context duration
+  useEffect(() => {
+
     if (contextURI?.includes('playlist')) {
-      // get playlist duration
-      songs.forEach(song => {
-        setContextDuration((current) => current += song.track.duration_ms)
-      })
+      let total = songs.reduce((acc, current) => {
+        return acc += current.track.duration_ms
+      },0)
+      setContextDuration(total)
     } else if (contextURI?.includes('album')) {
-      // get album duration
-      songs.forEach(song => {
-        setContextDuration((current) => current += song.duration_ms)
-      })
+      let total = songs.reduce((acc, current) => {
+        return acc += current.duration_ms
+      },0)
+      setContextDuration(total)
     }
+
   }, [songs])
 
   return (
@@ -130,5 +118,3 @@ function PlaylistInfo() {
     </div>
   ) 
 }
-
-export default PlaylistInfo
