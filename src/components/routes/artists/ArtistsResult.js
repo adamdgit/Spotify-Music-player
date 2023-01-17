@@ -22,21 +22,32 @@ export default function ArtistsResult({ token, artists, setSelectedArtist, setIs
 
   return (
     <div className="artist-wrap">
-      {artists.length !== 0 ?
-        artists.map(artist => {
-          return <span key={artist.id} className="result-artist" onClick={() => {
-            getArtistSongs(artist.id)
-            setSelectedArtist(artist.name)}
-            }>
-            <h2>{artist.name}</h2>
-            <img src={
-              artist.images.length === 0 ? 'no image found'
-              : artist.images[2].url} 
-              alt={''} />
-          </span>
+      {artists.length !== 0 ? (
+        artists.map((artist) => {
+          return (
+            <span
+              key={artist.id}
+              className="result-artist"
+              onClick={() => {
+                getArtistSongs(artist.id);
+                setSelectedArtist(artist.name);
+              }}
+            >
+              <h2>{artist.name}</h2>
+              <img
+                src={
+                  artist.images.length === 0
+                    ? "no image found"
+                    : artist.images[2].url
+                }
+                alt={""}
+              />
+            </span>
+          );
         })
-        : <SkeletonLoader type={'artist'} />
-      }
+      ) : (
+        <SkeletonLoader type={"artist"} />
+      )}
     </div>
-  )
+  );
 }
