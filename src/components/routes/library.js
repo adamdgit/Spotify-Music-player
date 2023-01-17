@@ -1,7 +1,6 @@
 import { useEffect, useContext, useState } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { GlobalContext } from "./login";
-import Loading from "../Loading";
 import SkeletonLoader from "../SkeletonLoader";
 import { sanitizeArtistNames } from "../utils/sanitizeArtistNames";
 import { createPlaylist } from "../../api/createPlaylist"
