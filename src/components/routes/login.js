@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom"
 import Header from "../header/header";
 import Controls from '../web-player/Controls';
-import Artists from './artists';
+import Artists from './artists/artists';
 import Library from "./library";
 import EditPlaylist from "./edit-playlist/editPlaylist";
 import Search from "./search/search";
