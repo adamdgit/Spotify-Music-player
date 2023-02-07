@@ -53,9 +53,8 @@ export default function PlaylistInfo() {
     }
   }, [contextURI])
 
-  // calculates total context duration
+  // calculates total context duration whenever song list changes
   useEffect(() => {
-
     if (contextURI?.includes('playlist')) {
       let total = songs.reduce((acc, current) => {
         return acc += current.track.duration_ms
@@ -67,7 +66,6 @@ export default function PlaylistInfo() {
       },0)
       setContextDuration(total)
     }
-
   }, [songs])
 
   return (

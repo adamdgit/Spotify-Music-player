@@ -12,7 +12,6 @@ import { playContext } from "../../api/playContext";
 
 export default function Library() {
 
-  // global context
   const { token } = useContext(GlobalContext)
   const { contextURI, setContextURI } = useContext(GlobalContext)
   const { setContextID } = useContext(GlobalContext)
@@ -20,9 +19,9 @@ export default function Library() {
   const { setMessage } = useContext(GlobalContext)
   const { setSongs } = useContext(GlobalContext)
   const { setPlayerIsHidden } = useContext(GlobalContext)
-  // users playlists results
-  const [isLoading, setLoading] = useState(false)
   const { playlists, setPlaylists } = useContext(GlobalContext)
+
+  const [isLoading, setLoading] = useState(false)
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
 
