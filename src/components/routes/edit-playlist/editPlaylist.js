@@ -101,13 +101,13 @@ export default function EditPlaylist() {
         console.log('scrolling up')
         scrollDebounceTop()
         cursorTouchingEdge(e)
-      }, 50)
+      }, 35)
     } else if (e.clientY > document.querySelector('.page-wrap').offsetHeight) {
       timer = setTimeout(() => {
         console.log('scrolling down')
         scrollDebounceBottom()
         cursorTouchingEdge(e)
-      }, 50)
+      }, 35)
     } else {
       clearTimeout(timer);
     }
@@ -120,13 +120,13 @@ export default function EditPlaylist() {
         console.log('scrolling up')
         scrollDebounceTop()
         cursorTouchingEdgeMobile(e)
-      }, 50)
+      }, 35)
     } else if (e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight) {
       timer = setTimeout(() => {
         console.log('scrolling down')
         scrollDebounceBottom()
         cursorTouchingEdgeMobile(e)
-      }, 50)
+      }, 35)
     } else {
       clearTimeout(timer);
     }
@@ -162,6 +162,7 @@ export default function EditPlaylist() {
 
     if(draggables.length === 0) return
 
+    // 5th child of the draggable element is the drag and drop button
     draggables.forEach(element => {
       element.children[4].addEventListener('mousedown', dragStart)
       element.children[4].addEventListener('touchstart', dragStart)
