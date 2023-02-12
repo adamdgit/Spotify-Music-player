@@ -25,7 +25,7 @@ export default function Library() {
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
 
-  const playNewContext = async (context) => {
+  async function playNewContext(context) {
     // prevent restarting context if already playing / prevents new API call
     if (context.uri === contextURI) {
       return setMessage({ msg: `Context is already playing!`, needsUpdate: true });
@@ -43,13 +43,13 @@ export default function Library() {
     }
   }
 
-  const createNewPlaylist = async () => {
+  async function createNewPlaylist() {
     const { errorMsg, playlistData } = await createPlaylist(token, userID);
     if (errorMsg) console.error(errorMsg)
     else navigate(`/spotify/editPlaylist/${playlistData.id}`)
   }
 
-  const remove = async (id, name) => {
+  async function remove (id, name) {
     const errorMsg = await removeAlbum(token, id);
     if (errorMsg) console.error(errorMsg)
     else {
@@ -61,7 +61,7 @@ export default function Library() {
     }
   }
 
-  const unfollow = async (id, name) => {
+  async function unfollow(id, name) {
     const errorMsg = await unfollowPlaylist(token, id);
     if (errorMsg) console.error(errorMsg)
     else {
@@ -73,7 +73,7 @@ export default function Library() {
     }
   }
 
-  const getPlaylists = async () => {
+  async function getPlaylists() {
     // start loading state to show skeleton loaders on mount
     setLoading(true)
     const { errorMsg, playlists} = await getUserPlaylists(token);
@@ -87,7 +87,7 @@ export default function Library() {
     }
   }
 
-  const getAlbums = async () => {
+  async function getAlbums() {
     const { errorMsg, albums } = await getSavedAlbums(token);
     if (errorMsg) console.error(errorMsg)
     else {
