@@ -9,7 +9,6 @@
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "env-cmd": "^10.1.0",
-    "gh-pages": "^4.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
