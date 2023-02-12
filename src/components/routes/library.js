@@ -25,82 +25,83 @@ export default function Library() {
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
 
-  const playNewContext = (context) => {
-    if (context.uri === contextURI) return console.error('context already playing')
+  const playNewContext = async (context) => {
+    // prevent restarting context if already playing / prevents new API call
+    if (context.uri === contextURI) {
+      return setMessage({ msg: `Context is already playing!`, needsUpdate: true });
+    }
     // show playlist info when playing new context
     setPlayerIsHidden(false)
     // clear playlist songs to allow new songs to be populated
     setSongs([])
-    playContext(token, context.uri)
-      .then(result => {
-        if (result === false) {
-          // save selected playlist data to global context
-          setContextURI(context.uri)
-          setContextID(context.id)
-        }
-        else console.error(result)
-      })
+    const errorMsg = await playContext(token, context.uri);
+    if (errorMsg) console.error(errorMsg)
+    else {
+      // save selected playlist data to global context
+      setContextURI(context.uri)
+      setContextID(context.id)
+    }
   }
 
-  const createNewPlaylist = () => {
-    createPlaylist(token, userID)
-    .then(result => {
-      if (result.errorMsg === false) navigate(`/spotify/editPlaylist/${result.playlistData.id}`)
-      else console.error(result.errorMsg)
-    })
+  const createNewPlaylist = async () => {
+    const { errorMsg, playlistData } = await createPlaylist(token, userID);
+    if (errorMsg) console.error(errorMsg)
+    else navigate(`/spotify/editPlaylist/${playlistData.id}`)
   }
 
-  const remove = (id, name) => {
-    removeAlbum(token, id)
-    .then(result => {
-      // remove result when unfollowing album if no errors returned
-      if (result === false) return setAlbums(albums.filter((a) => {
+  const remove = async (id, name) => {
+    const errorMsg = await removeAlbum(token, id);
+    if (errorMsg) console.error(errorMsg)
+    else {
+      setAlbums(albums.filter((a) => {
         if (a.album.id === id) return false
         return true
       }))
-      else console.error(result)
-    })
-    setMessage({msg: `${name} removed`, needsUpdate: true})
+      setMessage({ msg: `${name} removed`, needsUpdate: true })
+    }
   }
 
-  const unfollow = (id, name) => {
-    unfollowPlaylist(token, id)
-    .then(result => {
-      // remove result when unfollowing playlist if no errors returned
-      if (result === false)  {
-        setPlaylists(playlists.filter((playlist) => {
-          return playlist.id !== id;
-        }))
-      }
-      else console.error(result)
-    })
-    setMessage({msg: `${name} unFollowed`, needsUpdate: true})
+  const unfollow = async (id, name) => {
+    const errorMsg = await unfollowPlaylist(token, id);
+    if (errorMsg) console.error(errorMsg)
+    else {
+      // filter playlists by user owned first
+      setPlaylists(playlists.filter((playlist) => {
+        return playlist.id !== id;
+      }))
+      setMessage({ msg: `${name} unFollowed`, needsUpdate: true })
+    }
   }
 
-  const getLibraryData = () => {
+  const getPlaylists = async () => {
+    // start loading state to show skeleton loaders on mount
     setLoading(true)
-    getUserPlaylists(token)
-    .then(result => {
-      if (result.errorMsg === false)
-        setPlaylists(result.playlists.sort((a, b) => {
-          if(a.owner.id === userID && b.owner.id === userID) return 0
-          if(a.owner.id === userID && b.owner.id !== userID) return -1
-          return 1
-        }))
-      else console.error(result.errorMsg)
-    })
-    getSavedAlbums(token)
-    .then(result => {
-      setLoading(false)
-      if (result.errorMsg === false) setAlbums(result.albums)
-      else console.error(result.errorMsg)
-    })
+    const { errorMsg, playlists} = await getUserPlaylists(token);
+    if (errorMsg) console.error(errorMsg)
+    else {
+      setPlaylists(playlists.sort((a, b) => {
+        if(a.owner.id === userID && b.owner.id === userID) return 0
+        if(a.owner.id === userID && b.owner.id !== userID) return -1
+        return 1
+      }))
+    }
   }
+
+  const getAlbums = async () => {
+    const { errorMsg, albums } = await getSavedAlbums(token);
+    if (errorMsg) console.error(errorMsg)
+    else {
+      // finish loading state once playlists are fetched from server
+      setLoading(false);
+      setAlbums(albums);
+    }
+  }  
 
   useEffect(() => {
 
     if (!userID) return
-    getLibraryData()
+    getPlaylists();
+    getAlbums();
 
   },[userID])
 

@@ -18,20 +18,23 @@ export default function Explore() {
 
   useEffect(() => {
 
-    getUserPlaylists(token)
-      .then(result => {
-        if (result.errorMsg === false) return setUserPlaylists(result.playlists.filter(a => {
+    (async () => {
+      const { errorMsg, playlists } = await getUserPlaylists(token);
+      if (errorMsg) console.error(errorMsg)
+      else {
+        setUserPlaylists(playlists.filter(a => {
           if(a.owner.id === userID) return a
         }))
-        else console.error(result.errorMsg)
-      })
+      }
+    })();
 
-    getTopArtists(token)
-      .then(result => {
-        if (result.errorMsg === false) {
-          setArtists(result.data.items)
-        } else { console.error(result.errorMsg) }
-      })
+    (async () => {
+      const { errorMsg, data } = await getTopArtists(token);
+      if (errorMsg) console.error(errorMsg)
+      else {
+        setArtists(data.items)
+      }
+    })();
 
   },[token])
 
