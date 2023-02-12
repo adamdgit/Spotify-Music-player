@@ -47,15 +47,17 @@ export default function SearchSongs() {
 
     if(!userID) return
 
-    getUserPlaylists(token)
-      .then(result => {
-        if (result.errorMsg === false) return setPlaylists(result.playlists.filter(a => {
+    (async () => {
+      const { errorMsg, playlists } = await getUserPlaylists(token);
+      if (errorMsg) console.error(errorMsg)
+      else {
+        setPlaylists(playlists.filter(a => {
           if(a.owner.id === userID) return a
         }))
-        else console.error(result.errorMsg)
-      })
+      }
+    })();
     
-  },[token, userID])
+  },[token])
 
   useEffect(() => {
     if(query === '') return
