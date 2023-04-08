@@ -32,8 +32,8 @@ export async function changePlaylistOrder(dragElIndex, dragElNewIndex, token, pl
   }).then((res) => {
     tracks = res.data.items
   }).catch(error => errorMsg = error)
-  // return error as object if any occur else return new playlist data
 
+  // return error as object if any occur else return new playlist data
   return {
     errorMsg,
     tracks
