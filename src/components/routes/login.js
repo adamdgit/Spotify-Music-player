@@ -90,10 +90,12 @@ function Login() {
     :
       <>
         <Header />
+        <Routes>
           <Route path="/spotify/" element={<Library />} />
           <Route path="/spotify/artists" element={<Artists />} />
           <Route path="/spotify/search" element={<Search />} />
           <Route path="/spotify/editPlaylist/:id" element={<EditPlaylist />} />
+        </Routes>
         <Controls />
       </>
     }
