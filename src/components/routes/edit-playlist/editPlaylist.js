@@ -40,7 +40,7 @@ export default function EditPlaylist() {
   let offset = 0
   let timer = null
 
-  const changeOrder = (dragElIndex, dragElNewIndex) => {
+  async function changeOrder(dragElIndex, dragElNewIndex) {
     setTracks([])
     setDraggables([])
     // if currently playing playlist matches currently editing
@@ -48,33 +48,29 @@ export default function EditPlaylist() {
     if (contextID === playlistData.id) {
       setSongs([])
     }
-    changePlaylistOrder(dragElIndex, dragElNewIndex, token, id)
-      .then(result => { 
-        if (result.errorMsg === false) {
-          if (contextID === playlistData.id) {
-            return setSongs(result.tracks)
-          }
-          return setTracks(result.tracks)
-        }
-        else console.error(result.errorMsg)
-      })
+    const { errorMsg, tracks } = await changePlaylistOrder(dragElIndex, dragElNewIndex, token, id)
+    if (errorMsg) console.error(errorMsg)
+    else {
+      if (contextID === playlistData.id) {
+        return setSongs(tracks)
+      }
+      return setTracks(tracks)
+    }
   }
 
-  const removeTrack = (trackURI) => {
-    removeTrackFromPlaylist(trackURI, token, playlistData.id)
-      .then(result => { 
-        if (result.errorMsg === false) {
-          if (contextID === playlistData.id) {
-            return setSongs(result.tracks)
-          }
-          return setTracks(result.tracks)
-        }
-        else console.error(result.errorMsg)
-      })
-    setMessage({msg: 'Song removed from playlist', needsUpdate: true})
+  async function removeTrack(trackURI) {
+    const { errorMsg, tracks } = await removeTrackFromPlaylist(trackURI, token, playlistData.id)
+    if (errorMsg) console.error(errorMsg)  
+    else {
+      if (contextID === playlistData.id) {
+        return setSongs(tracks)
+      }
+      setMessage({msg: 'Song removed from playlist', needsUpdate: true})
+      return setTracks(tracks)
+    }
   }
 
-  const cursorTouchingEdge = (e) => {
+  function cursorTouchingEdge(e) {
     clearTimeout(timer);
     if (e.clientY < 200) {
       timer = setTimeout(() => {
@@ -95,7 +91,7 @@ export default function EditPlaylist() {
     }
   }
   // uses changed touches for touch based devices
-  const cursorTouchingEdgeMobile = (e) => {
+  function cursorTouchingEdgeMobile(e) {
     clearTimeout(timer);
     if (e.changedTouches[0].clientY < 150) {
       timer = setTimeout(() => {
@@ -120,7 +116,7 @@ export default function EditPlaylist() {
 
     if(!id) return
 
-    const getPlaylists = async () => {
+    async function getPlaylists() {
       await axios.get(`https://api.spotify.com/v1/playlists/${id}`, {
         headers: {
           Accept: 'application/json',
@@ -128,13 +124,11 @@ export default function EditPlaylist() {
           'Content-Type': 'application/json',
         }
       }).then((res) => {
-        if (res.data) {
           setPlaylistData(res.data)
           setTracks(res.data.tracks.items)
           setOriginalName(res.data.name)
           setOriginalDesc(res.data.description)
-        } else { console.error(res) }
-      })
+      }).catch(err => console.error(err))
     }
     getPlaylists()
 
@@ -145,7 +139,7 @@ export default function EditPlaylist() {
   useEffect(() => {
 
     if(draggables.length === 0) return
-    let nodes = [...document.querySelectorAll(`.edit-draggable:not(.clone)`)]
+    let nodes = Array.from(document.querySelectorAll(`.edit-draggable:not(.clone)`))
 
     // 5th child of the draggable element is the drag and drop button
     draggables.forEach(element => {
@@ -228,9 +222,7 @@ export default function EditPlaylist() {
         let newIndex = Array.from(container.current.childNodes).indexOf(element)
         // Only send API request if element has moved positions
         if(startIndex === newIndex) return
-        setTimeout(() => {
-          changeOrder(startIndex, newIndex)
-        }, 200)
+        changeOrder(startIndex, newIndex)
       }
     }
     // cleanup event listeners on component re-render
