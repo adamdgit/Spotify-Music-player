@@ -74,40 +74,22 @@ export default function EditPlaylist() {
     setMessage({msg: 'Song removed from playlist', needsUpdate: true})
   }
 
-  function debounce(cb, delay = 30) {
-    let timeout
-    return (...args) => {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        cb(...args)
-      }, delay)
-    }
-  }
-
-  const scrollDebounceTop = debounce(() => {
-    offset += 50;
-    document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
-  })
-
-  const scrollDebounceBottom = debounce(() => {
-    offset -= 50;
-    document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
-  })
-
   const cursorTouchingEdge = (e) => {
     clearTimeout(timer);
     if (e.clientY < 200) {
       timer = setTimeout(() => {
         console.log('scrolling up')
-        scrollDebounceTop()
+        offset += 50;
+        document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
         cursorTouchingEdge(e)
-      }, 35)
+      }, 40)
     } else if (e.clientY > document.querySelector('.page-wrap').offsetHeight) {
       timer = setTimeout(() => {
         console.log('scrolling down')
-        scrollDebounceBottom()
+        offset -= 50;
+        document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
         cursorTouchingEdge(e)
-      }, 35)
+      }, 40)
     } else {
       clearTimeout(timer);
     }
@@ -118,15 +100,17 @@ export default function EditPlaylist() {
     if (e.changedTouches[0].clientY < 150) {
       timer = setTimeout(() => {
         console.log('scrolling up')
-        scrollDebounceTop()
+        offset += 50;
+        document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
         cursorTouchingEdgeMobile(e)
-      }, 35)
+      }, 40)
     } else if (e.changedTouches[0].clientY > document.querySelector('.page-wrap').offsetHeight) {
       timer = setTimeout(() => {
         console.log('scrolling down')
-        scrollDebounceBottom()
+        offset -= 50;
+        document.querySelector('.edit-songlist').style.transform = `translateY(${offset}px)`;
         cursorTouchingEdgeMobile(e)
-      }, 35)
+      }, 40)
     } else {
       clearTimeout(timer);
     }
@@ -161,6 +145,7 @@ export default function EditPlaylist() {
   useEffect(() => {
 
     if(draggables.length === 0) return
+    let nodes = [...document.querySelectorAll(`.edit-draggable:not(.clone)`)]
 
     // 5th child of the draggable element is the drag and drop button
     draggables.forEach(element => {
@@ -170,7 +155,8 @@ export default function EditPlaylist() {
 
     function dragStart(e) {
       let element = e.target.parentElement
-      let startIndex = draggables.indexOf(element)
+      let startIndex = Number(element.dataset.index)
+      console.log(startIndex)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
       document.getElementById('root').appendChild(clone)
@@ -203,7 +189,7 @@ export default function EditPlaylist() {
         }
         clone.style.setProperty('--x', e.clientX + 'px')
         clone.style.setProperty('--y', e.clientY + 'px')
-        let nearestNode = getNearestNode(e.clientY)
+        let nearestNode = getNearestNode(e.clientY, nodes)
         // prevents constant rendering of element, only inserts when element is different
         if (nearestNode !== element && nearestNode !== element.nextSibling) {
           container.current.insertBefore(element, nearestNode)
@@ -218,7 +204,7 @@ export default function EditPlaylist() {
           clearTimeout(timer);
         }
         clone.style.setProperty('--y', e.changedTouches[0].clientY + 'px')
-        let nearestNode = getNearestNode(e.changedTouches[0].clientY)
+        let nearestNode = getNearestNode(e.changedTouches[0].clientY, nodes)
         // prevents constant rendering of element, only inserts when element is different
         if (nearestNode !== element && nearestNode !== element.nextSibling) {
           container.current.insertBefore(element, nearestNode)
@@ -238,10 +224,8 @@ export default function EditPlaylist() {
         document.removeEventListener('mouseup', placeEl)
         document.removeEventListener('touchmove', touchMove)
         document.removeEventListener('touchend', placeEl)
-        let newElLocation = container.current.querySelector(`[data-index="${startIndex}"]`)
         // get new index of moved element
-        let htmlElToArray = Array.from(container.current.childNodes)
-        let newIndex = htmlElToArray.indexOf(newElLocation)
+        let newIndex = Array.from(container.current.childNodes).indexOf(element)
         // Only send API request if element has moved positions
         if(startIndex === newIndex) return
         setTimeout(() => {
