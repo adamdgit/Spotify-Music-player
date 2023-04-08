@@ -1,5 +1,4 @@
-export function getNearestNode(y) {
-  let nodes = [...document.querySelectorAll(`.edit-draggable:not(.clone)`)]
+export function getNearestNode(y, nodes) {
     return nodes.reduce((closest, child) => {
       const box = child.getBoundingClientRect()
       const offset = y - box.top - box.height / 2
