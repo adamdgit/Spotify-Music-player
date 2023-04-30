@@ -13,7 +13,7 @@ export default function CurrentSong() {
   // when player updates currentTrackID get new track info
   useEffect(() => {
     // only runs once player is ready otherwise value would be an empty string
-    if(currentTrackID) {
+    if (currentTrackID) {
       getCurrentTrackData(token, currentTrackID)
         .then(result => {
           if (result.errorMsg === false) setCurrentItem(result.data)
@@ -23,6 +23,7 @@ export default function CurrentSong() {
   },[currentTrackID])
 
   return (
+    
     <div className="song-wrap">
     {
       currentItem ?
