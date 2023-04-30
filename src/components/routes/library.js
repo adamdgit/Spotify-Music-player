@@ -25,7 +25,7 @@ export default function Library() {
   const [albums, setAlbums] = useState([])
   const navigate = useNavigate()
 
-  async function playNewContext(context) {
+  async function handlePlayNewContext(context) {
     // prevent restarting context if already playing / prevents new API call
     if (context.uri === contextURI) {
       return setMessage({ msg: `Context is already playing!`, needsUpdate: true });
@@ -49,7 +49,7 @@ export default function Library() {
     else navigate(`/spotify/editPlaylist/${playlistData.id}`)
   }
 
-  async function remove (id, name) {
+  async function handleRemove (id, name) {
     const errorMsg = await removeAlbum(token, id);
     if (errorMsg) console.error(errorMsg)
     else {
@@ -61,7 +61,7 @@ export default function Library() {
     }
   }
 
-  async function unfollow(id, name) {
+  async function handleUnfollow(id, name) {
     const errorMsg = await unfollowPlaylist(token, id);
     if (errorMsg) console.error(errorMsg)
     else {
@@ -138,7 +138,7 @@ export default function Library() {
                     'no image found' :
                     `${result.name} playlist art`
                     }
-                    onClick={() => playNewContext(result)}
+                    onClick={() => handlePlayNewContext(result)}
                   />
                 }
                 <span className="result-info">
@@ -148,7 +148,7 @@ export default function Library() {
                   result.owner.id !== userID 
                   ? <button 
                       className="unfollow" 
-                      onClick={() => unfollow(result.id, result.name)}>
+                      onClick={() => handleUnfollow(result.id, result.name)}>
                         UnFollow
                     </button>
                   : 
@@ -158,7 +158,7 @@ export default function Library() {
                     </NavLink>
                     <button 
                       className="unfollow" 
-                      onClick={() => unfollow(result.id, result.name)}>
+                      onClick={() => handleUnfollow(result.id, result.name)}>
                         Delete
                     </button>
                   </span>
@@ -189,14 +189,14 @@ export default function Library() {
                     'no image found' :
                     `${result.name} playlist art`
                     }
-                  onClick={() => playNewContext(result.album)}
+                  onClick={() => handlePlayNewContext(result.album)}
                 />
                 <span className="result-info">
                   <h2>{result.album.name}</h2>
                   <p>{sanitizeArtistNames(result.album.artists)}</p>
                   <button 
                     className="remove" 
-                    onClick={() => remove(result.album.id, result.album.name)}>
+                    onClick={() => handleRemove(result.album.id, result.album.name)}>
                     Remove
                   </button>
                 </span>
