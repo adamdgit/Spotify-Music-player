@@ -41,6 +41,8 @@ function Login() {
       window.localStorage.setItem('token', token)
     }
 
+    // GITHUB upload fix
+
     setToken(token)
 
     if(token) {
