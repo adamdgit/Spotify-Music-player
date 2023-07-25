@@ -6,6 +6,8 @@ import { getPlaylistData } from "../../api/getPlaylistData";
 import { getAlbumData } from "../../api/getAlbumData"
 import PlaylistContext from "./PlaylistContext";
 import AlbumContext from "./AlbumContext";
+import { getShowData } from "../../api/getShowData";
+import ShowContext from "./ShowContext"
 
 export default function PlaylistInfo() {
 
@@ -23,9 +25,10 @@ export default function PlaylistInfo() {
 
   // when context changes check for playlist or album and get data
   useEffect(() => {
+    console.log(contextURI)
     // get playlist data
-    if(contextURI?.includes('playlist')) {
-      (async function getData() {
+    if (contextURI?.includes('playlist')) {
+      (async () => {
         const { errorMsg, data } = await getPlaylistData(token, contextID);
         if (errorMsg) console.error(errorMsg)
         else {
@@ -39,7 +42,7 @@ export default function PlaylistInfo() {
     }
     // get album data
     if (contextURI?.includes('album')) {
-      (async function getData2() {
+      (async () => {
         const { errorMsg, data } = await getAlbumData(token, contextID);
         if (errorMsg) console.error(errorMsg)
         else {
@@ -48,6 +51,21 @@ export default function PlaylistInfo() {
           setPlaylistName(data.name)
           setSongs(data.tracks.items)
           setPlaylistOwner('')
+        }
+      })();
+    }
+    // get show/podcast data
+    if (contextURI?.includes('show')) {
+      (async () => {
+        const { errorMsg, data } = await getShowData(token, contextID);
+        if (errorMsg) console.error(errorMsg)
+        else {
+          console.log(data.episodes.items)
+          setPlaylistArt(data.images[0].url)
+          setPlaylistDesc(data.description)
+          setPlaylistName(data.name)
+          setSongs(data.episodes.items)
+          setPlaylistOwner(data.publisher)
         }
       })();
     }
@@ -71,7 +89,7 @@ export default function PlaylistInfo() {
   return (
     <div style={!contextID ? {gridTemplateColumns:"unset"}:{}} className={playerIsHidden === true ? "playlist-wrap hide" : "playlist-wrap"}>
       
-      <CurrentSong />
+      {contextURI.includes('show') ? <></> : <CurrentSong />}
 
       <div className={!contextID ? "hidden" : "playlist"}>
         <div className="playlist-info-wrap">
@@ -109,6 +127,10 @@ export default function PlaylistInfo() {
               playlistArt={playlistArt} 
               playlistName={playlistName} 
             /> 
+            : contextURI?.includes('show') ? 
+            <ShowContext
+              songs={songs}
+            />
             : <h1>No tracks available</h1>
           }
         </div>

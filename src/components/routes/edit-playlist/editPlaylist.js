@@ -150,7 +150,6 @@ export default function EditPlaylist() {
     function dragStart(e) {
       let element = e.target.parentElement
       let startIndex = Number(element.dataset.index)
-      console.log(startIndex)
       // create a copy of the dragging element for effect
       let clone = element.cloneNode(true)
       document.getElementById('root').appendChild(clone)

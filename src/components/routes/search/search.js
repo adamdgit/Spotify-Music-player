@@ -53,6 +53,7 @@ export default function SearchSongs() {
       else {
         setPlaylists(playlists.filter(a => {
           if(a.owner.id === userID) return a
+          else return false
         }))
       }
     })();
