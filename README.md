@@ -43,3 +43,29 @@ https://developer.spotify.com/documentation/general/guides/authorization/scopes/
 - No liking tracks or showing liked songs *might add in future
 - *repeat context API currently broken on Spotify's end
 - *no toggle for smart shuffle, only normal shuffle
+
+### App Features Preview
+
+Home Screen
+
+![Preview 1](https://github.com/adamdgit/Spotify-Music-player/blob/master/src/screenshots/1.png)
+
+Currently Playing preview
+
+![Preview 1](https://github.com/adamdgit/Spotify-Music-player/blob/master/src/screenshots/2.png)
+
+Drag & Drop to reorder playlists
+
+![Preview 1](https://github.com/adamdgit/Spotify-Music-player/blob/master/src/screenshots/3.png)
+
+Editing the playlist details
+
+![Preview 1](https://github.com/adamdgit/Spotify-Music-player/blob/master/src/screenshots/4.png)
+
+Search for tracks, playlists or albums
+
+![Preview 1](https://github.com/adamdgit/Spotify-Music-player/blob/master/src/screenshots/5.png)
+
+Adding a track to an existing playlist
+
+![Preview 1](https://github.com/adamdgit/Spotify-Music-player/blob/master/src/screenshots/6.png)
