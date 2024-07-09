@@ -24,7 +24,7 @@ export default function EditPlaylist() {
   const [playlistDesc, setPlaylistDesc] = useState('')
   const [originalName, setOriginalName] = useState('')
   const [originalDesc, setOriginalDesc] = useState('')
-  const [playlistData, setPlaylistData] = useState()
+  const [playlistData, setPlaylistData] = useState(null)
   // edit playlist tracks can be different from currently playing global songs
   const [tracks, setTracks] = useState([])
   const [draggables, setDraggables] = useState([])

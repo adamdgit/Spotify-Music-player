@@ -79,6 +79,7 @@ export default function Library() {
     const { errorMsg, playlists} = await getUserPlaylists(token);
     if (errorMsg) console.error(errorMsg)
     else {
+      console.log(playlists)
       setPlaylists(playlists.sort((a, b) => {
         if(a.owner.id === userID && b.owner.id === userID) return 0
         if(a.owner.id === userID && b.owner.id !== userID) return -1
@@ -98,11 +99,9 @@ export default function Library() {
   }  
 
   useEffect(() => {
-
     if (!userID) return
     getPlaylists();
     getAlbums();
-
   },[userID])
 
   return (
@@ -117,19 +116,17 @@ export default function Library() {
         <div className="user-playlists-wrap">
         {isLoading === true ? <SkeletonLoader type={'playlist'} /> : <></>}
         {
-          playlists? playlists.map((result, i) => {
-            if (result === null || result === undefined) return <></>
+          playlists.length > 0 ? playlists.map((result, i) => {
+            if (result === null || result === undefined) return null
             return (
               <div key={i} className={result.owner.id === userID ? 'result-large user' : 'result-large'}>
                 {
-                  result.images.length === 0 ? 
+                  !result.images ?
                   <span style={{display: 'grid', placeItems: 'center'}}>
                     <svg role="img" fill="currentcolor" height="64" width="64" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3h15v15.167a3.5 3.5 0 11-3.5-3.5H19V5H8v13.167a3.5 3.5 0 11-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 101.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 101.5 1.5v-1.5z"></path></svg>
                   </span>
                   : 
                   <img src={
-                    result.images.length === 0 ?
-                    'no image found' :
                     result.images.length > 1 ?
                     result.images[1].url :
                     result.images[0].url
