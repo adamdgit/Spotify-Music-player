@@ -1,3 +1,5 @@
+# Spotify Clone - React
+
 This project was created using Create React App by Adam Demol. 2022
 
 ## Using The App
